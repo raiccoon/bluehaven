@@ -145,13 +145,15 @@ class Routes {
   }
 
   @Router.get("/classes/:id")
-  async getClass(classId: ObjectId) {
-    return await Class.getClassById(classId);
+  async getClass(session: WebSessionDoc, classId: ObjectId) {
+    const user = WebSession.getUser(session);
+    return await Class.getClassById(classId, user);
   }
 
   @Router.post("/classes/:id/instructors")
-  async inviteInstructor(session: WebSessionDoc, classId: ObjectId, invitee: ObjectId) {
+  async inviteInstructor(session: WebSessionDoc, classId: ObjectId, inviteeName: string) {
     const inviter = WebSession.getUser(session);
+    const invitee = (await User.getUserByUsername(inviteeName))._id;
     return await Class.inviteInstructor(classId, inviter, invitee);
   }
 
@@ -174,14 +176,14 @@ class Routes {
   }
 
   @Router.get("/classes/:_id/membership/isInstructor")
-  async isInstructor(session: WebSessionDoc, classId: ObjectId) {
-    const user = WebSession.getUser(session);
+  async isInstructor(session: WebSessionDoc, classId: ObjectId, userName: string) {
+    const user = (await User.getUserByUsername(userName))._id;
     return await Class.isInstructor(classId, user);
   }
 
   @Router.get("/classes/:_id/membership/isStudent")
-  async isStudent(session: WebSessionDoc, classId: ObjectId) {
-    const user = WebSession.getUser(session);
+  async isStudent(session: WebSessionDoc, classId: ObjectId, userName: string) {
+    const user = (await User.getUserByUsername(userName))._id;
     return await Class.isStudent(classId, user);
   }
 
