@@ -39,19 +39,6 @@ export default class ClassConcept {
     return classDoc;
   }
 
-  async getClassesByIds(classIds: ObjectId[]) {
-    const classDocs = await this.classes.readMany({ _id: { $in: classIds } });
-    return classDocs;
-  }
-
-  async getClassByJoinCode(joinCode: string) {
-    const classDoc = await this.classes.readOne({ joinCode });
-    if (classDoc === null) {
-      throw new NotFoundError(`Class not found!`);
-    }
-    return classDoc;
-  }
-
   async inviteInstructor(classId: ObjectId, inviter: ObjectId, invitee: ObjectId) {
     await this.classExists(classId);
     await this.assertIsInstructor(classId, inviter);
@@ -132,6 +119,19 @@ export default class ClassConcept {
     if (maybeClass === null) {
       throw new NotFoundError("Collection not found!");
     }
+  }
+
+  private async getClassByJoinCode(joinCode: string) {
+    const classDoc = await this.classes.readOne({ joinCode });
+    if (classDoc === null) {
+      throw new NotFoundError(`Class not found!`);
+    }
+    return classDoc;
+  }
+
+  private async getClassesByIds(classIds: ObjectId[]) {
+    const classDocs = await this.classes.readMany({ _id: { $in: classIds } });
+    return classDocs;
   }
 
   private async addInstructor(classId: ObjectId, user: ObjectId) {
