@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Friend, Post, User, WebSession } from "./app";
+import { Class, Friend, Post, User, WebSession } from "./app";
 import { PostDoc, PostOptions } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
 import { WebSessionDoc } from "./concepts/websession";
@@ -135,6 +135,60 @@ class Routes {
     const user = WebSession.getUser(session);
     const fromId = (await User.getUserByUsername(from))._id;
     return await Friend.rejectRequest(fromId, user);
+  }
+
+  // CLASS
+  @Router.post("/classes")
+  async createClass(session: WebSessionDoc, className: string) {
+    const user = WebSession.getUser(session);
+    return await Class.createClass(user, className);
+  }
+
+  @Router.get("/classes/:id")
+  async getClass(classId: ObjectId) {
+    return await Class.getClassById(classId);
+  }
+
+  @Router.post("/classes/:id/instructors")
+  async inviteInstructor(session: WebSessionDoc, classId: ObjectId, invitee: ObjectId) {
+    const inviter = WebSession.getUser(session);
+    return await Class.inviteInstructor(classId, inviter, invitee);
+  }
+
+  @Router.post("/classes/joincode/:joinCode/students")
+  async joinByJoinCode(session: WebSessionDoc, joinCode: string) {
+    const student = WebSession.getUser(session);
+    return await Class.joinByJoinCode(joinCode, student);
+  }
+
+  @Router.get("/classes/instruct")
+  async getClassesInstruct(session: WebSessionDoc) {
+    const user = WebSession.getUser(session);
+    return await Class.getClassesInstruct(user);
+  }
+
+  @Router.get("/classes/enroll")
+  async getClassesEnroll(session: WebSessionDoc) {
+    const user = WebSession.getUser(session);
+    return await Class.getClassesEnroll(user);
+  }
+
+  @Router.get("/classes/:_id/membership/isInstructor")
+  async isInstructor(session: WebSessionDoc, classId: ObjectId) {
+    const user = WebSession.getUser(session);
+    return await Class.isInstructor(classId, user);
+  }
+
+  @Router.get("/classes/:_id/membership/isStudent")
+  async isStudent(session: WebSessionDoc, classId: ObjectId) {
+    const user = WebSession.getUser(session);
+    return await Class.isStudent(classId, user);
+  }
+
+  @Router.delete("/classes/:_id/membership")
+  async removeSelf(session: WebSessionDoc, classId: ObjectId) {
+    const user = WebSession.getUser(session);
+    return await Class.removeSelf(classId, user);
   }
 }
 
