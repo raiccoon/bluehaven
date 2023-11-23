@@ -31,11 +31,12 @@ export default class ClassConcept {
     return { msg: "Class created successfully!", collection: await this.classes.readOne({ _id }) };
   }
 
-  async getClassById(classId: ObjectId) {
+  async getClassById(classId: ObjectId, user: ObjectId) {
     const classDoc = await this.classes.readOne({ classId });
     if (classDoc === null) {
       throw new NotFoundError(`Class not found!`);
     }
+    await this.assertIsMember(classId, user);
     return classDoc;
   }
 
@@ -101,6 +102,15 @@ export default class ClassConcept {
     const maybeInstructor = this.instructorMemberships.readOne({ classId, user });
     const maybeStudent = this.studentMemberships.readOne({ classId, user });
     return (await maybeInstructor) || (await maybeStudent);
+  }
+
+  async assertIsMember(classId: ObjectId, user: ObjectId) {
+    await this.classExists(classId);
+    const maybeInstructor = this.instructorMemberships.readOne({ classId, user });
+    const maybeStudent = this.studentMemberships.readOne({ classId, user });
+    if (!((await maybeInstructor) || (await maybeStudent))) {
+      throw new NotAllowedError("Error");
+    }
   }
 
   async removeSelf(classId: ObjectId, user: ObjectId) {
