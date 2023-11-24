@@ -25,8 +25,7 @@ export default class ClassConcept {
   }
 
   async createClass(user: ObjectId, className: string) {
-    const joinCode = Math.random().toString(36).substring(2, 7);
-    // const joinCode = await this.createUniqueJoinCode();
+    const joinCode = await this.createUniqueJoinCode();
     const _id = await this.classes.createOne({ className, joinCode });
     await this.addInstructor(_id, user);
     return { msg: "Class created successfully!", class: await this.classes.readOne({ _id }) };
@@ -132,13 +131,13 @@ export default class ClassConcept {
     }
   }
 
-  // private async createUniqueJoinCode() {
-  //   let joinCode = Math.random().toString(36).substring(2, 7);
-  //   while ((await this.classes.readOne({ joinCode })) == null) {
-  //     joinCode = Math.random().toString(36).substring(2, 7);
-  //   }
-  //   return joinCode;
-  // }
+  private async createUniqueJoinCode() {
+    let joinCode = Math.random().toString(36).substring(2, 7);
+    while ((await this.classes.readOne({ joinCode })) != null) {
+      joinCode = Math.random().toString(36).substring(2, 7);
+    }
+    return joinCode;
+  }
 
   private async getClassByJoinCode(joinCode: string) {
     const classDoc = await this.classes.readOne({ joinCode });
