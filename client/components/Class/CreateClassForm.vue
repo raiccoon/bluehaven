@@ -22,8 +22,8 @@ const handleCreateClass = async (className: string) => {
   } catch (_) {
     return;
   }
-  displayMsg.value = true;
   msg.value = classResults;
+  displayMsg.value = true;
   emptyForm();
 };
 
