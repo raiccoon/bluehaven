@@ -2,15 +2,27 @@
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
+import { fetchy } from "../../utils/fetchy";
+const { isLoggedIn } = storeToRefs(useUserStore());
 
 const classObjectID = ref("");
 const username = ref("");
 const displayMsg = ref(false);
 const msg = ref("message");
-const handleLookup = () => {
-  //  msg.value = isInstructor(classObjectID.value, username.value)
+const handleLookup = async (classObjectID: string, username: string) => {
+  let classResults;
+  try {
+    classResults = await fetchy(`/api/classes/${classObjectID}/membership/isInstructor`, "GET", {
+      query: { classId: classObjectID, username: username },
+    });
+  } catch (_) {
+    return;
+  }
+  msg.value = classResults;
   displayMsg.value = true;
+  emptyForm();
+};
+const emptyForm = () => {
   classObjectID.value = "";
   username.value = "";
 };
@@ -20,7 +32,7 @@ const handleLookup = () => {
   <main>
     <section v-if="isLoggedIn">
       <div class="main">
-        <form @submit.prevent="handleLookup">
+        <form @submit.prevent="handleLookup(classObjectID, username)">
           <input type="text" v-model="classObjectID" placeholder="Class Object ID" />
           <input type="text" v-model="username" placeholder="Username" />
           <button type="submit">Check If Instructor</button>

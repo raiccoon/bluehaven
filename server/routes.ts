@@ -176,15 +176,15 @@ class Routes {
     return await Class.getClassesEnroll(user);
   }
 
-  @Router.get("/classes/:_id/membership/isInstructor")
-  async isInstructor(session: WebSessionDoc, classId: ObjectId, userName: string) {
-    const user = (await User.getUserByUsername(userName))._id;
+  @Router.get("/classes/:classId/membership/isInstructor")
+  async isInstructor(session: WebSessionDoc, classId: ObjectId, username: string) {
+    const user = (await User.getUserByUsername(username))._id;
     return await Class.isInstructor(new ObjectId(classId), user);
   }
 
   @Router.get("/classes/:_id/membership/isStudent")
-  async isStudent(session: WebSessionDoc, classId: ObjectId, userName: string) {
-    const user = (await User.getUserByUsername(userName))._id;
+  async isStudent(session: WebSessionDoc, classId: ObjectId, username: string) {
+    const user = (await User.getUserByUsername(username))._id;
     return await Class.isStudent(new ObjectId(classId), user);
   }
 
