@@ -101,7 +101,7 @@ export default class ClassConcept {
     await this.classExists(classId);
     const maybeInstructor = this.instructorMemberships.readOne({ classId, user });
     const maybeStudent = this.studentMemberships.readOne({ classId, user });
-    return (await maybeInstructor) || (await maybeStudent);
+    return (await maybeInstructor) != null || (await maybeStudent) != null;
   }
 
   async assertIsMember(classId: ObjectId, user: ObjectId) {

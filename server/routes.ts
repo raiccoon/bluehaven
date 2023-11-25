@@ -188,6 +188,12 @@ class Routes {
     return await Class.isStudent(new ObjectId(classId), user);
   }
 
+  @Router.get("/classes/:_id/membership/isMember")
+  async isMember(session: WebSessionDoc, classId: ObjectId, username: string) {
+    const user = (await User.getUserByUsername(username))._id;
+    return await Class.isMember(new ObjectId(classId), user);
+  }
+
   @Router.delete("/classes/:_id/membership")
   async removeSelf(session: WebSessionDoc, classId: ObjectId) {
     const user = WebSession.getUser(session);
