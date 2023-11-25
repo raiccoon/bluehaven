@@ -155,7 +155,7 @@ class Routes {
   async inviteInstructor(session: WebSessionDoc, classId: ObjectId, inviteeName: string) {
     const inviter = WebSession.getUser(session);
     const invitee = (await User.getUserByUsername(inviteeName))._id;
-    return await Class.inviteInstructor(classId, inviter, invitee);
+    return await Class.inviteInstructor(new ObjectId(classId), inviter, invitee);
   }
 
   @Router.post("/classes/joincode/:joinCode/students")
@@ -179,19 +179,19 @@ class Routes {
   @Router.get("/classes/:_id/membership/isInstructor")
   async isInstructor(session: WebSessionDoc, classId: ObjectId, userName: string) {
     const user = (await User.getUserByUsername(userName))._id;
-    return await Class.isInstructor(classId, user);
+    return await Class.isInstructor(new ObjectId(classId), user);
   }
 
   @Router.get("/classes/:_id/membership/isStudent")
   async isStudent(session: WebSessionDoc, classId: ObjectId, userName: string) {
     const user = (await User.getUserByUsername(userName))._id;
-    return await Class.isStudent(classId, user);
+    return await Class.isStudent(new ObjectId(classId), user);
   }
 
   @Router.delete("/classes/:_id/membership")
   async removeSelf(session: WebSessionDoc, classId: ObjectId) {
     const user = WebSession.getUser(session);
-    return await Class.removeSelf(classId, user);
+    return await Class.removeSelf(new ObjectId(classId), user);
   }
 }
 
