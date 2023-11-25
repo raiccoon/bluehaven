@@ -32,7 +32,7 @@ export default class ClassConcept {
   }
 
   async getClassById(classId: ObjectId, user: ObjectId) {
-    const classDoc = await this.classes.readOne({ classId });
+    const classDoc = await this.classes.readOne({ _id: classId });
     if (classDoc === null) {
       throw new NotFoundError(`Class not found!`);
     }

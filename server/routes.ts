@@ -144,10 +144,11 @@ class Routes {
     return await Class.createClass(user, className);
   }
 
-  @Router.get("/classes/:id")
+  @Router.get("/classes/:classId")
   async getClass(session: WebSessionDoc, classId: ObjectId) {
     const user = WebSession.getUser(session);
-    return await Class.getClassById(classId, user);
+    console.log(new ObjectId(classId));
+    return await Class.getClassById(new ObjectId(classId), user);
   }
 
   @Router.post("/classes/:id/instructors")
