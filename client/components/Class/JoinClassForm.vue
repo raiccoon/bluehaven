@@ -2,7 +2,8 @@
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
+import { fetchy } from "../../utils/fetchy";
+const { isLoggedIn } = storeToRefs(useUserStore());
 
 const isJoinClassClicked = ref(false);
 const joinCode = ref("");
@@ -12,14 +13,24 @@ const clickJoinClass = () => {
   displayMsg.value = false;
   isJoinClassClicked.value = true;
 };
-const handleJoinClass = () => {
-  //  msg.value = createClass(joinCode.value)
+const handleJoinClass = async (joinCode: string) => {
+  let classResults;
+  try {
+    classResults = await fetchy(`/api/classes/joincode/${joinCode}/students`, "POST", {
+      body: { joinCode },
+    });
+  } catch (_) {
+    return;
+  }
+  msg.value = classResults;
   displayMsg.value = true;
-  joinCode.value = "";
-  isJoinClassClicked.value = false;
+  emptyForm();
 };
 const handleCancel = () => {
   displayMsg.value = false;
+  emptyForm();
+};
+const emptyForm = () => {
   joinCode.value = "";
   isJoinClassClicked.value = false;
 };
@@ -30,7 +41,7 @@ const handleCancel = () => {
     <section v-if="isLoggedIn">
       <div class="main">
         <button v-if="!isJoinClassClicked" @click="clickJoinClass">Click here to join a class!</button>
-        <form v-else @submit.prevent="handleJoinClass">
+        <form v-else @submit.prevent="handleJoinClass(joinCode)">
           <input type="text" v-model="joinCode" placeholder="Join code for your class" />
           <button type="submit">Join</button>
           <button @click="handleCancel">Cancel</button>
