@@ -10,7 +10,10 @@ const { loginUser, updateSession } = useUserStore();
 async function login() {
   await loginUser(username.value, password.value);
   void updateSession();
-  void router.push({ name: "Home" });
+  void router.push({ name: "Classes" });
+}
+function goBack() {
+  void router.push({ name: "Start" });
 }
 </script>
 
@@ -31,6 +34,7 @@ async function login() {
       </div>
     </fieldset>
   </form>
+  <button @click="goBack">Back</button>
 </template>
 
 <style scoped>

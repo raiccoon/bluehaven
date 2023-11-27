@@ -22,7 +22,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <header>
+  <header v-if="isLoggedIn && currentRouteName !== 'Start' && currentRouteName !== 'Register' && currentRouteName !== 'Login'">
     <nav>
       <div class="title">
         <img src="@/assets/images/logo.svg" />
