@@ -2,13 +2,27 @@
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
+import { fetchy } from "../../utils/fetchy";
+const { isLoggedIn } = storeToRefs(useUserStore());
 
+const classObjectID = ref("");
 const displayMsg = ref(false);
 const msg = ref("message");
-const removeSelf = () => {
-  //  msg.value = removeSelf()
+const removeSelf = async (classObjectID: string) => {
+  let classResults;
+  try {
+    classResults = await fetchy(`/api/classes/id/${classObjectID}/membership`, "DELETE", {
+      query: { classId: classObjectID },
+    });
+  } catch (_) {
+    return;
+  }
+  msg.value = classResults;
   displayMsg.value = true;
+  emptyForm();
+};
+const emptyForm = () => {
+  classObjectID.value = "";
 };
 </script>
 
@@ -16,7 +30,10 @@ const removeSelf = () => {
   <main>
     <section v-if="isLoggedIn">
       <div class="main">
-        <button @click="removeSelf">Click to remove yourself from this class</button>
+        <form @submit.prevent="removeSelf(classObjectID)">
+          <input type="text" v-model="classObjectID" placeholder="Class ObjectID" />
+          <button type="submit">Click to remove yourself from this class</button>
+        </form>
         <p v-if="displayMsg">{{ msg }}</p>
       </div>
     </section>

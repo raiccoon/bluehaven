@@ -2,14 +2,27 @@
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
+import { fetchy } from "../../utils/fetchy";
+const { isLoggedIn } = storeToRefs(useUserStore());
 
 const classObjectID = ref("");
 const displayMsg = ref(false);
 const msg = ref("message");
-const handleGetClass = () => {
-  //  msg.value = getClass(classObjectID.value)
+const handleGetClass = async (classObjectID: string) => {
+  let classResults;
+  try {
+    classResults = await fetchy(`/api/classes/id/${classObjectID}`, "GET", {
+      query: { classId: classObjectID },
+    });
+  } catch (_) {
+    return;
+  }
+  msg.value = classResults;
   displayMsg.value = true;
+  emptyForm();
+};
+
+const emptyForm = () => {
   classObjectID.value = "";
 };
 </script>
@@ -18,7 +31,7 @@ const handleGetClass = () => {
   <main>
     <section v-if="isLoggedIn">
       <div class="main">
-        <form @submit.prevent="handleGetClass">
+        <form @submit.prevent="handleGetClass(classObjectID)">
           <input type="text" v-model="classObjectID" placeholder="Class ObjectID" />
           <button type="submit">Lookup</button>
         </form>

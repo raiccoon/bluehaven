@@ -2,7 +2,8 @@
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
+import { fetchy } from "../../utils/fetchy";
+const { isLoggedIn } = storeToRefs(useUserStore());
 
 const isCreateClassClicked = ref(false);
 const className = ref("");
@@ -12,12 +13,25 @@ const clickCreateClass = () => {
   displayMsg.value = false;
   isCreateClassClicked.value = true;
 };
-const handleCreateClass = () => {
-  //  msg.value = createClass(className.value)
+const handleCreateClass = async (className: string) => {
+  let classResults;
+  try {
+    classResults = await fetchy("/api/classes", "POST", {
+      body: { className: className },
+    });
+  } catch (_) {
+    return;
+  }
+  msg.value = classResults;
   displayMsg.value = true;
+  emptyForm();
+};
+
+const emptyForm = () => {
   className.value = "";
   isCreateClassClicked.value = false;
 };
+
 const handleCancel = () => {
   displayMsg.value = false;
   className.value = "";
@@ -30,7 +44,7 @@ const handleCancel = () => {
     <section v-if="isLoggedIn">
       <div class="main">
         <button v-if="!isCreateClassClicked" @click="clickCreateClass">Click here to create a class!</button>
-        <form v-else @submit.prevent="handleCreateClass">
+        <form v-else @submit.prevent="handleCreateClass(className)">
           <input type="text" v-model="className" placeholder="Name of your class" />
           <button type="submit">Create</button>
           <button @click="handleCancel">Cancel</button>

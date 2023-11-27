@@ -2,15 +2,28 @@
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
+import { fetchy } from "../../utils/fetchy";
+const { isLoggedIn } = storeToRefs(useUserStore());
 
 const classObjectID = ref("");
 const username = ref("");
 const displayMsg = ref(false);
 const msg = ref("message");
-const handleInvite = () => {
-  //  msg.value = inviteInstructor(classObjectID.value, username.value)
+const handleInvite = async (classObjectId: string, username: string) => {
+  let classResults;
+  try {
+    classResults = await fetchy(`/api/classes/id/${classObjectId}/instructors`, "POST", {
+      body: { classId: classObjectId, inviteeName: username },
+    });
+  } catch (_) {
+    return;
+  }
+  msg.value = classResults;
   displayMsg.value = true;
+  emptyForm();
+};
+
+const emptyForm = () => {
   classObjectID.value = "";
   username.value = "";
 };
@@ -20,7 +33,7 @@ const handleInvite = () => {
   <main>
     <section v-if="isLoggedIn">
       <div class="main">
-        <form @submit.prevent="handleInvite">
+        <form @submit.prevent="handleInvite(classObjectID, username)">
           <input type="text" v-model="classObjectID" placeholder="Class Object ID" />
           <input type="text" v-model="username" placeholder="Invite by username" />
           <button type="submit">Invite</button>
