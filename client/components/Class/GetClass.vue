@@ -11,7 +11,7 @@ const msg = ref("message");
 const handleGetClass = async (classObjectID: string) => {
   let classResults;
   try {
-    classResults = await fetchy(`/api/classes/${classObjectID}`, "GET", {
+    classResults = await fetchy(`/api/classes/id/${classObjectID}`, "GET", {
       query: { classId: classObjectID },
     });
   } catch (_) {

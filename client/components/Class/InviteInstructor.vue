@@ -12,7 +12,7 @@ const msg = ref("message");
 const handleInvite = async (classObjectId: string, username: string) => {
   let classResults;
   try {
-    classResults = await fetchy(`/api/classes/${classObjectId}/instructors`, "POST", {
+    classResults = await fetchy(`/api/classes/id/${classObjectId}/instructors`, "POST", {
       body: { classId: classObjectId, inviteeName: username },
     });
   } catch (_) {

@@ -12,7 +12,7 @@ const msg = ref("message");
 const handleLookup = async (classObjectID: string, username: string) => {
   let classResults;
   try {
-    classResults = await fetchy(`/api/classes/${classObjectID}/membership/isInstructor`, "GET", {
+    classResults = await fetchy(`/api/classes/id/${classObjectID}/membership/isInstructor`, "GET", {
       query: { classId: classObjectID, username: username },
     });
   } catch (_) {
