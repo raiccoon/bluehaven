@@ -3,21 +3,26 @@ import { Filter, ObjectId } from "mongodb";
 import DocCollection, { BaseDoc } from "../framework/doc";
 import { NotAllowedError, NotFoundError } from "./errors";
 
-export interface PostOptions {
-  backgroundColor?: string;
+// export interface PostOptions {
+//   backgroundColor?: string;
+// }
+
+export interface PostMultimedia {
+  image?: string;
+  video?: string;
 }
 
 export interface PostDoc extends BaseDoc {
   author: ObjectId;
   content: string;
-  options?: PostOptions;
+  multimedia?: PostMultimedia;
 }
 
 export default class PostConcept {
   public readonly posts = new DocCollection<PostDoc>("posts");
 
-  async create(author: ObjectId, content: string, options?: PostOptions) {
-    const _id = await this.posts.createOne({ author, content, options });
+  async create(author: ObjectId, content: string, multimedia?: PostMultimedia) {
+    const _id = await this.posts.createOne({ author, content, multimedia });
     return { msg: "Post successfully created!", post: await this.posts.readOne({ _id }) };
   }
 
