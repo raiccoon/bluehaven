@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { Router, getExpressRouter } from "./framework/router";
 
 import { Class, Friend, Post, User, WebSession } from "./app";
-import { PostDoc, PostOptions } from "./concepts/post";
+import { PostDoc, PostMultimedia } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
 import { WebSessionDoc } from "./concepts/websession";
 import Responses from "./responses";
@@ -57,6 +57,8 @@ class Routes {
     return { msg: "Logged out!" };
   }
 
+  // POST
+
   @Router.get("/posts")
   async getPosts(author?: string) {
     let posts;
@@ -70,7 +72,7 @@ class Routes {
   }
 
   @Router.post("/posts")
-  async createPost(session: WebSessionDoc, content: string, options?: PostOptions) {
+  async createPost(session: WebSessionDoc, content: string, options?: PostMultimedia) {
     const user = WebSession.getUser(session);
     const created = await Post.create(user, content, options);
     return { msg: created.msg, post: await Responses.post(created.post) };
