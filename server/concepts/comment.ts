@@ -21,7 +21,7 @@ export default class CommentConcept {
 
   async create(author: ObjectId, parent: ObjectId, content: string, multimedia?: CommentMultimedia) {
     const _id = await this.comments.createOne({ author, parent, content, multimedia });
-    return { msg: "Post successfully created!", post: await this.comments.readOne({ _id }) };
+    return { msg: "Comment successfully created!", comment: await this.comments.readOne({ _id }) };
   }
 
   async isComment(_id: ObjectId) {
@@ -59,6 +59,27 @@ export default class CommentConcept {
     }
     if (comment.author.toString() !== userId.toString()) {
       throw new CommentAuthorNotMatchError(userId, _id);
+    }
+  }
+
+  async update(_id: ObjectId, update: Partial<CommentDoc>) {
+    this.sanitizeUpdate(update);
+    await this.comments.updateOne({ _id }, update);
+    return { msg: "Comment successfully updated!" };
+  }
+
+  async delete(_id: ObjectId) {
+    await this.comments.deleteOne({ _id });
+    return { msg: "Comment deleted successfully!" };
+  }
+
+  private sanitizeUpdate(update: Partial<CommentDoc>) {
+    // Make sure the update cannot change the author or parent.
+    const allowedUpdates = ["content", "multimedia", "instructorEdited"];
+    for (const key in update) {
+      if (!allowedUpdates.includes(key)) {
+        throw new NotAllowedError(`Cannot update '${key}' field!`);
+      }
     }
   }
 
