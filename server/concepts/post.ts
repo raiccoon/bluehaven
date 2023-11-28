@@ -3,26 +3,18 @@ import { Filter, ObjectId } from "mongodb";
 import DocCollection, { BaseDoc } from "../framework/doc";
 import { NotAllowedError, NotFoundError } from "./errors";
 
-// export interface PostOptions {
-//   backgroundColor?: string;
-// }
-
-export interface PostMultimedia {
-  image?: string;
-  video?: string;
-}
-
 export interface PostDoc extends BaseDoc {
   author: ObjectId;
   content: string;
-  multimedia?: PostMultimedia;
+  image: string;
+  video: string;
 }
 
 export default class PostConcept {
   public readonly posts = new DocCollection<PostDoc>("posts");
 
-  async create(author: ObjectId, content: string, multimedia?: PostMultimedia) {
-    const _id = await this.posts.createOne({ author, content, multimedia });
+  async create(author: ObjectId, content: string, image: string, video: string) {
+    const _id = await this.posts.createOne({ author, content, image, video });
     return { msg: "Post successfully created!", post: await this.posts.readOne({ _id }) };
   }
 
@@ -75,5 +67,11 @@ export class PostAuthorNotMatchError extends NotAllowedError {
     public readonly _id: ObjectId,
   ) {
     super("{0} is not the author of post {1}!", author, _id);
+  }
+}
+
+export class PostNotFoundError extends NotFoundError {
+  constructor(public readonly _id: ObjectId) {
+    super("Post {0} does not exist!", _id);
   }
 }
