@@ -1,4 +1,5 @@
 import { User } from "./app";
+import { CommentDoc } from "./concepts/comment";
 import { AlreadyFriendsError, FriendNotFoundError, FriendRequestAlreadyExistsError, FriendRequestDoc, FriendRequestNotFoundError } from "./concepts/friend";
 import { PostAuthorNotMatchError, PostDoc } from "./concepts/post";
 import { Router } from "./framework/router";
@@ -9,22 +10,22 @@ import { Router } from "./framework/router";
  */
 export default class Responses {
   /**
-   * Convert PostDoc into more readable format for the frontend by converting the author id into a username.
+   * Convert Comment / PostDoc into more readable format for the frontend by converting the author id into a username.
    */
-  static async post(post: PostDoc | null) {
-    if (!post) {
-      return post;
+  static async post(item: CommentDoc | PostDoc | null) {
+    if (!item) {
+      return item;
     }
-    const author = await User.getUserById(post.author);
-    return { ...post, author: author.username };
+    const author = await User.getUserById(item.author);
+    return { ...item, author: author.username };
   }
 
   /**
-   * Same as {@link post} but for an array of PostDoc for improved performance.
+   * Same as {@link post} but for an array of PostDoc / CommentDoc for improved performance.
    */
-  static async posts(posts: PostDoc[]) {
-    const authors = await User.idsToUsernames(posts.map((post) => post.author));
-    return posts.map((post, i) => ({ ...post, author: authors[i] }));
+  static async posts(items: PostDoc[] | CommentDoc[]) {
+    const authors = await User.idsToUsernames(items.map((item) => item.author));
+    return items.map((item, i) => ({ ...item, author: authors[i] }));
   }
 
   /**
