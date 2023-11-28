@@ -3,8 +3,8 @@ import { ObjectId } from "mongodb";
 import { Router, getExpressRouter } from "./framework/router";
 
 import { Class, Comment, Friend, Post, User, WebSession } from "./app";
-import { CommentDoc, CommentMultimedia } from "./concepts/comment";
-import { PostDoc, PostMultimedia } from "./concepts/post";
+import { CommentDoc } from "./concepts/comment";
+import { PostDoc } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
 import { WebSessionDoc } from "./concepts/websession";
 import Responses from "./responses";
@@ -73,9 +73,9 @@ class Routes {
   }
 
   @Router.post("/posts")
-  async createPost(session: WebSessionDoc, content: string, options?: PostMultimedia) {
+  async createPost(session: WebSessionDoc, content: string, image: string, video: string) {
     const user = WebSession.getUser(session);
-    const created = await Post.create(user, content, options);
+    const created = await Post.create(user, content, image, video);
     return { msg: created.msg, post: await Responses.post(created.post) };
   }
 
@@ -96,9 +96,9 @@ class Routes {
   // COMMENT
 
   @Router.post("/comments")
-  async createComment(session: WebSessionDoc, parent: ObjectId, content: string, multimedia?: CommentMultimedia) {
+  async createComment(session: WebSessionDoc, parent: ObjectId, content: string, image: string, video: string) {
     const user = WebSession.getUser(session);
-    const created = await Comment.create(user, parent, content, multimedia);
+    const created = await Comment.create(user, parent, content, image, video);
     return { msg: created.msg, comment: await Responses.post(created.comment) };
   }
 
