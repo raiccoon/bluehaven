@@ -25,14 +25,14 @@ onBeforeMount(async () => {
   <header v-if="isLoggedIn && currentRouteName !== 'Start' && currentRouteName !== 'Register' && currentRouteName !== 'Login'">
     <nav>
       <div class="title">
-        <img src="@/assets/images/logo.svg" />
+        <img src="@/assets/images/logo.png" />
         <RouterLink :to="{ name: 'Home' }">
-          <h1>Social Media App</h1>
+          <h1>BlueHaven</h1>
         </RouterLink>
       </div>
       <ul>
         <li>
-          <RouterLink :to="{ name: 'Classes' }" :class="{ underline: currentRouteName == 'Classes' }"> Your Classes </RouterLink>
+          <RouterLink :to="{ name: 'Boilerplate' }" :class="{ underline: currentRouteName == 'Boilerplate' }"> Boilerplate (for testing) </RouterLink>
         </li>
         <li>
           <RouterLink :to="{ name: 'Home' }" :class="{ underline: currentRouteName == 'Home' }"> Home </RouterLink>
