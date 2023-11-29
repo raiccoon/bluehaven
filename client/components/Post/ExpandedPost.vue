@@ -9,6 +9,7 @@ import { fetchy } from "../../utils/fetchy";
 
 const props = defineProps(["postId", "author"]);
 const loaded = ref(false);
+
 let post = ref();
 const emit = defineEmits(["editPost", "refreshPosts"]);
 const { currentUsername } = storeToRefs(useUserStore());
@@ -44,14 +45,15 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div v-if="loaded">
+  <section class="article" v-if="loaded">
     <p class="author">{{ props.author }}</p>
     <!-- placeholder media -->
     <img class="postMedia" src="https://i.imgur.com/CWuBXGh.jpg" />
-    <p>{{ post.content }}</p>
+    <p class="text single-line">{{ post.content }}</p>
     <div class="base">
       <menu>
-        <li><button v-if="props.author == currentUsername" class="btn-small pure-button" @click="emit('editPost', post._id)">Edit</button></li>
+        <!-- will implement editing within expanded view later? -->
+        <!-- <li><button v-if="props.author == currentUsername" class="btn-small pure-button" @click="emit('editPost', post._id)">Edit</button></li> -->
         <li><button v-if="props.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
       </menu>
       <article class="timestamp">
@@ -59,7 +61,7 @@ onBeforeMount(async () => {
         <p v-else>Created on: {{ formatDate(post.dateCreated) }}</p>
       </article>
     </div>
-  </div>
+  </section>
   <h2 v-else>Loading...</h2>
 </template>
 
@@ -75,6 +77,18 @@ p {
 .author {
   font-weight: bold;
   font-size: 1.2em;
+}
+.article {
+  margin: 1em;
+  max-width: 45%;
+  background-color: var(--base-bg);
+  border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 1em;
+  overflow-y: auto;
+  max-height: 70vh;
 }
 
 menu {
@@ -110,8 +124,7 @@ menu {
   text-align: center;
 }
 .text.single-line {
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  text-wrap: balance;
 }
 </style>

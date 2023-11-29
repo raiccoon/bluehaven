@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import ExpandedPost from "@/components/Post/ExpandedPost.vue";
-import { useUserStore } from "@/stores/user";
-import { storeToRefs } from "pinia";
+import { ref } from "vue";
 
-const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
+let editing = ref("");
+
+function updateEditing(id: string) {
+  editing.value = id;
+}
 </script>
 
 <template>
   <main>
     <h1>Module Name</h1>
     <section>
-      <ExpandedPost :postId="$route.params.postId" :author="$route.query.author" />
+      <ExpandedPost v-if="editing !== $route.params.postId" :postId="$route.params.postId" :author="$route.query.author" />
     </section>
   </main>
 </template>
