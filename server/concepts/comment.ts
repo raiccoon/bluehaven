@@ -50,7 +50,7 @@ export default class CommentConcept {
 
   async deleteComment(_id: ObjectId) {
     await this.comments.deleteOne({ _id });
-    return { msg: "Post deleted successfully!" };
+    return { msg: "Comment deleted successfully!" };
   }
 
   async isAuthor(_id: ObjectId, userId: ObjectId) {

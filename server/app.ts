@@ -1,3 +1,4 @@
+import BookmarkConcept from "./concepts/bookmark";
 import ClassConcept from "./concepts/class";
 import CommentConcept from "./concepts/comment";
 import FriendConcept from "./concepts/friend";
@@ -12,3 +13,4 @@ export const Post = new PostConcept();
 export const Friend = new FriendConcept();
 export const Class = new ClassConcept();
 export const Comment = new CommentConcept();
+export const Bookmark = new BookmarkConcept();
