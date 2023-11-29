@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import ExpandedPost from "@/components/Post/ExpandedPost.vue";
-import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
-
-const currentRoute = router.currentRoute;
 
 // const props = defineProps(["postId"]);
 
@@ -15,7 +11,8 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
   <main>
     <h1>[author name here's post]</h1>
     <section>
-      <ExpandedPost :_id="currentRoute.params" />
+      <p>{{ $route.params }}</p>
+      <ExpandedPost :_id="$route.params" />
     </section>
     <PostListComponent />
   </main>
