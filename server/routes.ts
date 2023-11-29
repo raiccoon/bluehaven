@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Class, Comment, Friend, Post, User, WebSession } from "./app";
+import { Bookmark, Class, Comment, Friend, Post, User, WebSession } from "./app";
 import { CommentDoc } from "./concepts/comment";
 import { PostDoc } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
@@ -136,7 +136,29 @@ class Routes {
   async deleteComment(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
     await Comment.isAuthor(user, _id);
-    return Comment.delete(_id);
+    return await Comment.delete(_id);
+  }
+
+  // BOOKMARK
+
+  @Router.post("/bookmarks")
+  async createBookmark(session: WebSessionDoc, post: ObjectId, classId: ObjectId) {
+    const user = WebSession.getUser(session);
+    const created = await Bookmark.addBookmark(user, post, classId);
+    return created;
+  }
+
+  @Router.delete("/bookmarks/:_id")
+  async deleteBookmark(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    await Bookmark.isAuthor(user, _id);
+    return await Bookmark.deleteBookmark(_id);
+  }
+
+  @Router.get("/bookmarks/:_id")
+  async getBookmarkedPosts(session: WebSessionDoc) {
+    const user = WebSession.getUser(session);
+    return Bookmark.getBookmarkedPosts(user);
   }
 
   // FRIENDS
