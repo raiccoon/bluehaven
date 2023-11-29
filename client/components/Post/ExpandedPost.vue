@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
+import { ObjectId } from "mongodb";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
-import router from "../../router";
 import { fetchy } from "../../utils/fetchy";
 
-// const props = defineProps(["postId"]);
+const props = defineProps(["postId"]);
 let post = ref();
 const emit = defineEmits(["editPost", "refreshPosts"]);
 const { currentUsername } = storeToRefs(useUserStore());
@@ -20,9 +20,7 @@ const deletePost = async () => {
   emit("refreshPosts");
 };
 
-async function getPostById() {
-  const route = router.currentRoute;
-  const _id = route.value.params;
+async function getPostById(_id: ObjectId) {
   let postResults;
   try {
     postResults = await fetchy(`/api/posts/${_id}`, "GET");
@@ -34,7 +32,7 @@ async function getPostById() {
 
 onBeforeMount(async () => {
   try {
-    await getPostById();
+    await getPostById(props.postId);
   } catch (_) {
     return;
   }
