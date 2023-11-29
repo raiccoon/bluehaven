@@ -3,17 +3,14 @@ import ExpandedPost from "@/components/Post/ExpandedPost.vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 
-// const props = defineProps(["postId"]);
-
 const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 </script>
 
 <template>
   <main>
-    <h1>[author name here's post]</h1>
+    <h1>Module Name</h1>
     <section>
-      <p>{{ $route.params }}</p>
-      <ExpandedPost :postId="$route.params.postId" />
+      <ExpandedPost :postId="$route.params.postId" :author="$route.query.author" />
     </section>
   </main>
 </template>

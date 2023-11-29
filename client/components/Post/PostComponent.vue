@@ -19,8 +19,7 @@ const deletePost = async () => {
 };
 
 const expandPost = async () => {
-  console.log(`HELLO ${props.post._id}`);
-  void router.push({ path: `/expanded-post/${props.post._id}` });
+  void router.push({ path: `/expanded-post/${props.post._id}`, query: { author: props.post.author } });
 };
 </script>
 

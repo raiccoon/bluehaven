@@ -61,6 +61,7 @@ const router = createRouter({
       path: "/expanded-post/:postId",
       name: "Expanded-Post",
       component: ExpandedPostView,
+      props: { author: "" },
     },
     {
       path: "/:catchAll(.*)",
