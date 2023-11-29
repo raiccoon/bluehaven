@@ -7,6 +7,7 @@ import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
 const props = defineProps(["postId"]);
+const loaded = ref(false);
 let post = ref();
 const emit = defineEmits(["editPost", "refreshPosts"]);
 const { currentUsername } = storeToRefs(useUserStore());
@@ -34,6 +35,7 @@ async function getPostById(_id: ObjectId) {
 onBeforeMount(async () => {
   try {
     await getPostById(props.postId);
+    loaded.value = true;
   } catch (_) {
     return;
   }
@@ -41,19 +43,21 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <p class="author">{{ post.value.author }}</p>
-  <!-- placeholder media -->
-  <img class="postMedia" src="https://i.imgur.com/CWuBXGh.jpg" />
-  <p>{{ post.value.content }}</p>
-  <div class="base">
-    <menu>
-      <li><button v-if="post.value.author == currentUsername" class="btn-small pure-button" @click="emit('editPost', post.value._id)">Edit</button></li>
-      <li><button v-if="post.value.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
-    </menu>
-    <article class="timestamp">
-      <p v-if="post.value.dateCreated !== post.value.dateUpdated">Edited on: {{ formatDate(post.value.dateUpdated) }}</p>
-      <p v-else>Created on: {{ formatDate(post.value.dateCreated) }}</p>
-    </article>
+  <div v-if="loaded">
+    <p class="author">{{ post.author }}</p>
+    <!-- placeholder media -->
+    <img class="postMedia" src="https://i.imgur.com/CWuBXGh.jpg" />
+    <p>{{ post.content }}</p>
+    <div class="base">
+      <menu>
+        <li><button v-if="post.author == currentUsername" class="btn-small pure-button" @click="emit('editPost', post._id)">Edit</button></li>
+        <li><button v-if="post.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
+      </menu>
+      <article class="timestamp">
+        <p v-if="post.dateCreated !== post.dateUpdated">Edited on: {{ formatDate(post.dateUpdated) }}</p>
+        <p v-else>Created on: {{ formatDate(post.dateCreated) }}</p>
+      </article>
+    </div>
   </div>
 </template>
 
