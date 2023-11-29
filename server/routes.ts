@@ -72,6 +72,13 @@ class Routes {
     return Responses.posts(posts);
   }
 
+  //gets post by post id
+  @Router.get("/posts/:_id")
+  async getPostById(_id: ObjectId) {
+    const posts = await Post.getPosts({ _id });
+    return posts[0];
+  }
+
   @Router.post("/posts")
   async createPost(session: WebSessionDoc, content: string, image: string, video: string) {
     const user = WebSession.getUser(session);

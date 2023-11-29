@@ -2,10 +2,11 @@
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
-import router from "../../router";
+import { onBeforeMount } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const props = defineProps(["post"]);
+const props = defineProps(["postId"]);
+let post;
 const emit = defineEmits(["editPost", "refreshPosts"]);
 const { currentUsername } = storeToRefs(useUserStore());
 
@@ -18,9 +19,23 @@ const deletePost = async () => {
   emit("refreshPosts");
 };
 
-const expandPost = async () => {
-  void router.push({ path: `/expanded-post/${props.post}` });
-};
+async function getPostById() {
+  let postResults;
+  try {
+    postResults = await fetchy(`/api/posts/${props.postId}`, "GET");
+  } catch (_) {
+    return;
+  }
+  post = postResults;
+}
+
+onBeforeMount(async () => {
+  try {
+    await getPostById(props.postId);
+  } catch (_) {
+    return;
+  }
+});
 </script>
 
 <template>
@@ -28,11 +43,9 @@ const expandPost = async () => {
   <!-- placeholder media -->
   <img class="postMedia" src="https://i.imgur.com/CWuBXGh.jpg" />
   <!-- truncate text, can view full text by expanding -->
-  <p class="text single-line">{{ props.post.content }}</p>
+  <p>{{ props.post.content }}</p>
   <div class="base">
     <menu>
-      <!-- expand button takes you to the large post view -->
-      <li><button class="btn-small pure-button" @click="expandPost">Expand</button></li>
       <li><button v-if="props.post.author == currentUsername" class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>
       <li><button v-if="props.post.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
     </menu>
@@ -80,7 +93,7 @@ menu {
 }
 
 .postMedia {
-  max-width: 100px;
+  max-width: 500px;
   height: auto;
   align-self: center;
 }

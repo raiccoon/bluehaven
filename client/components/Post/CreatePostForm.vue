@@ -3,12 +3,15 @@ import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
 const content = ref("");
+const imageLink = ref("");
+const videoLink = ref("");
 const emit = defineEmits(["refreshPosts"]);
 
-const createPost = async (content: string) => {
+const createPost = async (content: string, imageLink: string, videoLink: string) => {
+  // put back ? and check if undefined here or set as empty string, then check for empty string
   try {
     await fetchy("/api/posts", "POST", {
-      body: { content },
+      body: { content, imageLink, videoLink },
     });
   } catch (_) {
     return;
@@ -23,8 +26,10 @@ const emptyForm = () => {
 </script>
 
 <template>
-  <form @submit.prevent="createPost(content)">
+  <form @submit.prevent="createPost(content, imageLink, videoLink)">
     <label for="content">Post Contents:</label>
+    <textarea id="image-link" v-model="imageLink" placeholder="Paste link to image media here!"> </textarea>
+    <textarea id="video-link" v-model="videoLink" placeholder="Paste link to video media here!"> </textarea>
     <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
     <button type="submit" class="pure-button-primary pure-button">Create Post</button>
   </form>
@@ -47,5 +52,13 @@ textarea {
   padding: 0.5em;
   border-radius: 4px;
   resize: none;
+}
+
+#media-link {
+  max-height: 20px;
+}
+
+.media-button {
+  max-width: 10rem;
 }
 </style>
