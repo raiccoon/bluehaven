@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Bookmark, Class, Comment, Friend, Post, User, WebSession } from "./app";
+import { Bookmark, Class, Comment, Friend, Pin, Post, User, WebSession } from "./app";
 import { CommentDoc } from "./concepts/comment";
 import { PostDoc } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
@@ -163,8 +163,28 @@ class Routes {
 
   // TODO: PINS
 
-  // FRIENDS
+  @Router.post("/pins")
+  async addPin(session: WebSessionDoc, postId: ObjectId, commentId: ObjectId) {
+    // TODO: verify only instructor can pin
+    // await Class.isInstructor(classId, user);
+    const created = await Pin.addPin(postId, commentId);
+    return created;
+  }
 
+  @Router.delete("/pins/:_id")
+  async deletePin(session: WebSessionDoc, _id: ObjectId) {
+    // const user = WebSession.getUser(session);
+    // TODO: verify instructor
+    return await Pin.deletePin(_id);
+  }
+
+  @Router.get("pins/:_id")
+  async getPinsOnPost(session: WebSessionDoc, postId: ObjectId) {
+    // TODO; verify membership
+    return await Pin.getPostPins(postId);
+  }
+
+  // FRIENDS
   @Router.get("/friends")
   async getFriends(session: WebSessionDoc) {
     const user = WebSession.getUser(session);
