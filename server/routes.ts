@@ -161,6 +161,8 @@ class Routes {
     return Bookmark.getBookmarkedPosts(user);
   }
 
+  // TODO: PINS
+
   // FRIENDS
 
   @Router.get("/friends")
