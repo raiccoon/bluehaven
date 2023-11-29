@@ -2,13 +2,14 @@ import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
-import HomeView from "../views/HomeView.vue";
-import StartView from "../views/StartView.vue";
 import AllClassesView from "../views/AllClassesView.vue";
+import ExpandedPostView from "../views/ExpandedPostView.vue";
+import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
-import RegisterView from "../views/RegisterView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
+import RegisterView from "../views/RegisterView.vue";
 import SettingView from "../views/SettingView.vue";
+import StartView from "../views/StartView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -55,6 +56,13 @@ const router = createRouter({
           return { name: "Settings" };
         }
       },
+    },
+    {
+      path: "/expanded-post/:postId",
+      name: "Expanded Post",
+      component: ExpandedPostView,
+      meta: { requiresAuth: false },
+      props: true,
     },
     {
       path: "/:catchAll(.*)",

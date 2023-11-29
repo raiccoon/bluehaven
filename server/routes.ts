@@ -2,9 +2,8 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Class, Comment, Friend, Post, User, WebSession } from "./app";
-import { CommentDoc, CommentMultimedia } from "./concepts/comment";
-import { PostDoc, PostMultimedia } from "./concepts/post";
+import { Class, Friend, Post, User, WebSession } from "./app";
+import { PostDoc } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
 import { WebSessionDoc } from "./concepts/websession";
 import Responses from "./responses";
@@ -72,10 +71,17 @@ class Routes {
     return Responses.posts(posts);
   }
 
+  //gets post by post id
+  @Router.get("/posts/:_id")
+  async getPostById(_id: ObjectId) {
+    const posts = await Post.getPosts({ _id });
+    return posts[0];
+  }
+
   @Router.post("/posts")
-  async createPost(session: WebSessionDoc, content: string, options?: PostMultimedia) {
+  async createPost(session: WebSessionDoc, content: string, image?: string, video?: string) {
     const user = WebSession.getUser(session);
-    const created = await Post.create(user, content, options);
+    const created = await Post.create(user, content, image, video);
     return { msg: created.msg, post: await Responses.post(created.post) };
   }
 
@@ -92,54 +98,6 @@ class Routes {
     await Post.isAuthor(user, _id);
     return Post.delete(_id);
   }
-
-  // COMMENT
-
-  @Router.post("/comments")
-  async createComment(session: WebSessionDoc, parent: ObjectId, content: string, multimedia?: CommentMultimedia) {
-    const user = WebSession.getUser(session);
-    const created = await Comment.create(user, parent, content, multimedia);
-    return { msg: created.msg, comment: await Responses.post(created.comment) };
-  }
-
-  @Router.get("/comments")
-  async getComments(parent?: string) {
-    let comments;
-    if (parent) {
-      const id = (await User.getUserByUsername(parent))._id;
-      comments = await Comment.getCommentsByParent(id);
-    } else {
-      comments = await Comment.getComments({});
-    }
-    return Responses.posts(comments);
-  }
-
-  @Router.get("/parent/:_id")
-  async getParentofComment(_id: ObjectId) {
-    const parent = await Comment.getParentOfComment(_id);
-    if (parent !== undefined && (await Comment.isComment(parent))) {
-      return { msg: "Comment", parent_id: parent };
-    } else if (parent !== undefined) {
-      return { msg: "Post", parent_id: parent };
-    }
-    return parent;
-  }
-
-  @Router.patch("/comments/:_id")
-  async updateComment(session: WebSessionDoc, _id: ObjectId, update: Partial<CommentDoc>) {
-    const user = WebSession.getUser(session);
-    await Comment.isAuthor(user, _id);
-    return await Comment.update(_id, update);
-  }
-
-  @Router.delete("/comments/:_id")
-  async deleteComment(session: WebSessionDoc, _id: ObjectId) {
-    const user = WebSession.getUser(session);
-    await Comment.isAuthor(user, _id);
-    return Comment.delete(_id);
-  }
-
-  // FRIENDS
 
   @Router.get("/friends")
   async getFriends(session: WebSessionDoc) {
