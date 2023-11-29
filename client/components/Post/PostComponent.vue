@@ -19,7 +19,8 @@ const deletePost = async () => {
 };
 
 const expandPost = async () => {
-  void router.push({ path: `/expanded-post/${props.post}` });
+  console.log(`HELLO ${props.post._id}`);
+  void router.push({ path: `/expanded-post/${props.post._id}` });
 };
 </script>
 

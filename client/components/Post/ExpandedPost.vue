@@ -2,17 +2,18 @@
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
-import { onBeforeMount } from "vue";
+import { onBeforeMount, ref } from "vue";
+import router from "../../router";
 import { fetchy } from "../../utils/fetchy";
 
-const props = defineProps(["postId"]);
-let post;
+// const props = defineProps(["postId"]);
+let post = ref();
 const emit = defineEmits(["editPost", "refreshPosts"]);
 const { currentUsername } = storeToRefs(useUserStore());
 
 const deletePost = async () => {
   try {
-    await fetchy(`/api/posts/${props.post._id}`, "DELETE");
+    await fetchy(`/api/posts/${post.value._id}`, "DELETE");
   } catch {
     return;
   }
@@ -20,18 +21,20 @@ const deletePost = async () => {
 };
 
 async function getPostById() {
+  const route = router.currentRoute;
+  const _id = route.value.params;
   let postResults;
   try {
-    postResults = await fetchy(`/api/posts/${props.postId}`, "GET");
+    postResults = await fetchy(`/api/posts/${_id}`, "GET");
   } catch (_) {
     return;
   }
-  post = postResults;
+  post.value = postResults;
 }
 
 onBeforeMount(async () => {
   try {
-    await getPostById(props.postId);
+    await getPostById();
   } catch (_) {
     return;
   }
@@ -39,19 +42,18 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <p class="author">{{ props.post.author }}</p>
+  <p class="author">{{ post.value.author }}</p>
   <!-- placeholder media -->
   <img class="postMedia" src="https://i.imgur.com/CWuBXGh.jpg" />
-  <!-- truncate text, can view full text by expanding -->
-  <p>{{ props.post.content }}</p>
+  <p>{{ post.value.content }}</p>
   <div class="base">
     <menu>
-      <li><button v-if="props.post.author == currentUsername" class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>
-      <li><button v-if="props.post.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
+      <li><button v-if="post.value.author == currentUsername" class="btn-small pure-button" @click="emit('editPost', post.value._id)">Edit</button></li>
+      <li><button v-if="post.value.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
     </menu>
     <article class="timestamp">
-      <p v-if="props.post.dateCreated !== props.post.dateUpdated">Edited on: {{ formatDate(props.post.dateUpdated) }}</p>
-      <p v-else>Created on: {{ formatDate(props.post.dateCreated) }}</p>
+      <p v-if="post.value.dateCreated !== post.value.dateUpdated">Edited on: {{ formatDate(post.value.dateUpdated) }}</p>
+      <p v-else>Created on: {{ formatDate(post.value.dateCreated) }}</p>
     </article>
   </div>
 </template>

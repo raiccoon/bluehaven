@@ -28,8 +28,8 @@ const emptyForm = () => {
 <template>
   <form @submit.prevent="createPost(content, imageLink, videoLink)">
     <label for="content">Post Contents:</label>
-    <textarea id="image-link" v-model="imageLink" placeholder="Paste link to image media here!"> </textarea>
-    <textarea id="video-link" v-model="videoLink" placeholder="Paste link to video media here!"> </textarea>
+    <textarea id="media-link" v-model="imageLink" placeholder="Paste link to image media here!"> </textarea>
+    <textarea id="media-link" v-model="videoLink" placeholder="Paste link to video media here!"> </textarea>
     <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
     <button type="submit" class="pure-button-primary pure-button">Create Post</button>
   </form>

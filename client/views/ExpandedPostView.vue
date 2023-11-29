@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import ExpandedPost from "@/components/Post/ExpandedPost.vue";
+import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 
-const props = defineProps(["postId"]);
+const currentRoute = router.currentRoute;
+
+// const props = defineProps(["postId"]);
 
 const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 </script>
@@ -12,7 +14,7 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
   <main>
     <h1>[author name here's post]</h1>
     <section>
-      <ExpandedPost :post="props.postId" />
+      <p>value of id is {{ currentRoute.params }}</p>
     </section>
     <PostListComponent />
   </main>

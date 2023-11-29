@@ -59,10 +59,8 @@ const router = createRouter({
     },
     {
       path: "/expanded-post/:postId",
-      name: "Expanded Post",
+      name: "Expanded-Post",
       component: ExpandedPostView,
-      meta: { requiresAuth: false },
-      props: true,
     },
     {
       path: "/:catchAll(.*)",
