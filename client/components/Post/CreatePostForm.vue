@@ -67,12 +67,4 @@ textarea {
 .media-button {
   max-width: 10rem;
 }
-
-#media-link {
-  max-height: 20px;
-}
-
-.media-button {
-  max-width: 10rem;
-}
 </style>
