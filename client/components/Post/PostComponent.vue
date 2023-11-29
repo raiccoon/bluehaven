@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
-import { ObjectId } from "mongodb";
 import { storeToRefs } from "pinia";
 import router from "../../router";
 import { fetchy } from "../../utils/fetchy";
@@ -19,9 +18,9 @@ const deletePost = async () => {
   emit("refreshPosts");
 };
 
-const expandPost = async (_id: ObjectId) => {
-  console.log(`HELLO ${_id}`);
-  void router.push({ path: `/expanded-post/${_id}` });
+const expandPost = async () => {
+  console.log(`HELLO ${props.post._id}`);
+  void router.push({ path: `/expanded-post/${props.post._id}` });
 };
 </script>
 
@@ -34,7 +33,7 @@ const expandPost = async (_id: ObjectId) => {
   <div class="base">
     <menu>
       <!-- expand button takes you to the large post view -->
-      <li><button class="btn-small pure-button" @click="expandPost(props.post._id)">Expand</button></li>
+      <li><button class="btn-small pure-button" @click="expandPost">Expand</button></li>
       <li><button v-if="props.post.author == currentUsername" class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>
       <li><button v-if="props.post.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
     </menu>

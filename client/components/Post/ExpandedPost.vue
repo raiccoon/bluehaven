@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const props = defineProps(["_id"]);
+const props = defineProps(["postId"]);
 let post = ref();
 const emit = defineEmits(["editPost", "refreshPosts"]);
 const { currentUsername } = storeToRefs(useUserStore());
@@ -27,13 +27,13 @@ async function getPostById(_id: ObjectId) {
   } catch (_) {
     return;
   }
-  console.log(typeof postResults);
+  // console.log(typeof postResults);
   post.value = postResults;
 }
 
 onBeforeMount(async () => {
   try {
-    await getPostById(props._id);
+    await getPostById(props.postId);
   } catch (_) {
     return;
   }
