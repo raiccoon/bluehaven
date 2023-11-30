@@ -5,6 +5,8 @@ import { formatDate } from "../../utils/formatDate";
 
 const props = defineProps(["post"]);
 const content = ref(props.post.content);
+const imageLink = ref("");
+const videoLink = ref("");
 const emit = defineEmits(["editPost", "refreshPosts"]);
 
 const editPost = async (content: string) => {
@@ -21,6 +23,8 @@ const editPost = async (content: string) => {
 <template>
   <form @submit.prevent="editPost(content)">
     <p class="author">{{ props.post.author }}</p>
+    <textarea id="media-link" v-model="imageLink" placeholder="Paste link to image here!"> </textarea>
+    <textarea id="media-link" v-model="videoLink" placeholder="Paste link to video here!"> </textarea>
     <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
     <div class="base">
       <menu>
@@ -78,5 +82,9 @@ menu {
   justify-content: flex-end;
   font-size: 0.9em;
   font-style: italic;
+}
+
+#media-link {
+  max-height: 20px;
 }
 </style>

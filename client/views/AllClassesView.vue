@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { useUserStore } from "@/stores/user";
-import { storeToRefs } from "pinia";
 import CreateClassForm from "@/components/Class/CreateClassForm.vue";
 import GetClass from "@/components/Class/GetClass.vue";
 import InviteInstructor from "@/components/Class/InviteInstructor.vue";
 import JoinClassForm from "@/components/Class/JoinClassForm.vue";
-import isInstructor from "@/components/Class/isInstructor.vue";
-import isStudent from "@/components/Class/isStudent.vue";
-import isMember from "@/components/Class/isMember.vue";
-import getClassesInstruct from "@/components/Class/getClassesInstruct.vue";
 import getClassesEnroll from "@/components/Class/getClassesEnroll.vue";
+import getClassesInstruct from "@/components/Class/getClassesInstruct.vue";
+import isInstructor from "@/components/Class/isInstructor.vue";
+import isMember from "@/components/Class/isMember.vue";
+import isStudent from "@/components/Class/isStudent.vue";
 import removeSelf from "@/components/Class/removeSelf.vue";
+import { useUserStore } from "@/stores/user";
+import { storeToRefs } from "pinia";
 
 const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 </script>
