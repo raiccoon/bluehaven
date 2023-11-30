@@ -5,6 +5,7 @@ import getClassOfModule from "@/components/Module/boilerplate/getClassOfModule.v
 import getClassOfPost from "@/components/Module/boilerplate/getClassOfPost.vue";
 import getModule from "@/components/Module/boilerplate/getModule.vue";
 import getModuleOfPost from "@/components/Module/boilerplate/getModuleOfPost.vue";
+import getModulesInClass from "@/components/Module/boilerplate/getModulesInClass.vue";
 import getPostsInModule from "@/components/Module/boilerplate/getPostsInModule.vue";
 import isPostInClass from "@/components/Module/boilerplate/isPostInClass.vue";
 import isPostInModule from "@/components/Module/boilerplate/isPostInModule.vue";
@@ -21,6 +22,7 @@ import UpdateModuleVisibility from "@/components/Module/boilerplate/updateModule
       <getModule />
       <tempAddPost />
       <getPostsInModule />
+      <getModulesInClass />
       <getClassOfModule />
       <getModuleOfPost />
       <getClassOfPost />

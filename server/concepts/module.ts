@@ -37,6 +37,10 @@ export default class ModuleConcept {
     return pairs.map((postLocation) => postLocation.post);
   }
 
+  async getModulesInClass(classId: ObjectId) {
+    return await this.modules.readMany({ classId });
+  }
+
   async getClassOfModule(_id: ObjectId) {
     return (await this.modules.readOne({ _id }))?.classId;
   }
