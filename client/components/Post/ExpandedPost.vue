@@ -7,6 +7,9 @@ import { onBeforeMount, ref } from "vue";
 import router from "../../router";
 import { fetchy } from "../../utils/fetchy";
 
+const hasImage = ref(false);
+const hasVideo = ref(false);
+
 const props = defineProps(["postId", "author"]);
 const loaded = ref(false);
 
@@ -32,6 +35,17 @@ async function getPostById(_id: ObjectId) {
     return;
   }
   post.value = postResults;
+
+  try {
+    if (post.value.image !== "") {
+      hasImage.value = true;
+    }
+    if (post.value.video !== "") {
+      hasVideo.value = true;
+    }
+  } catch (_) {
+    return;
+  }
 }
 
 onBeforeMount(async () => {
@@ -47,8 +61,14 @@ onBeforeMount(async () => {
 <template>
   <section class="article" v-if="loaded">
     <p class="author">{{ props.author }}</p>
+
+    <img v-if="hasImage" class="postMedia image" :src="post.image" />
+    <!-- <img v-if="hasVideo" class="postMedia video" :src="props.post.video" /> -->
+    <video v-if="hasVideo" class="postMedia video" controls>
+      <source v-if="hasVideo" :src="post.video" type="video/mp4" />
+    </video>
     <!-- placeholder media -->
-    <img class="postMedia" src="https://i.imgur.com/CWuBXGh.jpg" />
+    <!-- <img class="postMedia" src="https://i.imgur.com/CWuBXGh.jpg" /> -->
 
     <p class="text single-line">{{ post.content }}</p>
     <div class="base">
