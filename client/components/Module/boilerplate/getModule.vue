@@ -1,13 +1,19 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { fetchy } from "@/utils/fetchy";
+import { ref } from "vue";
 
 const _id = ref("");
 const displayMsg = ref(false);
 const msg = ref("message");
 
-const handleGetModule = async () => {
-  // fecthy getModule(_id)
+const handleGetModule = async (_id: string) => {
+  let moduleResults;
+  try {
+    moduleResults = await fetchy(`/api/modules/${_id}`, "GET");
+  } catch (_) {
+    return;
+  }
+  msg.value = moduleResults;
   displayMsg.value = true;
   emptyForm();
 };
@@ -20,7 +26,7 @@ const emptyForm = () => {
 <template>
   <main>
     <div class="main">
-      <form @submit.prevent="handleGetModule">
+      <form @submit.prevent="handleGetModule(_id)">
         <input type="text" v-model="_id" placeholder="Module ObjectID" />
         <button type="submit">Lookup</button>
       </form>

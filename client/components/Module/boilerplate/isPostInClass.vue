@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { fetchy } from "@/utils/fetchy";
+import { ref } from "vue";
 
 const classID = ref("");
 const postID = ref("");
 const displayMsg = ref(false);
 const msg = ref("message");
 
-const handleIsPostInClass = async () => {
-  // fetchy isPostInClass(classID, postID)
+const handleIsPostInClass = async (classId: string, post: string) => {
+  let moduleResults;
+  try {
+    moduleResults = await fetchy(`/api/classes/id/${classId}/posts/${post}/isInClass`, "GET");
+  } catch (_) {
+    return;
+  }
+  msg.value = moduleResults;
   displayMsg.value = true;
   emptyForm();
 };
@@ -22,7 +28,7 @@ const emptyForm = () => {
 <template>
   <main>
     <div class="main">
-      <form @submit.prevent="handleIsPostInClass">
+      <form @submit.prevent="handleIsPostInClass(classID, postID)">
         <input type="text" v-model="classID" placeholder="Class ID" />
         <input type="text" v-model="postID" placeholder="Post ID" />
         <button type="submit">Check if Post in Class</button>
