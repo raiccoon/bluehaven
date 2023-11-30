@@ -5,13 +5,13 @@ import { formatDate } from "../../utils/formatDate";
 
 const props = defineProps(["post"]);
 const content = ref(props.post.content);
-const imageLink = ref("");
-const videoLink = ref("");
+const image = ref(props.post.image);
+const video = ref(props.post.video);
 const emit = defineEmits(["editPost", "refreshPosts"]);
 
-const editPost = async (content: string) => {
+const editPost = async (content: string, image: string, video: string) => {
   try {
-    await fetchy(`/api/posts/${props.post._id}`, "PATCH", { body: { update: { content: content } } });
+    await fetchy(`/api/posts/${props.post._id}`, "PATCH", { body: { update: { content: content, image: image, video: video } } });
   } catch (e) {
     return;
   }
@@ -21,10 +21,10 @@ const editPost = async (content: string) => {
 </script>
 
 <template>
-  <form @submit.prevent="editPost(content)">
+  <form @submit.prevent="editPost(content, image, video)">
     <p class="author">{{ props.post.author }}</p>
-    <textarea id="media-link" v-model="imageLink" placeholder="Paste link to image here!"> </textarea>
-    <textarea id="media-link" v-model="videoLink" placeholder="Paste link to video here!"> </textarea>
+    <textarea id="media-link" v-model="image" placeholder="Paste link to image here!"> </textarea>
+    <textarea id="media-link" v-model="video" placeholder="Paste link to video here!"> </textarea>
     <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
     <div class="base">
       <menu>
