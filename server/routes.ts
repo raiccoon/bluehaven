@@ -270,8 +270,10 @@ class Routes {
   }
 
   @Router.get("/classes/id/:_id/modules")
-  async getModulesInClass(_id: ObjectId) {
-    return await Module.getModulesInClass(new ObjectId(_id));
+  async getModulesInClass(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    const viewHidden = await Class.isInstructor(new ObjectId(_id), user);
+    return await Module.getModulesInClass(new ObjectId(_id), viewHidden);
   }
 
   @Router.get("/modules/:_id/class")
