@@ -10,6 +10,7 @@ import isPostInClass from "@/components/Module/boilerplate/isPostInClass.vue";
 import isPostInModule from "@/components/Module/boilerplate/isPostInModule.vue";
 import relocatePost from "@/components/Module/boilerplate/relocatePost.vue";
 import tempAddPost from "@/components/Module/boilerplate/tempAddPost.vue";
+import UpdateModuleVisibility from "@/components/Module/boilerplate/updateModuleVisibility.vue";
 </script>
 
 <template>
@@ -27,6 +28,7 @@ import tempAddPost from "@/components/Module/boilerplate/tempAddPost.vue";
       <isPostInClass />
       <relocatePost />
       <deleteModule />
+      <UpdateModuleVisibility />
     </div>
   </main>
 </template>
