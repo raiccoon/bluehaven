@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Bookmark, Class, Comment, Friend, Pin, Post, User, WebSession } from "./app";
+import { Bookmark, Class, Comment, Friend, Module, Pin, Post, User, WebSession } from "./app";
 import { CommentDoc } from "./concepts/comment";
 import { PostDoc } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
@@ -250,7 +250,6 @@ class Routes {
   @Router.get("/classes/id/:classId")
   async getClass(session: WebSessionDoc, classId: ObjectId) {
     const user = WebSession.getUser(session);
-    console.log(new ObjectId(classId));
     return await Class.getClassById(new ObjectId(classId), user);
   }
 
@@ -269,9 +268,7 @@ class Routes {
 
   @Router.get("/classes/instruct")
   async getClassesInstruct(session: WebSessionDoc) {
-    console.log("here");
     const user = WebSession.getUser(session);
-    console.log(user);
     return await Class.getClassesInstruct(user);
   }
 
@@ -299,10 +296,91 @@ class Routes {
     return await Class.isMember(new ObjectId(classId), user);
   }
 
-  @Router.delete("/classes/id/:_id/membership")
+  @Router.delete("/classes/id/:classId/membership")
   async removeSelf(session: WebSessionDoc, classId: ObjectId) {
     const user = WebSession.getUser(session);
     return await Class.removeSelf(new ObjectId(classId), user);
+  }
+
+  // MODULE
+  @Router.post("/modules")
+  async createModule(session: WebSessionDoc, classId: ObjectId, name: string, description?: string) {
+    const user = WebSession.getUser(session);
+    await Class.assertIsInstructor(new ObjectId(classId), user);
+    return await Module.createModule(new ObjectId(classId), name, description);
+  }
+
+  @Router.get("/modules/:_id")
+  async getModule(_id: ObjectId) {
+    return await Module.getModule(new ObjectId(_id));
+  }
+
+  @Router.get("/modules/:_id/posts")
+  async getPostsInModule(_id: ObjectId) {
+    const postIds = await Module.getPostsInModule(new ObjectId(_id));
+    return await Post.getPosts({ _id: { $in: postIds } });
+  }
+
+  @Router.get("/classes/id/:_id/modules")
+  async getModulesInClass(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    const viewHidden = await Class.isInstructor(new ObjectId(_id), user);
+    return await Module.getModulesInClass(new ObjectId(_id), viewHidden);
+  }
+
+  @Router.get("/modules/:_id/class")
+  async getClassOfModule(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    const classId = await Module.getClassOfModule(new ObjectId(_id));
+    return await Class.getClassById(classId!, user);
+  }
+
+  @Router.get("/posts/:_id/module")
+  async getModuleOfPost(_id: ObjectId) {
+    const moduleId = await Module.getModuleOfPost(new ObjectId(_id));
+    return await Module.getModule(moduleId!);
+  }
+
+  @Router.get("/posts/:_id/class")
+  async getClassOfPost(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    const classId = await Module.getClassOfPost(new ObjectId(_id));
+    return await Class.getClassById(classId!, user);
+  }
+
+  @Router.get("/modules/:module/posts/:post/isInModule")
+  async isPostInModule(module: ObjectId, post: ObjectId) {
+    return await Module.isPostInModule(new ObjectId(module), new ObjectId(post));
+  }
+
+  @Router.get("/classes/id/:classId/posts/:post/isInClass")
+  async isPostInClass(classId: ObjectId, post: ObjectId) {
+    return await Module.isPostInClass(new ObjectId(classId), new ObjectId(post));
+  }
+
+  @Router.put("/post/:_id/module")
+  async relocatePost(post: ObjectId, module: ObjectId) {
+    return await Module.relocatePost(new ObjectId(post), new ObjectId(module));
+  }
+
+  @Router.delete("/modules/:_id")
+  async deleteModule(_id: ObjectId) {
+    const posts = await Module.getPostsInModule(new ObjectId(_id));
+    for (const post of posts) {
+      await Post.delete(new ObjectId(post));
+    }
+    return await Module.deleteModule(new ObjectId(_id));
+  }
+
+  @Router.put("/modules/:_id/hidden")
+  async updateModuleVisibility(_id: ObjectId, hidden: boolean) {
+    return await Module.updateModuleVisibility(new ObjectId(_id), hidden);
+  }
+
+  // MODULE - TEMP ROUTES FOR TESTING
+  @Router.post("/modules/:module/posts")
+  async addPost(post: ObjectId, module: ObjectId) {
+    return await Module.addPost(new ObjectId(post), new ObjectId(module));
   }
 }
 

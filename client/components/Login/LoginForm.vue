@@ -10,7 +10,7 @@ const { loginUser, updateSession } = useUserStore();
 async function login() {
   await loginUser(username.value, password.value);
   void updateSession();
-  void router.push({ name: "Classes" });
+  void router.push({ name: "Boilerplate" });
 }
 function goBack() {
   void router.push({ name: "Start" });

@@ -11,7 +11,7 @@ async function register() {
   await createUser(username.value, password.value);
   await loginUser(username.value, password.value);
   void updateSession();
-  void router.push({ name: "Classes" });
+  void router.push({ name: "Boilerplate" });
 }
 function goBack() {
   void router.push({ name: "Start" });

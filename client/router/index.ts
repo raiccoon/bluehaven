@@ -2,7 +2,6 @@ import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
-import AllClassesView from "../views/AllClassesView.vue";
 import ExpandedPostView from "../views/ExpandedPostView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
@@ -10,6 +9,7 @@ import NotFoundView from "../views/NotFoundView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import SettingView from "../views/SettingView.vue";
 import StartView from "../views/StartView.vue";
+import BoilerplateView from "../views/boilerplates/BoilerplateView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -33,11 +33,13 @@ const router = createRouter({
       path: "/home",
       name: "Home",
       component: HomeView,
+      meta: { requiresAuth: true },
     },
     {
-      path: "/classes",
-      name: "Classes",
-      component: AllClassesView,
+      path: "/boilerplate",
+      name: "Boilerplate",
+      component: BoilerplateView,
+      meta: { requiresAuth: true },
     },
     {
       path: "/setting",
@@ -78,7 +80,7 @@ router.beforeEach((to, from) => {
   const { isLoggedIn } = storeToRefs(useUserStore());
 
   if (to.meta.requiresAuth && !isLoggedIn.value) {
-    return { name: "Login" };
+    return { name: "Start" };
   }
 });
 
