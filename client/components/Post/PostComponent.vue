@@ -48,7 +48,10 @@ onBeforeMount(async () => {
   <!-- <img class="postMedia" src="https://i.imgur.com/CWuBXGh.jpg" />-->
   <p>{{ props.post }}</p>
   <img v-if="hasImage" class="postMedia image" :src="props.post.image" />
-  <img v-if="hasVideo" class="postMedia video" :src="props.post.video" />
+  <!-- <img v-if="hasVideo" class="postMedia video" :src="props.post.video" /> -->
+  <video v-if="hasVideo" class="postMedia video" controls>
+    <source :src="props.post.video" type="video/mp4" />
+  </video>
 
   <!-- truncate text, can view full text by expanding -->
   <p class="text single-line">{{ props.post.content }}</p>
