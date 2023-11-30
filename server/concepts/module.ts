@@ -37,6 +37,13 @@ export default class ModuleConcept {
     return pairs.map((postLocation) => postLocation.post);
   }
 
+  async getModulesInClass(classId: ObjectId, viewHidden: boolean) {
+    if (viewHidden) {
+      return await this.modules.readMany({ classId });
+    }
+    return await this.modules.readMany({ classId, hidden: false });
+  }
+
   async getClassOfModule(_id: ObjectId) {
     return (await this.modules.readOne({ _id }))?.classId;
   }
@@ -78,5 +85,10 @@ export default class ModuleConcept {
   async deleteModule(module: ObjectId) {
     await this.modules.deleteOne({ _id: module });
     return { msg: "Sucessfully deleted module!" };
+  }
+
+  async updateModuleVisibility(module: ObjectId, hidden: boolean) {
+    await this.modules.updateOne({ _id: module }, { hidden });
+    return { msg: "Updated module visibility" };
   }
 }

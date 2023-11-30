@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { fetchy } from "@/utils/fetchy";
+import { ref } from "vue";
 
 const classObjectID = ref("");
 const displayMsg = ref(false);

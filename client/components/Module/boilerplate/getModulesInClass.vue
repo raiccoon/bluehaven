@@ -6,10 +6,10 @@ const _id = ref("");
 const displayMsg = ref(false);
 const msg = ref("message");
 
-const handleGetModule = async (_id: string) => {
+const handleGetModulesInClass = async (_id: string) => {
   let moduleResults;
   try {
-    moduleResults = await fetchy(`/api/modules/${_id}`, "GET");
+    moduleResults = await fetchy(`/api/classes/id/${_id}/modules`, "GET");
   } catch (_) {
     return;
   }
@@ -26,9 +26,9 @@ const emptyForm = () => {
 <template>
   <main>
     <div class="main">
-      <form @submit.prevent="handleGetModule(_id)">
+      <form @submit.prevent="handleGetModulesInClass(_id)">
         <input type="text" v-model="_id" placeholder="Module ObjectID" />
-        <button type="submit">Lookup</button>
+        <button type="submit">Get Modules In Class</button>
       </form>
     </div>
     <p v-if="displayMsg">{{ msg }}</p>
