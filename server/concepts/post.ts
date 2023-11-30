@@ -15,6 +15,11 @@ export default class PostConcept {
 
   async create(author: ObjectId, content: string, image: string, video: string) {
     const _id = await this.posts.createOne({ author, content, image, video });
+    const imgur_expression = "imgur.com";
+    // referenced: https://www.tutorialspoint.com/typescript/typescript_string_search.htm
+    if ((image.search(imgur_expression) == -1 && image !== "") || (video.search(imgur_expression) == -1 && video !== "")) {
+      throw new NotAllowedError("Media links must be to imgur");
+    }
     return { msg: "Post successfully created!", post: await this.posts.readOne({ _id }) };
   }
 
