@@ -28,12 +28,10 @@ const expandPost = async () => {
 
 onBeforeMount(async () => {
   try {
-    // console.log("props.post", props.post);
-    // console.log("props.post.image", props.post.image);
-    if (props.post.image !== null) {
+    if (props.post.image !== "") {
       hasImage.value = true;
     }
-    if (props.post.video !== null) {
+    if (props.post.video !== "") {
       hasVideo.value = true;
     }
   } catch (_) {
@@ -44,13 +42,11 @@ onBeforeMount(async () => {
 
 <template>
   <p class="author">{{ props.post.author }}</p>
-  <!-- placeholder media -->
-  <!-- <img class="postMedia" src="https://i.imgur.com/CWuBXGh.jpg" />-->
-  <p>{{ props.post }}</p>
+
   <img v-if="hasImage" class="postMedia image" :src="props.post.image" />
   <!-- <img v-if="hasVideo" class="postMedia video" :src="props.post.video" /> -->
   <video v-if="hasVideo" class="postMedia video" controls>
-    <source :src="props.post.video" type="video/mp4" />
+    <source v-if="hasVideo" :src="props.post.video" type="video/mp4" />
   </video>
 
   <!-- truncate text, can view full text by expanding -->

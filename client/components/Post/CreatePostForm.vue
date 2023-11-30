@@ -23,6 +23,8 @@ const createPost = async (content: string, image: string, video: string) => {
 
 const emptyForm = () => {
   content.value = "";
+  image.value = "";
+  video.value = "";
 };
 </script>
 
