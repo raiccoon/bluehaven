@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { fetchy } from "@/utils/fetchy";
+import { ref } from "vue";
 
 const isCreateModuleClicked = ref(false);
 const classId = ref("");
@@ -15,8 +15,17 @@ const clickCreateModule = () => {
   isCreateModuleClicked.value = true;
 };
 
-const handleCreateModule = async () => {
+const handleCreateModule = async (classId: string, name: string, description: string) => {
   // fetchy createModule(classId, name, description?)
+  let moduleResults;
+  try {
+    moduleResults = await fetchy("/api/modules", "POST", {
+      body: { classId, name, description },
+    });
+  } catch (_) {
+    return;
+  }
+  msg.value = moduleResults;
   displayMsg.value = true;
   emptyForm();
 };
@@ -39,7 +48,7 @@ const handleCancel = () => {
   <main>
     <div class="main">
       <button v-if="!isCreateModuleClicked" @click="clickCreateModule">Click here to create a module!</button>
-      <form v-else @submit.prevent="handleCreateModule">
+      <form v-else @submit.prevent="handleCreateModule(classId, name, description)">
         <input type="text" v-model="classId" placeholder="Class Object Id" />
         <input type="text" v-model="name" placeholder="Module Name" />
         <input type="text" v-model="description" placeholder="Description (optional)" />
