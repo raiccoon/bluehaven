@@ -76,7 +76,7 @@ export default class CommentConcept {
 
   private sanitizeUpdate(update: Partial<CommentDoc>) {
     // Make sure the update cannot change the author or parent.
-    const allowedUpdates = ["content", "multimedia", "instructorEdited"];
+    const allowedUpdates = ["content", "image", "video", "instructorEdited"];
     for (const key in update) {
       if (!allowedUpdates.includes(key)) {
         throw new NotAllowedError(`Cannot update '${key}' field!`);
