@@ -321,6 +321,11 @@ class Routes {
     return await Post.getPosts({ _id: { $in: postIds } });
   }
 
+  @Router.get("/classes/id/:_id/modules")
+  async getModulesInClass(_id: ObjectId) {
+    return await Module.getModulesInClass(new ObjectId(_id));
+  }
+
   @Router.get("/modules/:_id/class")
   async getClassOfModule(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
