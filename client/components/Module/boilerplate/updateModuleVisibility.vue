@@ -31,7 +31,9 @@ const emptyForm = () => {
 };
 
 onMounted(async () => {
-  await handleGetModule(_id.value);
+  if (_id.value !== "") {
+    await handleGetModule(_id.value);
+  }
 });
 </script>
 
