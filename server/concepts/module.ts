@@ -79,4 +79,9 @@ export default class ModuleConcept {
     await this.modules.deleteOne({ _id: module });
     return { msg: "Sucessfully deleted module!" };
   }
+
+  async updateModuleVisibility(module: ObjectId, hidden: boolean) {
+    await this.modules.updateOne({ _id: module }, { hidden });
+    return { msg: "Updated module visibility" };
+  }
 }

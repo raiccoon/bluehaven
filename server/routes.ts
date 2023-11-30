@@ -365,6 +365,11 @@ class Routes {
     return await Module.deleteModule(new ObjectId(_id));
   }
 
+  @Router.put("/modules/:_id/hidden")
+  async updateModuleVisibility(_id: ObjectId, hidden: boolean) {
+    return await Module.updateModuleVisibility(new ObjectId(_id), hidden);
+  }
+
   // MODULE - TEMP ROUTES FOR TESTING
   @Router.post("/modules/:module/posts")
   async addPost(post: ObjectId, module: ObjectId) {
