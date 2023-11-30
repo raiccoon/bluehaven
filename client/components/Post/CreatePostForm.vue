@@ -10,6 +10,7 @@ const emit = defineEmits(["refreshPosts"]);
 const createPost = async (content: string, imageLink: string, videoLink: string) => {
   // put back ? and check if undefined here or set as empty string, then check for empty string
   try {
+    console.log("imageLink", imageLink);
     await fetchy("/api/posts", "POST", {
       body: { content, imageLink, videoLink },
     });

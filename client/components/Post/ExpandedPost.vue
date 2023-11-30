@@ -49,6 +49,7 @@ onBeforeMount(async () => {
     <p class="author">{{ props.author }}</p>
     <!-- placeholder media -->
     <img class="postMedia" src="https://i.imgur.com/CWuBXGh.jpg" />
+
     <p class="text single-line">{{ post.content }}</p>
     <div class="base">
       <menu>
