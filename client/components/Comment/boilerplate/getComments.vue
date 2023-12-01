@@ -2,15 +2,16 @@
 import { fetchy } from "@/utils/fetchy";
 import { ref } from "vue";
 
-const _id = ref("");
+const parentId = ref("");
 const displayMsg = ref(false);
 const msg = ref("message");
 
 // parent might have to be renamed _id?
-const handleGetComments = async (_id: string) => {
+const handleGetComments = async (parentId?: string) => {
+  let query: Record<string, string> = parentId !== undefined ? { parentId } : {};
   let commentResults;
   try {
-    commentResults = await fetchy(`/api/comments/${_id}`, "GET");
+    commentResults = await fetchy(`/api/comments/`, "GET", { query });
   } catch (_) {
     return;
   }
@@ -20,15 +21,15 @@ const handleGetComments = async (_id: string) => {
 };
 
 const emptyForm = () => {
-  _id.value = "";
+  parent.value = "";
 };
 </script>
 
 <template>
   <main>
     <div class="main">
-      <form @submit.prevent="handleGetComments(_id)">
-        <input type="text" v-model="_id" placeholder="Parent post ObjectID" />
+      <form @submit.prevent="handleGetComments(parentId)">
+        <input type="text" v-model="parentId" placeholder="Parent post ObjectID" />
         <button type="submit">Lookup</button>
       </form>
     </div>

@@ -14,7 +14,6 @@ export default class PostConcept {
   public readonly posts = new DocCollection<PostDoc>("posts");
 
   async create(author: ObjectId, content: string, image: string, video: string) {
-    console.log("CREATING");
     const _id = await this.posts.createOne({ author, content, image, video });
     const imgur_expression = "imgur.com";
     // referenced: https://www.tutorialspoint.com/typescript/typescript_string_search.htm

@@ -9,7 +9,7 @@ const msg = ref("message");
 const handleDeleteComment = async (_id: string) => {
   let commentResults;
   try {
-    commentResults = await fetchy(`/api/comment/${_id}`, "DELETE");
+    commentResults = await fetchy(`/api/comments/${_id}`, "DELETE");
   } catch (_) {
     return;
   }
