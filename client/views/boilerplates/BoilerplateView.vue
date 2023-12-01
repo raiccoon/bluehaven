@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
-import { storeToRefs } from "pinia";
 import AllClassesBoilerplate from "@/views/boilerplates/AllClassesBoilerplate.vue";
 import ModuleBoilerplate from "@/views/boilerplates/ModuleBoilerplate.vue";
+import { storeToRefs } from "pinia";
+import PinBoilerPlate from "./PinBoilerPlate.vue";
 
-import { ref, onMounted } from "vue";
+import { onMounted, ref } from "vue";
 const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 
 const showComponent = ref("");
 const allComponents: Record<string, any> = {
   Class: AllClassesBoilerplate,
   Module: ModuleBoilerplate,
+  Pin: PinBoilerPlate,
 };
 onMounted(() => {
   const savedComponent = localStorage.getItem("selectedComponent");

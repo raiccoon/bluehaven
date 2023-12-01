@@ -185,7 +185,7 @@ class Routes {
     return await Pin.deletePin(_id);
   }
 
-  @Router.get("pins/:postId")
+  @Router.get("/pins/:postId")
   async getPinsOnPost(session: WebSessionDoc, postId: ObjectId) {
     // TODO; verify membership
     return await Pin.getPostPins(postId);
