@@ -163,13 +163,13 @@ class Routes {
     return await Bookmark.deleteBookmark(_id);
   }
 
-  @Router.get("/bookmarks/:_id")
+  @Router.get("/bookmarks")
   async getBookmarkedPosts(session: WebSessionDoc) {
     const user = WebSession.getUser(session);
     return Bookmark.getBookmarkedPosts(user);
   }
 
-  // TODO: PINS
+  // PINS ROUTES
 
   @Router.post("/pins")
   async addPin(session: WebSessionDoc, postId: ObjectId, commentId: ObjectId) {
