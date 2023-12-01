@@ -4,30 +4,23 @@ import { fetchy } from "@/utils/fetchy";
 
 const isJoinClassClicked = ref(false);
 const joinCode = ref("");
-const displayMsg = ref(false);
-const msg = ref("message");
 
 const clickJoinClass = () => {
-  displayMsg.value = false;
   isJoinClassClicked.value = true;
 };
 
 const handleJoinClass = async (joinCode: string) => {
-  let classResults;
   try {
-    classResults = await fetchy(`/api/classes/joincode/${joinCode}/students`, "POST", {
+    await fetchy(`/api/classes/joincode/${joinCode}/students`, "POST", {
       body: { joinCode },
     });
   } catch (_) {
     return;
   }
-  msg.value = classResults;
-  displayMsg.value = true;
   emptyForm();
 };
 
 const handleCancel = () => {
-  displayMsg.value = false;
   emptyForm();
 };
 
@@ -47,7 +40,6 @@ const emptyForm = () => {
         <button @click="handleCancel">Cancel</button>
       </form>
     </div>
-    <p v-if="displayMsg">{{ msg }}</p>
   </main>
 </template>
 
