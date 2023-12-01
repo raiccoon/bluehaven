@@ -11,7 +11,7 @@ const video = ref();
 const displayMsg = ref(false);
 const msg = ref("message");
 
-const handleUpdateComment = async (_id: string) => {
+const handleUpdateComment = async (_id: string, content: string, image: string, video: string) => {
   let commentResults;
   try {
     commentResults = await fetchy(`/api/comments/${_id}`, "PATCH", { body: { update: { content: content, image: image, video: video } } });
@@ -34,7 +34,7 @@ const emptyForm = () => {
 <template>
   <main>
     <div class="main">
-      <form @submit.prevent="handleUpdateComment(_id)">
+      <form @submit.prevent="handleUpdateComment(_id, content, image, video)">
         <input type="text" v-model="_id" placeholder="CommentId" />
         <input type="text" v-model="content" placeholder="Content here" />
         <input type="text" v-model="image" placeholder="image link here" />
