@@ -21,7 +21,7 @@ const handleGetComments = async (parentId?: string) => {
 };
 
 const emptyForm = () => {
-  parent.value = "";
+  parentId.value = "";
 };
 </script>
 
