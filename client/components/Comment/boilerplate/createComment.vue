@@ -51,7 +51,7 @@ const handleCancel = () => {
   <main>
     <div class="main">
       <button v-if="!isCreateCommentClicked" @click="clickCreateComment">Click here to create a comment!</button>
-      <form v-else @submit.prevent="handleCreateComment(classId, name, description)">
+      <form v-else @submit.prevent="handleCreateComment(parent, content, image, video)">
         <input type="text" v-model="parent" placeholder="Parent Post Id" />
         <input type="text" v-model="content" placeholder="Comment content here" />
         <input type="text" v-model="image" placeholder="Image link (optional)" />

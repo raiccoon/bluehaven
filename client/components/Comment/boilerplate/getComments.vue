@@ -7,10 +7,10 @@ const displayMsg = ref(false);
 const msg = ref("message");
 
 // parent might have to be renamed _id?
-const handleGetComments = async (parent: string) => {
+const handleGetComments = async (_id: string) => {
   let commentResults;
   try {
-    commentResults = await fetchy(`/api/comments/${parent}`, "GET");
+    commentResults = await fetchy(`/api/comments/${_id}`, "GET");
   } catch (_) {
     return;
   }
