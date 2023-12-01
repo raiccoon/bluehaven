@@ -5,13 +5,18 @@ import { ref } from "vue";
 
 const username = ref("");
 const password = ref("");
+const error = ref("");
 const { createUser, loginUser, updateSession } = useUserStore();
 
 async function register() {
-  await createUser(username.value, password.value);
-  await loginUser(username.value, password.value);
-  void updateSession();
-  void router.push({ name: "Boilerplate" });
+  try {
+    await createUser(username.value, password.value);
+    await loginUser(username.value, password.value);
+    void updateSession();
+    void router.push({ name: "Classes" });
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : "An error occurred";
+  }
 }
 function goBack() {
   void router.push({ name: "Start" });
@@ -36,6 +41,7 @@ function goBack() {
     </fieldset>
   </form>
   <button @click="goBack">Back</button>
+  <div v-if="error">{{ error }}</div>
 </template>
 
 <style scoped>

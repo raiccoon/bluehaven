@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { fetchy } from "@/utils/fetchy";
 import { ref, defineProps, onMounted } from "vue";
+import router from "../../router";
 
 const props = defineProps(["classId", "isAdmin"]);
 
@@ -25,6 +26,7 @@ const removeSelf = async () => {
     await fetchy(`/api/classes/id/${props.classId}/membership`, "DELETE", {
       query: { classId: props.classId },
     });
+    void router.push({ name: "Classes" });
   } catch (_) {
     return;
   }
