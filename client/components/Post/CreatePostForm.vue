@@ -1,18 +1,35 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+
+const loaded = ref(false);
+
+const props = defineProps(["classId"]);
+
+const module = ref("");
+const modules = ref<Array<Record<string, string>>>([]);
 
 const content = ref("");
 const image = ref("");
 const video = ref("");
 const emit = defineEmits(["refreshPosts"]);
 
-const createPost = async (content: string, image: string, video: string) => {
+const getModulesInClass = async (classId: string) => {
+  let moduleResults;
+  try {
+    moduleResults = await fetchy(`/api/classes/id/${classId}/modules`, "GET");
+  } catch (_) {
+    return;
+  }
+  modules.value = moduleResults;
+};
+
+const createPost = async (module: string, content: string, image: string, video: string) => {
   // put back ? and check if undefined here or set as empty string, then check for empty string
   try {
     console.log("image", image);
     await fetchy("/api/posts", "POST", {
-      body: { content, image, video },
+      body: { module, content, image, video },
     });
   } catch (_) {
     return;
@@ -26,14 +43,23 @@ const emptyForm = () => {
   image.value = "";
   video.value = "";
 };
+
+onBeforeMount(async () => {
+  await getModulesInClass(props.classId);
+  loaded.value = true;
+});
 </script>
 
 <template>
-  <form @submit.prevent="createPost(content, image, video)">
+  <form v-if="loaded" @submit.prevent="createPost(module, content, image, video)">
     <label for="content">Post Contents:</label>
     <textarea id="media-link" v-model="image" placeholder="Paste link to image media here!"> </textarea>
     <textarea id="media-link" v-model="video" placeholder="Paste link to video media here!"> </textarea>
     <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
+    <select id="collection" v-model="module">
+      <option disabled value="">Add to module:</option>
+      <option v-for="module in modules" :key="module._id" :value="module._id">{{ module.name }}</option>
+    </select>
     <button type="submit" class="pure-button-primary pure-button">Create Post</button>
   </form>
 </template>

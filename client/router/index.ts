@@ -2,6 +2,9 @@ import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
+import AllClassesView from "../views/AllClassesView.vue";
+import ClassView from "../views/ClassView.vue";
+import CreatePostView from "../views/CreatePostView.vue";
 import ExpandedPostView from "../views/ExpandedPostView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
@@ -10,8 +13,6 @@ import RegisterView from "../views/RegisterView.vue";
 import SettingView from "../views/SettingView.vue";
 import StartView from "../views/StartView.vue";
 import BoilerplateView from "../views/boilerplates/BoilerplateView.vue";
-import AllClassesView from "../views/AllClassesView.vue";
-import ClassView from "../views/ClassView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -71,6 +72,12 @@ const router = createRouter({
       path: "/classes/:classId",
       name: "Class",
       component: ClassView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/classes/:classId/createPost",
+      name: "Create-Post",
+      component: CreatePostView,
       meta: { requiresAuth: true },
     },
     {
