@@ -111,11 +111,10 @@ class Routes {
   }
 
   @Router.get("/comments")
-  async getComments(parent?: string) {
+  async getComments(parent?: ObjectId) {
     let comments;
     if (parent) {
-      const id = (await User.getUserByUsername(parent))._id;
-      comments = await Comment.getCommentsByParent(id);
+      comments = await Comment.getCommentsByParent(parent);
     } else {
       comments = await Comment.getComments({});
     }
@@ -186,7 +185,7 @@ class Routes {
     return await Pin.deletePin(_id);
   }
 
-  @Router.get("pins/:_id")
+  @Router.get("/pins/:postId")
   async getPinsOnPost(session: WebSessionDoc, postId: ObjectId) {
     // TODO; verify membership
     return await Pin.getPostPins(postId);

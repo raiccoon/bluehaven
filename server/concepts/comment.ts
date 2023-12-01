@@ -21,7 +21,7 @@ export default class CommentConcept {
   public readonly comments = new DocCollection<CommentDoc>("comments");
 
   async create(author: ObjectId, parent: ObjectId, content: string, image: string, video: string) {
-    const _id = await this.comments.createOne({ author, parent, content, image, video });
+    const _id = await this.comments.createOne({ author, parent, content, instructorEdited: false, image, video });
     return { msg: "Comment successfully created!", comment: await this.comments.readOne({ _id }) };
   }
 

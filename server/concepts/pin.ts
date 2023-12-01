@@ -13,7 +13,8 @@ export default class PinConcept {
 
   async addPin(postId: ObjectId, commentId: ObjectId) {
     const pin = await this.pins.readOne({ comment: commentId });
-    if (pin !== undefined) {
+    console.log(pin);
+    if (pin !== null) {
       throw new AlreadyPinned(commentId);
     }
     return await this.pins.createOne({ post: postId, comment: commentId });
@@ -32,6 +33,6 @@ export default class PinConcept {
 
 export class AlreadyPinned extends NotAllowedError {
   constructor(public readonly comment: ObjectId) {
-    super("You have already pinned {}", comment);
+    super("You have already pinned {0}", comment);
   }
 }

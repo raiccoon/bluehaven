@@ -52,6 +52,6 @@ export class BookmarkAuthorNotMatchError extends NotAllowedError {
 
 export class AlreadyBookmarked extends NotAllowedError {
   constructor(public readonly post: ObjectId) {
-    super("You have already bookmarked {}", post);
+    super("You have already bookmarked {0}", post);
   }
 }
