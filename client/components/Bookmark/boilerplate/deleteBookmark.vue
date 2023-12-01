@@ -6,14 +6,14 @@ const _id = ref("");
 const displayMsg = ref(false);
 const msg = ref("message");
 
-const handleGetModulesInClass = async (_id: string) => {
-  let moduleResults;
+const handleDeleteBookmark = async (_id: string) => {
+  let bookmarkResults;
   try {
-    moduleResults = await fetchy(`/api/classes/id/${_id}/modules`, "GET");
+    bookmarkResults = await fetchy(`/api/bookmarks/${_id}`, "DELETE");
   } catch (_) {
     return;
   }
-  msg.value = moduleResults;
+  msg.value = bookmarkResults;
   displayMsg.value = true;
   emptyForm();
 };
@@ -26,9 +26,9 @@ const emptyForm = () => {
 <template>
   <main>
     <div class="main">
-      <form @submit.prevent="handleGetModulesInClass(_id)">
-        <input type="text" v-model="_id" placeholder="Class ObjectID" />
-        <button type="submit">Get Modules In Class</button>
+      <form @submit.prevent="handleDeleteBookmark(_id)">
+        <input type="text" v-model="_id" placeholder="Bookmark ObjectID" />
+        <button type="submit">Delete Bookmark</button>
       </form>
     </div>
     <p v-if="displayMsg">{{ msg }}</p>

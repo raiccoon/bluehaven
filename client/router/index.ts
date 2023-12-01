@@ -10,6 +10,8 @@ import RegisterView from "../views/RegisterView.vue";
 import SettingView from "../views/SettingView.vue";
 import StartView from "../views/StartView.vue";
 import BoilerplateView from "../views/boilerplates/BoilerplateView.vue";
+import AllClassesView from "../views/AllClassesView.vue";
+import ClassView from "../views/ClassView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -42,6 +44,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/classes",
+      name: "Classes",
+      component: AllClassesView,
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/setting",
       name: "Settings",
       component: SettingView,
@@ -60,10 +68,17 @@ const router = createRouter({
       },
     },
     {
+      path: "/classes/:classId",
+      name: "Class",
+      component: ClassView,
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/expanded-post/:postId",
       name: "Expanded-Post",
       component: ExpandedPostView,
       props: { author: "" },
+      meta: { requiresAuth: true },
     },
     {
       path: "/:catchAll(.*)",
