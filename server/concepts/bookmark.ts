@@ -14,10 +14,12 @@ export default class BookmarkConcept {
 
   async addBookmark(owner: ObjectId, post: ObjectId, classId: ObjectId) {
     const bookMark = await this.bookmarks.readOne({ post: post });
-    if (bookMark !== undefined) {
+    if (bookMark !== null) {
       throw new AlreadyBookmarked(post);
     }
-    return await this.bookmarks.createOne({ owner, post, classId });
+    const createdBookmark = await this.bookmarks.createOne({ owner, post, classId });
+    console.log(createdBookmark);
+    return createdBookmark;
   }
 
   async deleteBookmark(_id: ObjectId) {
@@ -26,11 +28,19 @@ export default class BookmarkConcept {
   }
 
   async getBookmarkedPosts(user: ObjectId) {
-    const bookMarks = await this.bookmarks.readMany({ user: user });
+    console.log("USER");
+    console.log(user);
+    const bookMarks = await this.bookmarks.readMany(
+      { owner: user },
+      {
+        sort: { dateUpdated: -1 },
+      },
+    );
+
     return bookMarks;
   }
 
-  async isAuthor(_id: ObjectId, user: ObjectId) {
+  async isAuthor(user: ObjectId, _id: ObjectId) {
     const bookmark = await this.bookmarks.readOne({ _id });
     if (!bookmark) {
       throw new NotFoundError(`Bookmark ${_id} does not exist!`);
