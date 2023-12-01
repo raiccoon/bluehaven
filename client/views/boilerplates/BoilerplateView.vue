@@ -3,6 +3,7 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import AllClassesBoilerplate from "@/views/boilerplates/AllClassesBoilerplate.vue";
 import ModuleBoilerplate from "@/views/boilerplates/ModuleBoilerplate.vue";
+import BookmarkBoilerplate from "@/views/boilerplates/BookmarkBoilerplate.vue";
 
 import { ref, onMounted } from "vue";
 const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
@@ -11,6 +12,7 @@ const showComponent = ref("");
 const allComponents: Record<string, any> = {
   Class: AllClassesBoilerplate,
   Module: ModuleBoilerplate,
+  Bookmark: BookmarkBoilerplate,
 };
 onMounted(() => {
   const savedComponent = localStorage.getItem("selectedComponent");
