@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
 import AllClassesBoilerplate from "@/views/boilerplates/AllClassesBoilerplate.vue";
+import BookmarkBoilerplate from "@/views/boilerplates/BookmarkBoilerplate.vue";
 import ModuleBoilerplate from "@/views/boilerplates/ModuleBoilerplate.vue";
 import { storeToRefs } from "pinia";
+import CommentBoilerplate from "./CommentBoilerplate.vue";
 import PinBoilerPlate from "./PinBoilerPlate.vue";
-import BookmarkBoilerplate from "@/views/boilerplates/BookmarkBoilerplate.vue";
 
 import { onMounted, ref } from "vue";
 const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
@@ -15,6 +16,7 @@ const allComponents: Record<string, any> = {
   Module: ModuleBoilerplate,
   Pin: PinBoilerPlate,
   Bookmark: BookmarkBoilerplate,
+  Comment: CommentBoilerplate,
 };
 onMounted(() => {
   const savedComponent = localStorage.getItem("selectedComponent");
