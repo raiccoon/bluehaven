@@ -10,7 +10,7 @@ export interface CommentMultimedia {
 
 export interface CommentDoc extends BaseDoc {
   author: ObjectId;
-  parent: ObjectId;
+  parentId: ObjectId;
   content: string;
   instructorEdited: boolean;
   image: string;
@@ -20,8 +20,8 @@ export interface CommentDoc extends BaseDoc {
 export default class CommentConcept {
   public readonly comments = new DocCollection<CommentDoc>("comments");
 
-  async create(author: ObjectId, parent: ObjectId, content: string, image: string, video: string) {
-    const _id = await this.comments.createOne({ author, parent, content, instructorEdited: false, image, video });
+  async create(author: ObjectId, parentId: ObjectId, content: string, image: string, video: string) {
+    const _id = await this.comments.createOne({ author, parentId, content, instructorEdited: false, image, video });
     return { msg: "Comment successfully created!", comment: await this.comments.readOne({ _id }) };
   }
 
@@ -37,14 +37,14 @@ export default class CommentConcept {
     return comments;
   }
 
-  async getCommentsByParent(parent: ObjectId) {
-    return await this.getComments({ parent });
+  async getCommentsByParent(parentId: ObjectId) {
+    return await this.getComments({ parentId });
   }
 
   async getParentOfComment(_id: ObjectId) {
-    const comment = await this.comments.readOne({ _id });
+    const comment = await this.comments.readOne({ parentId: _id });
     if (comment !== null) {
-      return comment.parent;
+      return comment.parentId;
     }
   }
 

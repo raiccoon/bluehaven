@@ -110,17 +110,17 @@ class Routes {
   }
 
   @Router.get("/comments")
-  async getComments(parent?: ObjectId) {
+  async getComments(parentId?: ObjectId) {
     let comments;
-    if (parent) {
-      comments = await Comment.getCommentsByParent(parent);
+    if (parentId) {
+      comments = await Comment.getCommentsByParent(parentId);
     } else {
       comments = await Comment.getComments({});
     }
     return Responses.posts(comments);
   }
 
-  @Router.get("/parent/:_id")
+  @Router.get("/parent/:id")
   async getParentofComment(_id: ObjectId) {
     const parent = await Comment.getParentOfComment(_id);
     if (parent !== undefined && (await Comment.isComment(parent))) {
@@ -134,14 +134,14 @@ class Routes {
   @Router.patch("/comments/:_id")
   async updateComment(session: WebSessionDoc, _id: ObjectId, update: Partial<CommentDoc>) {
     const user = WebSession.getUser(session);
-    await Comment.isAuthor(user, _id);
+    await Comment.isAuthor(_id, user);
     return await Comment.update(_id, update);
   }
 
   @Router.delete("/comments/:_id")
   async deleteComment(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
-    await Comment.isAuthor(user, _id);
+    await Comment.isAuthor(_id, user);
     return await Comment.delete(_id);
   }
 

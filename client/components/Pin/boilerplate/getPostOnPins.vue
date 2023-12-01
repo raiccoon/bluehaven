@@ -17,14 +17,10 @@ const handleGetPins = async (postId: string) => {
   // fetchy createModule(classId, name, description?)
   let moduleResults;
   try {
-    console.log("POST");
-    console.log(postId);
     moduleResults = await fetchy(`/api/pins/${postId}`, "GET");
   } catch (_) {
     return;
   }
-  console.log("RES");
-  console.log(moduleResults);
   msg.value = moduleResults;
   displayMsg.value = true;
   emptyForm();
