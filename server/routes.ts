@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Bookmark, Class, Comment, Friend, Module, Pin, Post, User, WebSession } from "./app";
+import { Bookmark, Class, Comment, Friend, Label, Module, Pin, Post, User, WebSession } from "./app";
 import { CommentDoc } from "./concepts/comment";
 import { PostDoc } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
@@ -381,6 +381,46 @@ class Routes {
   @Router.post("/modules/:module/posts")
   async addPost(post: ObjectId, module: ObjectId) {
     return await Module.addPost(new ObjectId(post), new ObjectId(module));
+  }
+
+  // LABELs
+  @Router.post("/classes/id/:classId/labels")
+  async createLabel(classId: ObjectId, name: string) {
+    return await Label.createLabel(new ObjectId(classId), name);
+  }
+
+  @Router.post("/comments/:commentId/labels")
+  async assignLabel(session: WebSessionDoc, label: ObjectId, comment: ObjectId) {
+    // const user = WebSession.getUser(session);
+    // const class = this.getClassOfComment(class);
+    // await Label.assertIsLabelInClass(new ObjectId(label), class);
+    // await canEdit(user, comment);
+    return await Label.assignLabel(new ObjectId(label), new ObjectId(comment));
+  }
+
+  @Router.delete("/comments/:commentId/labels")
+  async removeLabel(label: ObjectId, comment: ObjectId) {
+    return await Label.removeLabel(new ObjectId(label), new ObjectId(comment));
+  }
+
+  @Router.get("/comments/:commentId/labels")
+  async getLabelsOnComment(comment: ObjectId) {
+    return await Label.getLabelsOnComment(new ObjectId(comment));
+  }
+
+  @Router.get("/classes/id/:classId/labels")
+  async getLabelsInClass(classId: ObjectId) {
+    return await Label.getLabelsInClass(new ObjectId(classId));
+  }
+
+  @Router.get("/classes/id/:classId/labels/isLabelInClass")
+  async isLabelInClass(classId: ObjectId, label: ObjectId) {
+    return await Label.isLabelInClass(new ObjectId(label), new ObjectId(classId));
+  }
+
+  @Router.get("/classes/id/:classId/labels/statistics")
+  async generateLabelStatistics(classId: ObjectId) {
+    return await Label.generateStatisticsClass(new ObjectId(classId));
   }
 }
 
