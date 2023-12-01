@@ -27,7 +27,7 @@ const emptyForm = () => {
   <main>
     <div class="main">
       <form @submit.prevent="handleGetModulesInClass(_id)">
-        <input type="text" v-model="_id" placeholder="Module ObjectID" />
+        <input type="text" v-model="_id" placeholder="Class ObjectID" />
         <button type="submit">Get Modules In Class</button>
       </form>
     </div>

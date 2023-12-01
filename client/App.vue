@@ -32,6 +32,9 @@ onBeforeMount(async () => {
       </div>
       <ul>
         <li>
+          <RouterLink :to="{ name: 'Classes' }" :class="{ underline: currentRouteName == 'Classes' }"> Your Classes </RouterLink>
+        </li>
+        <li>
           <RouterLink :to="{ name: 'Boilerplate' }" :class="{ underline: currentRouteName == 'Boilerplate' }"> Boilerplate (for testing) </RouterLink>
         </li>
         <li>
