@@ -76,7 +76,6 @@ class Routes {
   @Router.get("/posts/:_id")
   async getPostById(_id: ObjectId) {
     const posts = await Post.getPosts({ _id });
-    console.log(posts);
     return posts[0];
   }
 

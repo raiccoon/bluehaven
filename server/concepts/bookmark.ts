@@ -18,7 +18,6 @@ export default class BookmarkConcept {
       throw new AlreadyBookmarked(post);
     }
     const createdBookmark = await this.bookmarks.createOne({ owner, post, classId });
-    console.log(createdBookmark);
     return createdBookmark;
   }
 
@@ -28,8 +27,6 @@ export default class BookmarkConcept {
   }
 
   async getBookmarkedPosts(user: ObjectId) {
-    console.log("USER");
-    console.log(user);
     const bookMarks = await this.bookmarks.readMany(
       { owner: user },
       {
