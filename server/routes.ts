@@ -80,9 +80,13 @@ class Routes {
   }
 
   @Router.post("/posts")
-  async createPost(session: WebSessionDoc, content: string, image: string, video: string) {
+  async createPost(session: WebSessionDoc, module: ObjectId, content: string, image: string, video: string) {
     const user = WebSession.getUser(session);
+    const classId = await Module.getClassOfModule(new ObjectId(module));
+    await Class.assertIsInstructor(classId!, user);
+
     const created = await Post.create(user, content, image, video);
+    await Module.addPost(created.post!._id, new ObjectId(module));
     return { msg: created.msg, post: await Responses.post(created.post) };
   }
 
@@ -96,7 +100,10 @@ class Routes {
   @Router.delete("/posts/:_id")
   async deletePost(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
-    await Post.isAuthor(user, _id);
+    const classId = await Module.getClassOfPost(_id);
+    await Class.assertIsInstructor(classId!, user);
+
+    await Module.removePost(_id);
     return Post.delete(_id);
   }
 

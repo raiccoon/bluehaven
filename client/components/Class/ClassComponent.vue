@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import ClassHeader from "@/components/Class/ClassHeader.vue";
-import { ref, onMounted } from "vue";
+import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
-import { useUserStore } from "@/stores/user";
+import { onMounted, ref } from "vue";
+import router from "../../router";
 
 const { currentUsername } = storeToRefs(useUserStore());
 const props = defineProps(["classId"]);
 const isAdmin = ref(false);
+
+function createPost() {
+  void router.push({ path: `/classes/${props.classId.toString()}/createPost` });
+}
 
 const checkIfAdmin = async () => {
   try {
@@ -26,6 +31,7 @@ onMounted(async () => {
 <template>
   <main>
     <ClassHeader :classId="props.classId" :isAdmin="isAdmin" />
+    <button @click="createPost">Create Post</button>
   </main>
 </template>
 <style scoped>
