@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ModuleComponent from "@/components/Module/ModuleComponent.vue";
+import CreateModuleButton from "@/components/Module/CreateModuleButton.vue";
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
 
@@ -26,6 +27,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
+  <CreateModuleButton :classId="props.classId" />
   <section class="modules" v-if="loaded && modules.length !== 0">
     <article v-for="module in modules" :key="module._id">
       <ModuleComponent :module="module" />
