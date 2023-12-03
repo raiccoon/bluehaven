@@ -127,7 +127,7 @@ class Routes {
     return Responses.posts(comments);
   }
 
-  @Router.get("/parent/:id")
+  @Router.get("/parent/:_id")
   async getParentofComment(_id: ObjectId) {
     const parent = await Comment.getParentOfComment(_id);
     if (parent !== undefined && (await Comment.isComment(parent))) {
