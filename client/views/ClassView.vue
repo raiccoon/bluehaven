@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Class from "@/components/Class/ClassComponent.vue";
+
 import router from "../router";
 
 function goBack() {
