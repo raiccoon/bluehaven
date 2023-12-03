@@ -5,6 +5,7 @@ import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 import router from "../../router";
+import ModuleListComponent from "../Module/ModuleListComponent.vue";
 
 const { currentUsername } = storeToRefs(useUserStore());
 const props = defineProps(["classId"]);
@@ -32,6 +33,7 @@ onMounted(async () => {
   <main>
     <ClassHeader :classId="props.classId" :isAdmin="isAdmin" />
     <button @click="createPost">Create Post</button>
+    <ModuleListComponent :classId="props.classId" />
   </main>
 </template>
 <style scoped>
