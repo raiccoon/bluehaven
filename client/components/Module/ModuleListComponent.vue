@@ -35,4 +35,7 @@ onBeforeMount(async () => {
 
 <style scoped>
 @import "@/assets/boilerplate.css";
+section {
+  flex-direction: column;
+}
 </style>
