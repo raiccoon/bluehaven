@@ -26,7 +26,7 @@ export default class CommentConcept {
   }
 
   async isComment(_id: ObjectId) {
-    const item = await this.comments.readOne(_id);
+    const item = await this.comments.readOne({ _id });
     return item !== null;
   }
 
@@ -42,7 +42,7 @@ export default class CommentConcept {
   }
 
   async getParentOfComment(_id: ObjectId) {
-    const comment = await this.comments.readOne({ parentId: _id });
+    const comment = await this.comments.readOne({ _id });
     if (comment !== null) {
       return comment.parentId;
     }
