@@ -81,7 +81,9 @@ export default class ClassConcept {
     await this.classExists(classId);
     const maybeInstructor = await this.instructorMemberships.readOne({ classId, user });
     if (maybeInstructor === null) {
-      throw new NotAllowedError(`User is not an instructor!`);
+      const _id = new ObjectId(classId);
+      const goalClass = await this.classes.readOne({ _id });
+      throw new NotAllowedError(`You are not an instructor of class {0}!`, goalClass?.className);
     }
   }
 

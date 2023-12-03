@@ -179,7 +179,9 @@ class Routes {
   @Router.post("/pins")
   async addPin(session: WebSessionDoc, postId: ObjectId, commentId: ObjectId) {
     // TODO: verify only instructor can pin
-    // await Class.isInstructor(classId, user);
+    const user = WebSession.getUser(session);
+    const postClass = await Module.classOfPostExists(await Module.getClassOfPost(new ObjectId(postId)));
+    await Class.assertIsInstructor(postClass, user);
     const created = await Pin.addPin(postId, commentId);
     return created;
   }

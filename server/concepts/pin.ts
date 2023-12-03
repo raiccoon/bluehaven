@@ -13,7 +13,6 @@ export default class PinConcept {
 
   async addPin(postId: ObjectId, commentId: ObjectId) {
     const pin = await this.pins.readOne({ comment: commentId });
-    console.log(pin);
     if (pin !== null) {
       throw new AlreadyPinned(commentId);
     }
