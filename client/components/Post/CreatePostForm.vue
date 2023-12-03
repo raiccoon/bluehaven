@@ -66,6 +66,7 @@ onBeforeMount(async () => {
 
 <style scoped>
 form {
+  margin: 1em;
   background-color: var(--base-bg);
   border-radius: 1em;
   display: flex;

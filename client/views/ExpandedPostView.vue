@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import createCommentForm from "@/components/Comment/createCommentForm.vue";
 import ExpandedPost from "@/components/Post/ExpandedPost.vue";
 import { ref } from "vue";
 
@@ -14,6 +15,7 @@ function updateEditing(id: string) {
     <h1>Module Name</h1>
     <section>
       <ExpandedPost v-if="editing !== $route.params.postId" :postId="$route.params.postId" :author="$route.query.author" />
+      <createCommentForm :parent="$route.params.postId" />
     </section>
   </main>
 </template>
@@ -21,5 +23,9 @@ function updateEditing(id: string) {
 <style scoped>
 h1 {
   text-align: center;
+}
+section {
+  display: flex;
+  flex-direction: row;
 }
 </style>
