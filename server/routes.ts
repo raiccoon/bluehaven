@@ -115,7 +115,7 @@ class Routes {
 
     // const classId = await Module.getClassOfModule(new ObjectId(module));
     // await Class.assertIsInstructor(classId!, user);
-    const created = await Comment.create(user, parent, content, image, video);
+    const created = await Comment.create(user, new ObjectId(parent), content, image, video);
     return { msg: created.msg, comment: await Responses.post(created.comment) };
   }
 
@@ -154,6 +154,15 @@ class Routes {
     await Comment.isAuthor(_id, user);
     // TODO: instructor can delete a comment as well
     return await Comment.delete(_id);
+  }
+
+  @Router.get("/comments/:_id/class")
+  async getClassOfComment(_id: ObjectId) {
+    let parent = await Comment.getParentOfComment(new ObjectId(_id));
+    while (await Comment.isComment(parent!)) {
+      parent = await Comment.getParentOfComment(parent!);
+    }
+    return await Module.getClassOfPost(parent!);
   }
 
   // BOOKMARK
