@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ModuleComponent from "@/components/Module/ModuleComponent.vue";
 import CreateModuleButton from "@/components/Module/CreateModuleButton.vue";
+import ModuleComponent from "@/components/Module/ModuleComponent.vue";
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
 
