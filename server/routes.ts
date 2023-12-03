@@ -323,7 +323,7 @@ class Routes {
   @Router.get("/modules/:_id/posts")
   async getPostsInModule(_id: ObjectId) {
     const postIds = await Module.getPostsInModule(new ObjectId(_id));
-    return await Post.getPosts({ _id: { $in: postIds } });
+    return Responses.posts(await Post.getPosts({ _id: { $in: postIds } }));
   }
 
   @Router.get("/classes/id/:_id/modules")
