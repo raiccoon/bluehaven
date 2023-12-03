@@ -5,27 +5,23 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
-import SearchPostForm from "./SearchPostForm.vue";
-// import { eventBus } from "../main";
 
 const { isLoggedIn } = storeToRefs(useUserStore());
 
 const loaded = ref(false);
+const props = defineProps(["moduleId"]);
 let posts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
-let searchAuthor = ref("");
 
-async function getPosts(author?: string) {
-  let query: Record<string, string> = author !== undefined ? { author } : {};
-  let postResults;
+const getPosts = async () => {
+  let moduleResults;
   try {
-    postResults = await fetchy("/api/posts", "GET", { query });
+    moduleResults = await fetchy(`/api/modules/${props.moduleId}/posts`, "GET");
   } catch (_) {
     return;
   }
-  searchAuthor.value = author ? author : "";
-  posts.value = postResults;
-}
+  posts.value = moduleResults;
+};
 
 function updateEditing(id: string) {
   editing.value = id;
@@ -38,21 +34,14 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="row">
-    <h2 v-if="!searchAuthor">Posts:</h2>
-    <h2 v-else>Posts by {{ searchAuthor }}:</h2>
-    <SearchPostForm @getPostsByAuthor="getPosts" />
-  </div>
-  <div>
-    <section class="posts" v-if="loaded && posts.length !== 0">
-      <article v-for="post in posts" :key="post._id">
-        <PostComponent v-if="editing !== post._id" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
-        <EditPostForm v-else :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
-      </article>
-    </section>
-    <p v-else-if="loaded">No posts found</p>
-    <p v-else>Loading...</p>
-  </div>
+  <section class="posts" v-if="loaded && posts.length !== 0">
+    <article v-for="post in posts" :key="post._id">
+      <PostComponent v-if="editing !== post._id" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+      <EditPostForm v-else :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+    </article>
+  </section>
+  <p v-else-if="loaded">No posts found</p>
+  <p v-else>Loading...</p>
 </template>
 
 <style scoped>
