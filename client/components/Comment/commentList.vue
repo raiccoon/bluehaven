@@ -32,21 +32,16 @@ function updateEditing(id: string) {
 }
 
 onBeforeMount(async () => {
-  await getComments(props.parentId); //add post id
+  await getComments(props.parentId);
   loaded.value = true;
 });
 </script>
 
 <template>
-  <div class="row">
-    <h2 v-if="!searchAuthor">Comments:</h2>
-    <h2 v-else>Posts by {{ searchAuthor }}:</h2>
-    <!-- <SearchPostForm @getPostsByAuthor="getComments" /> -->
-  </div>
   <section class="comments" v-if="loaded && comments.length !== 0">
     <article v-for="comment in comments" :key="comment._id">
       <commentComponent v-if="editing !== comment._id" :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
-      <editCommentForm v-else :comment="comment" @refreshPosts="getComments" @editComment="updateEditing" />
+      <editCommentForm v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
     </article>
   </section>
   <p v-else-if="loaded">No comments found</p>

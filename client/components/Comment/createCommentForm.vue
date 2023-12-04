@@ -10,6 +10,7 @@ const video = ref("");
 
 const displayMsg = ref(false);
 const msg = ref("message");
+const emit = defineEmits(["refreshComments"]);
 
 const clickCreateComment = () => {
   displayMsg.value = false;
@@ -28,6 +29,7 @@ const handleCreateComment = async (parent: string, content: string, image: strin
   msg.value = commentResults;
   displayMsg.value = true;
   emptyForm();
+  emit("refreshComments");
 };
 
 const emptyForm = () => {
@@ -49,7 +51,6 @@ const handleCancel = () => {
   <section class="main">
     <button v-if="!isCreateCommentClicked" @click="clickCreateComment" class="pure-button">Click here to create a comment!</button>
     <form v-else @submit.prevent="handleCreateComment(props.parent, content, image, video)">
-      <!-- <input type="text" v-model="parent" placeholder="Parent Post Id" /> -->
       <textarea type="text" v-model="image" id="media-link" placeholder="Image link (optional)"> </textarea>
       <textarea type="text" v-model="video" id="media-link" placeholder="Video link (optional)"> </textarea>
       <textarea type="text" v-model="content" placeholder="Comment content here"> </textarea>
@@ -59,7 +60,7 @@ const handleCancel = () => {
       </div>
     </form>
   </section>
-  <p v-if="displayMsg">{{ msg }}</p>
+  <!-- <p v-if="displayMsg">{{ msg }}</p> -->
 </template>
 
 <style scoped>

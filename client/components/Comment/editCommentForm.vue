@@ -25,7 +25,7 @@ const editComment = async (content: string, image: string, video: string) => {
     <p class="author">{{ props.comment.author }}</p>
     <textarea id="media-link" v-model="image" placeholder="Paste link to image here!"> </textarea>
     <textarea id="media-link" v-model="video" placeholder="Paste link to video here!"> </textarea>
-    <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
+    <textarea id="content" v-model="content" placeholder="Create a comment!" required> </textarea>
     <div class="base">
       <menu>
         <li><button class="btn-small pure-button-primary pure-button" type="submit">Save</button></li>
