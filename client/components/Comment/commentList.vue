@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import commentComponent from "@/components/Comment/commentComponent.vue";
+import createCommentForm from "@/components/Comment/createCommentForm.vue";
 import editCommentForm from "@/components/Comment/editCommentForm.vue";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
@@ -43,6 +44,7 @@ onBeforeMount(async () => {
 
 <template>
   <section class="comments" v-if="loaded && comments.length !== 0 && viewComments === true">
+    <createCommentForm :parent="props.parentId" @refreshComments="getComments($props.parentId)" />
     <article v-for="comment in comments" :key="comment._id">
       <commentComponent v-if="editing !== comment._id" :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
       <editCommentForm v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />

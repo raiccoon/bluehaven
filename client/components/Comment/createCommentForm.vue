@@ -28,8 +28,8 @@ const handleCreateComment = async (parent: string, content: string, image: strin
   }
   msg.value = commentResults;
   displayMsg.value = true;
-  emptyForm();
   emit("refreshComments");
+  emptyForm();
 };
 
 const emptyForm = () => {

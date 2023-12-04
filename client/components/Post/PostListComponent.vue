@@ -6,6 +6,7 @@ import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import SearchPostForm from "./SearchPostForm.vue";
+// import { eventBus } from "../main";
 
 const { isLoggedIn } = storeToRefs(useUserStore());
 

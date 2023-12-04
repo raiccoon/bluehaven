@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import commentList from "@/components/Comment/commentList.vue";
-import createCommentForm from "@/components/Comment/createCommentForm.vue";
 import ExpandedPost from "@/components/Post/ExpandedPost.vue";
 import { ref } from "vue";
 
@@ -17,7 +16,7 @@ function updateEditing(id: string) {
     <section>
       <ExpandedPost v-if="editing !== $route.params.postId" :postId="$route.params.postId" :author="$route.query.author" />
       <div>
-        <createCommentForm :parent="$route.params.postId" />
+        <!-- <createCommentForm :parent="$route.params.postId" /> -->
         <commentList :parentId="$route.params.postId" />
       </div>
     </section>
