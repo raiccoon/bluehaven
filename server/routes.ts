@@ -211,6 +211,18 @@ class Routes {
     return await Pin.getPostPins(postId);
   }
 
+  @Router.get("/pins/comments/:postId")
+  async getCommentsPinnedOrder(post: ObjectId) {
+    // returns 2 sets, pinned comments followed by unpinned comments
+    const postObjectID = new ObjectId(post);
+    const pinnedComments = await Pin.getPostPins(postObjectID);
+    let comments = await Comment.getCommentsByParent(postObjectID);
+    const pinnedCommentsAlone = pinnedComments.map((pinned) => pinned.comment);
+    comments = comments.filter((comment) => pinnedCommentsAlone.indexOf(comment._id) === -1);
+
+    return { "Pinned Comments": pinnedComments, "UnPinned Comments": comments };
+  }
+
   // FRIENDS
   @Router.get("/friends")
   async getFriends(session: WebSessionDoc) {
