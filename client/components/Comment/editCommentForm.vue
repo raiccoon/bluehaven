@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-// import { fetchy } from "../../utils/fetchy";
+import { fetchy } from "../../utils/fetchy";
 import { formatDate } from "../../utils/formatDate";
 
 const props = defineProps(["comment"]);
@@ -11,7 +11,7 @@ const emit = defineEmits(["editComment", "refreshComments"]);
 
 const editComment = async (content: string, image: string, video: string) => {
   try {
-    // await fetchy(`/api/posts/${props.comment._id}`, "PATCH", { body: { update: { content: content, image: image, video: video } } });
+    await fetchy(`/api/comments/${props.comment._id}`, "PATCH", { body: { update: { content: content, image: image, video: video } } });
   } catch (e) {
     return;
   }

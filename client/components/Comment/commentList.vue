@@ -1,6 +1,6 @@
 <script setup lang="ts">
-// import EditPostForm from "@/components/Post/EditPostForm.vue";
 import commentComponent from "@/components/Comment/commentComponent.vue";
+import editCommentForm from "@/components/Comment/editCommentForm.vue";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
@@ -10,15 +10,16 @@ import { onBeforeMount, ref } from "vue";
 const { isLoggedIn } = storeToRefs(useUserStore());
 
 const loaded = ref(false);
+const props = defineProps(["parentId"]);
 let comments = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 let searchAuthor = ref("");
 
-async function getComments(author?: string) {
-  let query: Record<string, string> = author !== undefined ? { author } : {};
+async function getComments(parentId: string) {
+  let query: Record<string, string> = parentId !== undefined ? { parentId } : {};
   let commentResults;
   try {
-    commentResults = await fetchy("/api/posts", "GET", { query });
+    commentResults = await fetchy(`/api/comments/`, "GET", { query });
   } catch (_) {
     return;
   }
@@ -31,7 +32,7 @@ function updateEditing(id: string) {
 }
 
 onBeforeMount(async () => {
-  await getComments(); //add post id
+  await getComments(props.parentId); //add post id
   loaded.value = true;
 });
 </script>
@@ -44,8 +45,8 @@ onBeforeMount(async () => {
   </div>
   <section class="comments" v-if="loaded && comments.length !== 0">
     <article v-for="comment in comments" :key="comment._id">
-      <commentComponent v-if="editing !== comment._id" :comment="comment" @refreshPosts="getComments" @editComment="updateEditing" />
-      <EditCommentForm v-else :comment="comment" @refreshPosts="getComments" @editComment="updateEditing" />
+      <commentComponent v-if="editing !== comment._id" :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+      <editCommentForm v-else :comment="comment" @refreshPosts="getComments" @editComment="updateEditing" />
     </article>
   </section>
   <p v-else-if="loaded">No comments found</p>
