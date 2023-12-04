@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ClassTile from "@/components/Class/ClassTile.vue";
-import { ref, defineProps, onMounted } from "vue";
 import { fetchy } from "@/utils/fetchy";
+import { defineProps, onMounted, ref } from "vue";
 
 const props = defineProps({
   role: String,
