@@ -21,38 +21,45 @@ onBeforeMount(async () => {
 </script>
 <template>
   <main>
-    <div class="container">
-      <div class="header">
-        <img src="@/assets/images/logo.png" alt="BlueHaven Logo" />
-        <div class="text">
-          <h1>BlueHaven - A platform for collaborative learning</h1>
-        </div>
-      </div>
+    <div class="main-container">
+      <img class="logo" src="@/assets/images/logo.svg" alt="BlueHaven Logo" />
+      <img class="title" src="@/assets/images/title.png" alt="BlueHaven Title" />
+      <h2 class="subtitle">Begin your journey in collaborative learning.</h2>
       <div class="buttons">
         <router-link to="/login">
-          <button>Log In</button>
+          <button class="fancyButton">Log In</button>
         </router-link>
         <router-link to="/register">
-          <button>Register</button>
+          <button class="fancyButton">Register</button>
         </router-link>
       </div>
     </div>
   </main>
 </template>
 <style scoped>
-main {
-  display: flex;
-  justify-content: center;
-}
-.header {
+@import "@/assets/styles.css";
+.main-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+}
+.logo {
+  width: 350px;
+  height: 350px;
+}
+.title {
+  width: 350px;
+  height: auto;
+}
+.subtitle {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-size: 30px;
+  text-align: center;
 }
 .buttons {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  gap: 40px;
 }
 </style>
