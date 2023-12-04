@@ -17,14 +17,11 @@ async function login() {
     error.value = e instanceof Error ? e.message : "An error occurred";
   }
 }
-function goBack() {
-  void router.push({ name: "Start" });
-}
 </script>
 
 <template>
   <form class="pure-form pure-form-aligned" @submit.prevent="login">
-    <h3>Login</h3>
+    <h3 class="center">Login</h3>
     <fieldset>
       <div class="pure-control-group">
         <label for="aligned-name">Username</label>
@@ -34,18 +31,24 @@ function goBack() {
         <label for="aligned-password">Password</label>
         <input type="password" v-model.trim="password" id="aligned-password" placeholder="Password" required />
       </div>
-      <div class="pure-controls">
-        <button type="submit" class="pure-button pure-button-primary">Submit</button>
+      <div class="center">
+        <button type="submit" class="normalButton">Submit</button>
       </div>
     </fieldset>
   </form>
-  <button @click="goBack">Back</button>
-  <div v-if="error">{{ error }}</div>
+  <div class="center" v-if="error">{{ error }}</div>
 </template>
 
 <style scoped>
-h3 {
+@import "@/assets/styles.css";
+h2 {
+  margin-bottom: 20px;
+}
+.center {
   display: flex;
   justify-content: center;
+}
+button {
+  margin-top: 20px;
 }
 </style>

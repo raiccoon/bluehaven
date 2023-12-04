@@ -30,3 +30,13 @@ a.button {
   align-items: center;
   gap: 1em;
 }
+
+h1 {
+  margin: 0px;
+}
+h2 {
+  margin: 0px;
+}
+p {
+  margin: 0px;
+}
