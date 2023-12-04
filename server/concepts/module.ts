@@ -1,7 +1,6 @@
 import { ObjectId } from "mongodb";
 
 import DocCollection, { BaseDoc } from "../framework/doc";
-import { NotFoundError } from "./errors";
 
 export interface ModuleDoc extends BaseDoc {
   name: String;
@@ -56,13 +55,6 @@ export default class ModuleConcept {
   async getClassOfPost(post: ObjectId) {
     const module = await this.getModuleOfPost(post);
     return this.getClassOfModule(module!);
-  }
-
-  async classOfPostExists(classId: ObjectId | undefined) {
-    if (classId === undefined) {
-      throw new NotFoundError("Post does not have an associated class");
-    }
-    return classId;
   }
 
   async isPostInModule(module: ObjectId, post: ObjectId) {
