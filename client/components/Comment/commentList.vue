@@ -13,7 +13,7 @@ const loaded = ref(false);
 const props = defineProps(["parentId"]);
 let comments = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
-let searchAuthor = ref("");
+let viewComments = ref(false);
 
 async function getComments(parentId: string) {
   let query: Record<string, string> = parentId !== undefined ? { parentId } : {};
@@ -31,6 +31,10 @@ function updateEditing(id: string) {
   editing.value = id;
 }
 
+function toggleComments() {
+  viewComments.value = !viewComments.value;
+}
+
 onBeforeMount(async () => {
   await getComments(props.parentId);
   loaded.value = true;
@@ -38,11 +42,15 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <section class="comments" v-if="loaded && comments.length !== 0">
+  <section class="comments" v-if="loaded && comments.length !== 0 && viewComments === true">
     <article v-for="comment in comments" :key="comment._id">
       <commentComponent v-if="editing !== comment._id" :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
       <editCommentForm v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
     </article>
+    <button class="pure-button" @click="toggleComments">Hide Comments</button>
+  </section>
+  <section v-else-if="viewComments !== true">
+    <button class="pure-button" @click="toggleComments">View Comments</button>
   </section>
   <p v-else-if="loaded">No comments found</p>
   <p v-else>Loading...</p>

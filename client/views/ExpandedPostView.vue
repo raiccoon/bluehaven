@@ -30,6 +30,8 @@ h1 {
 }
 section {
   display: flex;
-  flex-direction: row;
+  max-height: 70vh;
+  overflow-y: auto;
+  /* flex-direction: row; */
 }
 </style>
