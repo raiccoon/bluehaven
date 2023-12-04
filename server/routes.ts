@@ -205,6 +205,22 @@ class Routes {
     return Bookmark.getBookmarkedPosts(user);
   }
 
+  @Router.get("/modules/:_id/posts/bookmarked")
+  async getBookmarksByModule(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    const bookmarkedPosts = (await Bookmark.getBookmarkedPosts(user)).map((bookmark) => bookmark.post);
+    const postsInModule = await Module.getPostsInModule(new ObjectId(_id));
+    const bookmarksInModule = bookmarkedPosts.filter((bookmark) => postsInModule.includes(bookmark));
+    return Responses.posts(await Post.getPosts({ _id: { $in: bookmarksInModule } }));
+  }
+
+  @Router.get("/classes/id/:_id/posts/bookmarked")
+  async getBookmarksByClass(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    const bookmarkedPosts = (await Bookmark.getBookmarkedPosts(user)).filter((bookmark) => bookmark.classId.equals(new ObjectId(_id))).map((bookmark) => bookmark.post);
+    return Responses.posts(await Post.getPosts({ _id: { $in: bookmarkedPosts } }));
+  }
+
   // PINS ROUTES
 
   @Router.post("/pins")
