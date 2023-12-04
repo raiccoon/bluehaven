@@ -75,7 +75,8 @@ class Routes {
   //gets post by post id
   @Router.get("/posts/:_id")
   async getPostById(_id: ObjectId) {
-    const posts = await Post.getPosts({ _id });
+    const idObj = new ObjectId(_id);
+    const posts = await Post.getPosts({ _id: idObj });
     return posts[0];
   }
 
@@ -83,7 +84,7 @@ class Routes {
   async createPost(session: WebSessionDoc, module: ObjectId, content: string, image: string, video: string) {
     const user = WebSession.getUser(session);
     const classId = await Module.getClassOfModule(new ObjectId(module));
-    await Class.assertIsInstructor(classId!, user);
+    await Class.assertIsInstructor(new ObjectId(classId!), user);
 
     const created = await Post.create(user, content, image, video);
     await Module.addPost(created.post!._id, new ObjectId(module));
@@ -93,18 +94,18 @@ class Routes {
   @Router.patch("/posts/:_id")
   async updatePost(session: WebSessionDoc, _id: ObjectId, update: Partial<PostDoc>) {
     const user = WebSession.getUser(session);
-    await Post.isAuthor(user, _id);
-    return await Post.update(_id, update);
+    await Post.isAuthor(user, new ObjectId(_id));
+    return await Post.update(new ObjectId(_id), update);
   }
 
   @Router.delete("/posts/:_id")
   async deletePost(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
-    const classId = await Module.getClassOfPost(_id);
-    await Class.assertIsInstructor(classId!, user);
+    const classId = await Module.getClassOfPost(new ObjectId(_id));
+    await Class.assertIsInstructor(new ObjectId(classId!), user);
 
-    await Module.removePost(_id);
-    return Post.delete(_id);
+    await Module.removePost(new ObjectId(_id));
+    return Post.delete(new ObjectId(_id));
   }
 
   // COMMENT
@@ -152,7 +153,6 @@ class Routes {
   async deleteComment(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
     await Comment.isAuthor(new ObjectId(_id), user);
-    // TODO: instructor can delete a comment as well
     return await Comment.delete(new ObjectId(_id));
   }
 
@@ -170,15 +170,15 @@ class Routes {
   @Router.post("/bookmarks")
   async createBookmark(session: WebSessionDoc, post: ObjectId, classId: ObjectId) {
     const user = WebSession.getUser(session);
-    const created = await Bookmark.addBookmark(user, post, classId);
+    const created = await Bookmark.addBookmark(user, new ObjectId(post), new ObjectId(classId));
     return created;
   }
 
   @Router.delete("/bookmarks/:_id")
   async deleteBookmark(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
-    await Bookmark.isAuthor(user, _id);
-    return await Bookmark.deleteBookmark(_id);
+    await Bookmark.isAuthor(user, new ObjectId(_id));
+    return await Bookmark.deleteBookmark(new ObjectId(_id));
   }
 
   @Router.get("/bookmarks")
@@ -200,14 +200,19 @@ class Routes {
 
   @Router.delete("/pins/:_id")
   async deletePin(session: WebSessionDoc, _id: ObjectId) {
-    // const user = WebSession.getUser(session);
-    // TODO: verify instructor
-    return await Pin.deletePin(_id);
+    const user = WebSession.getUser(session);
+    const post = await Pin.getPostOfPin(new ObjectId(_id));
+    const pinClass = await Module.getClassOfPost(post);
+    await Class.assertIsInstructor(pinClass!, user);
+    return await Pin.deletePin(new ObjectId(_id));
   }
 
   @Router.get("/pins/:postId")
   async getPinsOnPost(session: WebSessionDoc, postId: ObjectId) {
-    // TODO; verify membership
+    const user = WebSession.getUser(session);
+    const post = await Pin.getPostOfPin(new ObjectId(postId));
+    const pinClass = await Module.getClassOfPost(post);
+    await Class.assertIsMember(pinClass!, user);
     return await Pin.getPostPins(postId);
   }
 

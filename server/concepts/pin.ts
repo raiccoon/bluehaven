@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 import DocCollection, { BaseDoc } from "../framework/doc";
-import { NotAllowedError } from "./errors";
+import { NotAllowedError, NotFoundError } from "./errors";
 
 export interface PinDoc extends BaseDoc {
   post: ObjectId;
@@ -17,6 +17,14 @@ export default class PinConcept {
       throw new AlreadyPinned(commentId);
     }
     return await this.pins.createOne({ post: postId, comment: commentId });
+  }
+
+  async getPostOfPin(_id: ObjectId) {
+    const pin = await this.pins.readOne({ _id });
+    if (pin === null) {
+      throw new NotFoundError("Pin with id {0} is not found", _id);
+    }
+    return pin!.post;
   }
 
   async deletePin(_id: ObjectId) {
