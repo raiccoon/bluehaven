@@ -123,7 +123,7 @@ class Routes {
   async getComments(parentId?: ObjectId) {
     let comments;
     if (parentId) {
-      comments = await Comment.getCommentsByParent(parentId);
+      comments = await Comment.getCommentsByParent(new ObjectId(parentId));
     } else {
       comments = await Comment.getComments({});
     }
@@ -132,7 +132,7 @@ class Routes {
 
   @Router.get("/parent/:_id")
   async getParentofComment(_id: ObjectId) {
-    const parent = await Comment.getParentOfComment(_id);
+    const parent = await Comment.getParentOfComment(new ObjectId(_id));
     if (parent !== undefined && (await Comment.isComment(parent))) {
       return { msg: "Comment", parent_id: parent };
     } else if (parent !== undefined) {
@@ -144,16 +144,16 @@ class Routes {
   @Router.patch("/comments/:_id")
   async updateComment(session: WebSessionDoc, _id: ObjectId, update: Partial<CommentDoc>) {
     const user = WebSession.getUser(session);
-    await Comment.isAuthor(_id, user);
-    return await Comment.update(_id, update);
+    await Comment.isAuthor(new ObjectId(_id), user);
+    return await Comment.update(new ObjectId(_id), update);
   }
 
   @Router.delete("/comments/:_id")
   async deleteComment(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
-    await Comment.isAuthor(_id, user);
+    await Comment.isAuthor(new ObjectId(_id), user);
     // TODO: instructor can delete a comment as well
-    return await Comment.delete(_id);
+    return await Comment.delete(new ObjectId(_id));
   }
 
   @Router.get("/comments/:_id/class")
@@ -194,7 +194,7 @@ class Routes {
     const user = WebSession.getUser(session);
     const postClass = await Module.getClassOfPost(new ObjectId(postId));
     await Class.assertIsInstructor(new ObjectId(postClass!), user);
-    const created = await Pin.addPin(postId, commentId);
+    const created = await Pin.addPin(new ObjectId(postId), new ObjectId(commentId));
     return created;
   }
 
@@ -209,6 +209,18 @@ class Routes {
   async getPinsOnPost(session: WebSessionDoc, postId: ObjectId) {
     // TODO; verify membership
     return await Pin.getPostPins(postId);
+  }
+
+  @Router.get("/pins/comments/:postId")
+  async getCommentsPinnedOrder(postId: ObjectId) {
+    // returns 2 sets, pinned comments followed by unpinned comments
+    const postObjectID = new ObjectId(postId);
+    const pinnedComments = await Pin.getPostPins(postObjectID);
+    let comments = await Comment.getCommentsByParent(postObjectID);
+    const pinnedCommentsAlone = pinnedComments.map((pinned) => pinned.comment.toString());
+    comments = comments.filter((comment) => pinnedCommentsAlone.indexOf(comment._id.toString()) === -1);
+
+    return { "Pinned Comments": pinnedComments, "UnPinned Comments": comments };
   }
 
   // FRIENDS
