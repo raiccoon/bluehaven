@@ -75,8 +75,10 @@ onBeforeMount(async () => {
   <p class="text single-line">{{ props.comment.content }}</p>
   <div class="base">
     <button v-if="!viewReplies" class="pure-button btn-small" @click="toggleReplies">View replies</button>
-    <button v-if="viewReplies" class="pure-button btn-small" @click="toggleReplies">Hide Replies</button>
-    <commentList v-if="viewReplies" :parentId="props.comment._id" />
+    <p v-if="viewReplies" class="replies">
+      <button v-if="viewReplies" class="pure-button btn-small" @click="toggleReplies">Hide Replies</button>
+      <commentList v-if="viewReplies" :parentId="props.comment._id" />
+    </p>
     <article class="timestamp">
       <p v-if="props.comment.dateCreated !== props.comment.dateUpdated">Edited on: {{ formatDate(props.comment.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.comment.dateCreated) }}</p>
@@ -135,5 +137,13 @@ p {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.replies {
+  display: flex;
+  max-width: 200px;
+  background-color: white;
+  justify-content: center;
+  flex-direction: column;
 }
 </style>

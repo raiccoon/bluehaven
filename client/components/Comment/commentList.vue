@@ -79,7 +79,7 @@ article {
   flex-direction: column;
   gap: 0.5em;
   padding: 1em;
-  width: 60vh;
+  width: 70%;
 }
 
 .posts {
