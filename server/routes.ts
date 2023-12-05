@@ -225,6 +225,15 @@ class Routes {
     return await Pin.deletePin(new ObjectId(_id));
   }
 
+  // @Router.delete("/pins/comment/:_id")
+  // async deletePinByCommentId(session: WebSessionDoc, _id: ObjectId) {
+  //   const user = WebSession.getUser(session);
+  //   const post = await Pin.getPostOfPin(new ObjectId(_id));
+  //   const pinClass = await Module.getClassOfPost(post);
+  //   await Class.assertIsInstructor(pinClass!, user);
+  //   return await Pin.deletePin(new ObjectId(_id));
+  // }
+
   @Router.get("/pins/:postId")
   async getPinsOnPost(session: WebSessionDoc, postId: ObjectId) {
     const user = WebSession.getUser(session);
