@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import commentList from "@/components/Comment/commentList.vue";
 import ExpandedPost from "@/components/Post/ExpandedPost.vue";
 import { ref } from "vue";
 
@@ -14,6 +15,7 @@ function updateEditing(id: string) {
     <h1>Module Name</h1>
     <section>
       <ExpandedPost v-if="editing !== $route.params.postId" :postId="$route.params.postId" :author="$route.query.author" />
+      <commentList :parentId="$route.params.postId" />
     </section>
   </main>
 </template>
@@ -21,5 +23,11 @@ function updateEditing(id: string) {
 <style scoped>
 h1 {
   text-align: center;
+}
+section {
+  display: flex;
+  max-height: 70vh;
+  overflow-y: auto;
+  /* flex-direction: row; */
 }
 </style>

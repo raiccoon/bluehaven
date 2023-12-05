@@ -101,7 +101,7 @@ p {
 }
 .article {
   margin: 1em;
-  max-width: 45%;
+  width: 70vh;
   background-color: var(--base-bg);
   border-radius: 1em;
   display: flex;

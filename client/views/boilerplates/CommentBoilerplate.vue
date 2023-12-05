@@ -6,6 +6,7 @@ import getComments from "@/components/Comment/boilerplate/getComments.vue";
 import getParentOfComment from "@/components/Comment/boilerplate/getParentOfComment.vue";
 
 import updateComment from "@/components/Comment/boilerplate/updateComment.vue";
+import createCommentForm from "@/components/Comment/createCommentForm.vue";
 </script>
 
 <template>
@@ -18,6 +19,7 @@ import updateComment from "@/components/Comment/boilerplate/updateComment.vue";
       <updateComment />
       <deleteComment />
       <getClassOfComment />
+      <createCommentForm />
     </div>
   </main>
 </template>

@@ -6,6 +6,7 @@ import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import SearchPostForm from "./SearchPostForm.vue";
+// import { eventBus } from "../main";
 
 const { isLoggedIn } = storeToRefs(useUserStore());
 
@@ -42,14 +43,16 @@ onBeforeMount(async () => {
     <h2 v-else>Posts by {{ searchAuthor }}:</h2>
     <SearchPostForm @getPostsByAuthor="getPosts" />
   </div>
-  <section class="posts" v-if="loaded && posts.length !== 0">
-    <article v-for="post in posts" :key="post._id">
-      <PostComponent v-if="editing !== post._id" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
-      <EditPostForm v-else :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
-    </article>
-  </section>
-  <p v-else-if="loaded">No posts found</p>
-  <p v-else>Loading...</p>
+  <div>
+    <section class="posts" v-if="loaded && posts.length !== 0">
+      <article v-for="post in posts" :key="post._id">
+        <PostComponent v-if="editing !== post._id" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+        <EditPostForm v-else :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+      </article>
+    </section>
+    <p v-else-if="loaded">No posts found</p>
+    <p v-else>Loading...</p>
+  </div>
 </template>
 
 <style scoped>
@@ -57,6 +60,8 @@ section {
   display: flex;
   flex-direction: column;
   gap: 1em;
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 section,
