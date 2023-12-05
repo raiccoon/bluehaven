@@ -151,9 +151,9 @@ class Routes {
     const parentPost = await Comment.getPostParent(new ObjectId(_id));
     const commentClass = await Module.getClassOfPost(parentPost!);
 
-    const isAuthor = await Comment.isAuthor(new ObjectId(_id), user);
     const isInstructor = await Class.isInstructor(commentClass!, user);
-    await Comment.canEdit(isAuthor, isInstructor);
+    await Comment.canEdit(new ObjectId(_id), user, isInstructor);
+    await Comment.canEdit(new ObjectId(_id), user, isInstructor);
 
     if (isInstructor) {
       // set to true if an instructor made the edit regardless of author
@@ -170,9 +170,8 @@ class Routes {
     const parentPost = await Comment.getPostParent(new ObjectId(_id));
     const commentClass = await Module.getClassOfPost(parentPost!);
 
-    const isAuthor = await Comment.isAuthor(new ObjectId(_id), user);
     const isInstructor = await Class.isInstructor(commentClass!, user);
-    await Comment.canEdit(isAuthor, isInstructor);
+    await Comment.canEdit(new ObjectId(_id), user, isInstructor);
     return await Comment.delete(new ObjectId(_id));
   }
 

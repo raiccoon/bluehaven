@@ -98,9 +98,10 @@ export default class CommentConcept {
     return parent;
   }
 
-  async canEdit(isAuthor: boolean, isInstructor: boolean) {
+  async canEdit(commentId: ObjectId, user: ObjectId, isInstructor: boolean) {
+    const isAuthor = await this.isAuthor(commentId, user);
     if (!isAuthor && !isInstructor) {
-      throw new NotAllowedError("You must be the author or an instructor to edit!");
+      throw new NotAllowedError("You must be the author or an instructor!");
     }
     return true;
   }
