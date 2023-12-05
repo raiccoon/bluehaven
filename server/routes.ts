@@ -153,7 +153,6 @@ class Routes {
 
     const isInstructor = await Class.isInstructor(commentClass!, user);
     await Comment.canEdit(new ObjectId(_id), user, isInstructor);
-    await Comment.canEdit(new ObjectId(_id), user, isInstructor);
 
     if (isInstructor) {
       // set to true if an instructor made the edit regardless of author
