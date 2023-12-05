@@ -120,6 +120,13 @@ class Routes {
     return { msg: created.msg, comment: await Responses.post(created.comment) };
   }
 
+  @Router.get("/comment/:_id/canEdit")
+  async canEdit(session: WebSessionDoc, comment: ObjectId) {
+    const user = WebSession.getUser(session);
+    if (!Comment.isAuthor(new ObjectId(comment), user)) {
+    }
+  }
+
   @Router.get("/comments")
   async getComments(parentId?: ObjectId) {
     let comments;
