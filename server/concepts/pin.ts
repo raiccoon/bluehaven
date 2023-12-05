@@ -32,6 +32,12 @@ export default class PinConcept {
     return { msg: "Pin deleted successfully!" };
   }
 
+  // async deletePinByCommentId(_id: ObjectId) {
+  //   // TODO: expose route
+  //   const pinDoc = await this.pins.readOne({ comment: _id });
+  //   return await this.deletePin(pinDoc!._id);
+  // }
+
   async getPostPins(post: ObjectId) {
     const pins = await this.pins.readMany({ post: post });
     return pins;

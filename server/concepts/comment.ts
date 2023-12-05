@@ -48,6 +48,14 @@ export default class CommentConcept {
     }
   }
 
+  async getComment(commentId: ObjectId) {
+    const commentDoc = await this.comments.readOne({ _id: commentId });
+    if (commentDoc === null) {
+      throw new NotFoundError(`Comment not found!`);
+    }
+    return commentDoc;
+  }
+
   async deleteComment(_id: ObjectId) {
     await this.comments.deleteOne({ _id });
     return { msg: "Comment deleted successfully!" };
