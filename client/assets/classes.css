@@ -1,41 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@500&family=Noto+Sans:wght@700&display=swap');
 main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-left: 20px;
+  margin-right: 20px;
+  font-family: 'Assistant', sans-serif;
 }
 h1 {
   text-align: center;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 40px;
+}
+h2 {
+  font-family: 'Assistant', sans-serif;
 }
 section {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-
-.tile {
-  width: 250px;
-  height: 150px;
-  background-color: #a7d6f8ff;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  border-radius: 8px;
-  border: 0px;
-  transition: background-color 0.1s ease;
-}
-  
-.tile:hover {
-  background-color: #96bad4ff;
-}
-
-.className {
-  font-size: 1.2em;
-  position: absolute; 
-  top: 10px; 
-  left: 40px; 
 }
