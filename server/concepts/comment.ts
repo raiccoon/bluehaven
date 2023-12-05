@@ -53,7 +53,7 @@ export default class CommentConcept {
     return { msg: "Comment deleted successfully!" };
   }
 
-  async isAuthor(_id: ObjectId, userId: ObjectId) {
+  async assertIsAuthor(_id: ObjectId, userId: ObjectId) {
     const comment = await this.comments.readOne({ _id });
     if (!comment) {
       throw new NotFoundError(`Comment ${_id} does not exist!`);
@@ -61,6 +61,22 @@ export default class CommentConcept {
     if (comment.author.toString() !== userId.toString()) {
       throw new CommentAuthorNotMatchError(userId, _id);
     }
+  }
+
+  async commentSetInstructorEdited(_id: ObjectId) {
+    await this.comments.updateOne({ _id }, { instructorEdited: true });
+    return { msg: "Comment successfully updated!" };
+  }
+
+  async isAuthor(_id: ObjectId, userId: ObjectId) {
+    const comment = await this.comments.readOne({ _id });
+    if (!comment) {
+      throw new NotFoundError(`Comment ${_id} does not exist!`);
+    }
+    if (comment.author.toString() !== userId.toString()) {
+      return false;
+    }
+    return true;
   }
 
   async update(_id: ObjectId, update: Partial<CommentDoc>) {
@@ -80,6 +96,13 @@ export default class CommentConcept {
       parent = await this.getParentOfComment(parent!);
     }
     return parent;
+  }
+
+  async canEdit(isAuthor: boolean, isInstructor: boolean) {
+    if (!isAuthor && !isInstructor) {
+      throw new NotAllowedError("You must be the author or an instructor to edit!");
+    }
+    return true;
   }
 
   private sanitizeUpdate(update: Partial<CommentDoc>) {

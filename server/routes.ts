@@ -110,15 +110,6 @@ class Routes {
 
   // COMMENT
 
-  @Router.get("/comments/:_id/class")
-  async getClassOfComment(_id: ObjectId) {
-    let parent = await Comment.getParentOfComment(new ObjectId(_id));
-    while (await Comment.isComment(parent!)) {
-      parent = await Comment.getParentOfComment(parent!);
-    }
-    return await Module.getClassOfPost(parent!);
-  }
-
   @Router.post("/comments")
   async createComment(session: WebSessionDoc, parent: ObjectId, content: string, image: string, video: string) {
     const user = WebSession.getUser(session);
@@ -129,13 +120,6 @@ class Routes {
       await Class.assertIsMember(commentClass!, user);
     }
     return { msg: created.msg, comment: await Responses.post(created.comment) };
-  }
-
-  @Router.get("/comment/:_id/canEdit")
-  async canEdit(session: WebSessionDoc, comment: ObjectId) {
-    const user = WebSession.getUser(session);
-    if (!Comment.isAuthor(new ObjectId(comment), user)) {
-    }
   }
 
   @Router.get("/comments")
@@ -163,16 +147,57 @@ class Routes {
   @Router.patch("/comments/:_id")
   async updateComment(session: WebSessionDoc, _id: ObjectId, update: Partial<CommentDoc>) {
     const user = WebSession.getUser(session);
-    await Comment.isAuthor(new ObjectId(_id), user);
+
+    const parentPost = await Comment.getPostParent(new ObjectId(_id));
+    const commentClass = await Module.getClassOfPost(parentPost!);
+
+    const isAuthor = await Comment.isAuthor(new ObjectId(_id), user);
+    const isInstructor = await Class.isInstructor(commentClass!, user);
+    await Comment.canEdit(isAuthor, isInstructor);
+
+    if (isInstructor) {
+      // set to true if an instructor made the edit regardless of author
+      await Comment.commentSetInstructorEdited(new ObjectId(_id));
+    }
+
     return await Comment.update(new ObjectId(_id), update);
   }
+
+  // @Router.get("/comment/:_id/canEdit")
+  // async canEdit(session: WebSessionDoc, comment: ObjectId) {
+  //   const user = WebSession.getUser(session);
+  //   const parentPost = await Comment.getPostParent(new ObjectId(comment));
+  //   const commentClass = await Module.getClassOfPost(parentPost!);
+  //   if (!Comment.isAuthor(new ObjectId(comment), user)) {
+  //     if (!Class.isInstructor(commentClass!, user)) {
+  //       return false;
+  //     }
+  //     return true;
+  //   }
+  // }
 
   @Router.delete("/comments/:_id")
   async deleteComment(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
-    await Comment.isAuthor(new ObjectId(_id), user);
+
+    const parentPost = await Comment.getPostParent(new ObjectId(_id));
+    const commentClass = await Module.getClassOfPost(parentPost!);
+
+    const isAuthor = await Comment.isAuthor(new ObjectId(_id), user);
+    const isInstructor = await Class.isInstructor(commentClass!, user);
+    await Comment.canEdit(isAuthor, isInstructor);
     return await Comment.delete(new ObjectId(_id));
   }
+
+  @Router.get("/comments/:_id/class")
+  async getClassOfComment(_id: ObjectId) {
+    let parent = await Comment.getParentOfComment(new ObjectId(_id));
+    while (await Comment.isComment(parent!)) {
+      parent = await Comment.getParentOfComment(parent!);
+    }
+    return await Module.getClassOfPost(parent!);
+  }
+
   // BOOKMARK
 
   @Router.post("/bookmarks")
