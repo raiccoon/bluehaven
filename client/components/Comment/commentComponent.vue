@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import commentList from "@/components/Comment/commentList.vue";
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
@@ -75,6 +76,7 @@ onBeforeMount(async () => {
   <div class="base">
     <button v-if="!viewReplies" class="pure-button btn-small" @click="toggleReplies">View replies</button>
     <button v-if="viewReplies" class="pure-button btn-small" @click="toggleReplies">Hide Replies</button>
+    <commentList v-if="viewReplies" :parentId="props.comment._id" />
     <article class="timestamp">
       <p v-if="props.comment.dateCreated !== props.comment.dateUpdated">Edited on: {{ formatDate(props.comment.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.comment.dateCreated) }}</p>
