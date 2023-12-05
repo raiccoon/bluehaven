@@ -57,11 +57,18 @@ onBeforeMount(async () => {
 <template>
   <div class="comment-header">
     <p class="author">{{ props.comment.author }}</p>
+    <!-- labels -->
+    <!-- <label class="label">label 1</label>
+    <label class="label">label 2</label>
+    <label class="label">label 3</label> -->
+
     <!-- placeholder for triple dots -->
     <button v-if="!viewOptions" class="options-button pure-button btn-small" @click="toggleOptions">Options</button>
     <menu class="options" v-if="viewOptions">
       <li><button v-if="props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
       <li><button v-if="props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
+      <li><button class="btn-small pure-button">Add Label</button></li>
+      <li><button class="btn-small pure-button">Pin/Unpin</button></li>
       <button class="options-button pure-button btn-small" @click="toggleOptions">Hide Options</button>
     </menu>
   </div>
@@ -144,5 +151,12 @@ p {
   max-width: 200px;
   justify-content: center;
   flex-direction: column;
+}
+
+.label {
+  background-color: gray;
+  padding: 0.5rem;
+  border-radius: 10%;
+  color: white;
 }
 </style>
