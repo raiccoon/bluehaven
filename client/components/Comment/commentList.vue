@@ -12,6 +12,7 @@ const { isLoggedIn } = storeToRefs(useUserStore());
 
 const loaded = ref(false);
 const props = defineProps(["parentId"]);
+let pins = ref<Array<Record<string, string>>>([]);
 let comments = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 let viewComments = ref(false);
@@ -20,12 +21,13 @@ async function getComments(parentId: string) {
   let query: Record<string, string> = parentId !== undefined ? { parentId } : {};
   let commentResults;
   try {
-    commentResults = await fetchy(`/api/comments/`, "GET", { query });
+    // originally passed in query instead of parentId in fetchy?
+    commentResults = await fetchy(`/api/pins/comments/${parentId}`, "GET");
   } catch (_) {
     return;
   }
-  //   searchAuthor.value = author ? author : "";
-  comments.value = commentResults;
+  comments.value = commentResults["UnPinned Comments"];
+  pins.value = commentResults["Pinned Comments"];
 }
 
 function updateEditing(id: string) {
@@ -45,6 +47,11 @@ onBeforeMount(async () => {
 <template>
   <section class="comments" v-if="loaded && viewComments === true">
     <createCommentForm :parent="props.parentId" @refreshComments="getComments($props.parentId)" />
+    <!-- putting pinned comments first, need to troubleshoot pins -->
+    <article v-for="pinnedComment in pins" :key="pinnedComment._id">
+      <commentComponent v-if="editing !== pinnedComment.comment" :comment="pinnedComment.comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+      <editCommentForm v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+    </article>
     <article v-for="comment in comments" :key="comment._id">
       <commentComponent v-if="editing !== comment._id" :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
       <editCommentForm v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
