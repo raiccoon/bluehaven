@@ -11,6 +11,8 @@ const { currentUsername } = storeToRefs(useUserStore());
 
 const hasImage = ref(false);
 const hasVideo = ref(false);
+const viewOptions = ref(false);
+const viewReplies = ref(false);
 
 const deleteComment = async () => {
   try {
@@ -19,6 +21,22 @@ const deleteComment = async () => {
     return;
   }
   emit("refreshComments");
+};
+
+const toggleOptions = async () => {
+  try {
+    viewOptions.value = !viewOptions.value;
+  } catch {
+    return;
+  }
+};
+
+const toggleReplies = async () => {
+  try {
+    viewReplies.value = !viewReplies.value;
+  } catch {
+    return;
+  }
 };
 
 onBeforeMount(async () => {
@@ -36,7 +54,16 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <p class="author">{{ props.comment.author }}</p>
+  <div class="comment-header">
+    <p class="author">{{ props.comment.author }}</p>
+    <!-- placeholder for triple dots -->
+    <button v-if="!viewOptions" class="options-button pure-button btn-small" @click="toggleOptions">Options</button>
+    <menu class="options" v-if="viewOptions">
+      <li><button v-if="props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
+      <li><button v-if="props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
+      <button class="options-button pure-button btn-small" @click="toggleOptions">Hide Options</button>
+    </menu>
+  </div>
 
   <img v-if="hasImage" class="postMedia image" :src="props.comment.image" />
   <video v-if="hasVideo" class="postMedia video" controls>
@@ -46,10 +73,8 @@ onBeforeMount(async () => {
   <!-- truncate text, can view full text by expanding -->
   <p class="text single-line">{{ props.comment.content }}</p>
   <div class="base">
-    <menu>
-      <li><button v-if="props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
-      <li><button v-if="props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
-    </menu>
+    <button v-if="!viewReplies" class="pure-button btn-small" @click="toggleReplies">View replies</button>
+    <button v-if="viewReplies" class="pure-button btn-small" @click="toggleReplies">Hide Replies</button>
     <article class="timestamp">
       <p v-if="props.comment.dateCreated !== props.comment.dateUpdated">Edited on: {{ formatDate(props.comment.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.comment.dateCreated) }}</p>
@@ -67,7 +92,7 @@ p {
   font-size: 1.2em;
 }
 
-menu {
+.options {
   list-style-type: none;
   display: flex;
   flex-direction: row;
@@ -102,5 +127,11 @@ menu {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.comment-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 </style>

@@ -69,7 +69,7 @@ section,
 p,
 .row {
   margin: 0 auto;
-  max-width: 60em;
+  /* max-width: 60em; */
 }
 
 article {
@@ -79,6 +79,7 @@ article {
   flex-direction: column;
   gap: 0.5em;
   padding: 1em;
+  width: 60vh;
 }
 
 .posts {
@@ -89,6 +90,6 @@ article {
   display: flex;
   justify-content: space-between;
   margin: 0 auto;
-  max-width: 60em;
+  /* max-width: 70em; */
 }
 </style>
