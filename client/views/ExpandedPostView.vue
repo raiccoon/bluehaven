@@ -15,10 +15,7 @@ function updateEditing(id: string) {
     <h1>Module Name</h1>
     <section>
       <ExpandedPost v-if="editing !== $route.params.postId" :postId="$route.params.postId" :author="$route.query.author" />
-      <div>
-        <!-- <createCommentForm :parent="$route.params.postId" /> -->
-        <commentList :parentId="$route.params.postId" />
-      </div>
+      <commentList :parentId="$route.params.postId" />
     </section>
   </main>
 </template>

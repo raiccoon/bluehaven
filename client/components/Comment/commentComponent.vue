@@ -142,7 +142,6 @@ p {
 .replies {
   display: flex;
   max-width: 200px;
-  background-color: white;
   justify-content: center;
   flex-direction: column;
 }
