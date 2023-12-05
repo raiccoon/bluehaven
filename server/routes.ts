@@ -163,19 +163,6 @@ class Routes {
     return await Comment.update(new ObjectId(_id), update);
   }
 
-  // @Router.get("/comment/:_id/canEdit")
-  // async canEdit(session: WebSessionDoc, comment: ObjectId) {
-  //   const user = WebSession.getUser(session);
-  //   const parentPost = await Comment.getPostParent(new ObjectId(comment));
-  //   const commentClass = await Module.getClassOfPost(parentPost!);
-  //   if (!Comment.isAuthor(new ObjectId(comment), user)) {
-  //     if (!Class.isInstructor(commentClass!, user)) {
-  //       return false;
-  //     }
-  //     return true;
-  //   }
-  // }
-
   @Router.delete("/comments/:_id")
   async deleteComment(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
