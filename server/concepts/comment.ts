@@ -74,6 +74,14 @@ export default class CommentConcept {
     return { msg: "Comment deleted successfully!" };
   }
 
+  async getPostParent(_id: ObjectId) {
+    let parent = await this.getParentOfComment(_id);
+    while (await this.isComment(parent!)) {
+      parent = await this.getParentOfComment(parent!);
+    }
+    return parent;
+  }
+
   private sanitizeUpdate(update: Partial<CommentDoc>) {
     // Make sure the update cannot change the author or parent.
     const allowedUpdates = ["content", "image", "video", "instructorEdited"];

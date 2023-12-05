@@ -110,7 +110,7 @@ export default class ClassConcept {
     const maybeInstructor = this.instructorMemberships.readOne({ classId, user });
     const maybeStudent = this.studentMemberships.readOne({ classId, user });
     if (!((await maybeInstructor) || (await maybeStudent))) {
-      throw new NotAllowedError("Error");
+      throw new NotAllowedError("You are not a member of class {0}", classId);
     }
   }
 
