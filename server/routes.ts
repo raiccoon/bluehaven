@@ -110,13 +110,24 @@ class Routes {
 
   // COMMENT
 
+  @Router.get("/comments/:_id/class")
+  async getClassOfComment(_id: ObjectId) {
+    let parent = await Comment.getParentOfComment(new ObjectId(_id));
+    while (await Comment.isComment(parent!)) {
+      parent = await Comment.getParentOfComment(parent!);
+    }
+    return await Module.getClassOfPost(parent!);
+  }
+
   @Router.post("/comments")
   async createComment(session: WebSessionDoc, parent: ObjectId, content: string, image: string, video: string) {
     const user = WebSession.getUser(session);
-
-    // const classId = await Module.getClassOfModule(new ObjectId(module));
-    // await Class.assertIsInstructor(classId!, user);
     const created = await Comment.create(user, new ObjectId(parent), content, image, video);
+    if (created.comment !== null) {
+      const parentPost = await Comment.getPostParent(created.comment._id);
+      const commentClass = await Module.getClassOfPost(parentPost!);
+      await Class.assertIsMember(commentClass!, user);
+    }
     return { msg: created.msg, comment: await Responses.post(created.comment) };
   }
 
@@ -155,16 +166,6 @@ class Routes {
     await Comment.isAuthor(new ObjectId(_id), user);
     return await Comment.delete(new ObjectId(_id));
   }
-
-  @Router.get("/comments/:_id/class")
-  async getClassOfComment(_id: ObjectId) {
-    let parent = await Comment.getParentOfComment(new ObjectId(_id));
-    while (await Comment.isComment(parent!)) {
-      parent = await Comment.getParentOfComment(parent!);
-    }
-    return await Module.getClassOfPost(parent!);
-  }
-
   // BOOKMARK
 
   @Router.post("/bookmarks")
