@@ -40,17 +40,20 @@ const toggleReplies = async () => {
   }
 };
 
-// const togglePin = async () => {
-//   try {
-//     if (props.isPinned) {
-//       // delete pin fetchy - need to make it so it deletes the pin with the commentId since I don't have it in here?
-//     } else {
-//       // create pin fetchy - easier
-//     }
-//   } catch {
-//     return;
-//   }
-// };
+const togglePin = async () => {
+  try {
+    if (props.isPinned) {
+      await fetchy(`/api/pins/comment/${props.comment._id}`, "DELETE");
+    } else {
+      await fetchy("/api/pins", "POST", {
+        body: { postId: props.comment.parentId, commentId: props.comment._id },
+      });
+    }
+  } catch {
+    return;
+  }
+  emit("refreshComments");
+};
 
 onBeforeMount(async () => {
   try {
@@ -60,8 +63,6 @@ onBeforeMount(async () => {
     if (props.comment.video !== "") {
       hasVideo.value = true;
     }
-    console.log("isPinned", props.isPinned);
-    // pinned.value = props.isPinned !== undefined ? props.isPinned : false;
   } catch (_) {
     return;
   }
@@ -85,8 +86,8 @@ onBeforeMount(async () => {
       <li><button v-if="props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
       <li><button v-if="props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
       <li><button class="btn-small pure-button">Add Label</button></li>
-      <li v-if="isPinned"><button class="btn-small pure-button">Unpin</button></li>
-      <li v-else><button class="btn-small pure-button">Pin</button></li>
+      <li v-if="isPinned"><button class="btn-small pure-button" @click="togglePin">Unpin</button></li>
+      <li v-else><button class="btn-small pure-button" @click="togglePin">Pin</button></li>
       <button class="options-button pure-button btn-small" @click="toggleOptions">Hide Options</button>
     </menu>
   </div>

@@ -62,7 +62,7 @@ onBeforeMount(async () => {
     <button class="pure-button" @click="toggleComments">Hide Comments</button>
   </section>
   <section v-else-if="viewComments !== true">
-    <button class="pure-button" @click="toggleComments">View Comments</button>
+    <button class="pure-button view-comments" @click="toggleComments">View Comments</button>
   </section>
   <p v-else-if="loaded">No comments found</p>
   <p v-else>Loading...</p>
@@ -101,5 +101,10 @@ article {
   justify-content: space-between;
   margin: 0 auto;
   /* max-width: 70em; */
+}
+
+.view-comments {
+  gap: 1em;
+  margin: 1em;
 }
 </style>
