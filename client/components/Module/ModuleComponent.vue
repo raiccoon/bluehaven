@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ModuleHeader from "@/components/Module/ModuleHeader.vue";
 import PostComponent from "@/components/Post/PostComponent.vue";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
@@ -6,6 +7,12 @@ import { fetchy } from "../../utils/fetchy";
 const loaded = ref(false);
 const props = defineProps(["module"]);
 let posts = ref<Array<Record<string, string>>>([]);
+
+const isModuleClicked = ref(false);
+
+const clickModule = () => {
+  isModuleClicked.value = !isModuleClicked.value;
+};
 
 const getPostsInModule = async () => {
   let moduleResults;
@@ -24,40 +31,39 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <p>{{ "Name: " + props.module.name }}</p>
-  <p>{{ "Description: " + props.module.description }}</p>
-  <section class="posts" v-if="loaded && posts.length !== 0">
-    <article v-for="post in posts" :key="post._id">
-      <PostComponent :post="post" />
-    </article>
-  </section>
-  <p v-else-if="loaded">No posts found</p>
-  <p v-else>Loading...</p>
+  <main>
+    <ModuleHeader :module="module" @expand="clickModule" />
+    <div class="posts" v-if="isModuleClicked && loaded && posts.length !== 0">
+      <article v-for="post in posts" :key="post._id">
+        <PostComponent :post="post" />
+      </article>
+    </div>
+    <p v-else-if="isModuleClicked">No posts to show.</p>
+  </main>
 </template>
 
 <style scoped>
-article {
-  background-color: var(--base-bg);
-  border-radius: 1em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-  padding: 1em;
+main {
+  width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  @media (max-width: 1000px) {
+    width: calc(100vw - 100px);
+    max-width: 900px;
+    margin-left: 50px;
+    margin-right: 50px;
+  }
 }
 
 .posts {
-  padding: 1em;
-}
-
-section {
+  width: calc(100% - 80px);
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 10px;
+  margin-top: 10px;
 }
-
-section,
-p {
-  margin: 0 auto;
-  max-width: 60em;
+article {
+  background-color: #eff0f6ff;
+  border-radius: 8px;
 }
 </style>

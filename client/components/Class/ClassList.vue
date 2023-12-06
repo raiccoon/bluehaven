@@ -5,6 +5,7 @@ import ClassTile from "@/components/Class/ClassTile.vue";
 import { fetchy } from "@/utils/fetchy";
 import { defineProps, onBeforeMount, ref } from "vue";
 
+const loaded = ref(false);
 const props = defineProps({
   role: String,
 });
@@ -23,6 +24,7 @@ const handleRefresh = async () => {
 };
 onBeforeMount(async () => {
   await getClasses();
+  loaded.value = true;
 });
 </script>
 
@@ -36,7 +38,7 @@ onBeforeMount(async () => {
       <h2 class="enrolled">Enrolled: Student</h2>
       <JoinClassButton @classJoined="handleRefresh" />
     </div>
-    <div class="tile-container">
+    <div v-if="loaded" class="tile-container">
       <div v-if="classIDs.length === 0" class="placeholder">No classes to show.</div>
       <ClassTile v-for="classID in classIDs" :key="classID" :_id="classID" />
     </div>

@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import Class from "@/components/Class/ClassComponent.vue";
-
-import router from "../router";
-
-function goBack() {
-  void router.push({ name: "Classes" });
-}
+import BackButton from "@/components/BackButton.vue";
 </script>
 <template>
   <main>
-    <button @click="goBack">Back</button>
+    <BackButton :routeName="'Classes'" />
     <Class :classId="$route.params.classId" />
   </main>
 </template>
