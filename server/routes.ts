@@ -186,9 +186,10 @@ class Routes {
   // BOOKMARK
 
   @Router.post("/bookmarks")
-  async createBookmark(session: WebSessionDoc, post: ObjectId, classId: ObjectId) {
+  async createBookmark(session: WebSessionDoc, post: ObjectId) {
     const user = WebSession.getUser(session);
-    const created = await Bookmark.addBookmark(user, new ObjectId(post), new ObjectId(classId));
+    const classId = await Module.getClassOfPost(new ObjectId(post));
+    const created = await Bookmark.addBookmark(user, new ObjectId(post), classId!);
     return created;
   }
 
@@ -203,6 +204,22 @@ class Routes {
   async getBookmarkedPosts(session: WebSessionDoc) {
     const user = WebSession.getUser(session);
     return Bookmark.getBookmarkedPosts(user);
+  }
+
+  @Router.get("/modules/:_id/posts/bookmarked")
+  async getBookmarksByModule(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    const bookmarkedPosts = (await Bookmark.getBookmarkedPosts(user)).map((bookmark) => bookmark.post);
+    const postsInModule = (await Module.getPostsInModule(new ObjectId(_id))).map((id) => id.toString());
+    const bookmarksInModule = bookmarkedPosts.filter((bookmark) => postsInModule.includes(bookmark.toString()));
+    return Responses.posts(await Post.getPosts({ _id: { $in: bookmarksInModule } }));
+  }
+
+  @Router.get("/classes/id/:_id/posts/bookmarked")
+  async getBookmarksByClass(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    const bookmarkedPosts = (await Bookmark.getBookmarkedPosts(user)).filter((bookmark) => bookmark.classId.toString() === new ObjectId(_id).toString()).map((bookmark) => bookmark.post);
+    return Responses.posts(await Post.getPosts({ _id: { $in: bookmarkedPosts } }));
   }
 
   // PINS ROUTES
