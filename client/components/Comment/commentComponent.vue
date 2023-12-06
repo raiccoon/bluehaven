@@ -14,7 +14,6 @@ const hasImage = ref(false);
 const hasVideo = ref(false);
 const viewOptions = ref(false);
 const viewReplies = ref(false);
-const pinned = ref(false);
 
 const deleteComment = async () => {
   try {
@@ -41,17 +40,17 @@ const toggleReplies = async () => {
   }
 };
 
-const togglePin = async () => {
-  try {
-    if (pinned.value) {
-      // delete pin fetchy - need to make it so it deletes the pin with the commentId since I don't have it in here?
-    } else {
-      // create pin fetchy - easier
-    }
-  } catch {
-    return;
-  }
-};
+// const togglePin = async () => {
+//   try {
+//     if (props.isPinned) {
+//       // delete pin fetchy - need to make it so it deletes the pin with the commentId since I don't have it in here?
+//     } else {
+//       // create pin fetchy - easier
+//     }
+//   } catch {
+//     return;
+//   }
+// };
 
 onBeforeMount(async () => {
   try {
@@ -61,7 +60,8 @@ onBeforeMount(async () => {
     if (props.comment.video !== "") {
       hasVideo.value = true;
     }
-    pinned.value = props.isPinned !== undefined ? props.isPinned : false;
+    console.log("isPinned", props.isPinned);
+    // pinned.value = props.isPinned !== undefined ? props.isPinned : false;
   } catch (_) {
     return;
   }
@@ -70,7 +70,10 @@ onBeforeMount(async () => {
 
 <template>
   <div class="comment-header">
-    <p class="author">{{ props.comment.author }}</p>
+    <div class="user-info">
+      <div class="author">{{ props.comment.author }}</div>
+      <em v-if="isPinned">(pinned)</em>
+    </div>
     <!-- labels -->
     <!-- <label class="label">label 1</label>
     <label class="label">label 2</label>
@@ -82,7 +85,7 @@ onBeforeMount(async () => {
       <li><button v-if="props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
       <li><button v-if="props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
       <li><button class="btn-small pure-button">Add Label</button></li>
-      <li v-if="pinned"><button class="btn-small pure-button">Unpin</button></li>
+      <li v-if="isPinned"><button class="btn-small pure-button">Unpin</button></li>
       <li v-else><button class="btn-small pure-button">Pin</button></li>
       <button class="options-button pure-button btn-small" @click="toggleOptions">Hide Options</button>
     </menu>
@@ -173,5 +176,11 @@ p {
   padding: 0.5rem;
   border-radius: 10%;
   color: white;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
 }
 </style>

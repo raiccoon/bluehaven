@@ -12,7 +12,7 @@ const { isLoggedIn } = storeToRefs(useUserStore());
 
 const loaded = ref(false);
 const props = defineProps(["parentId"]);
-let pins = ref<Array<Record<string, string>>>([]);
+let pinnedComments = ref<Array<Record<string, string>>>([]);
 let comments = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 let viewComments = ref(false);
@@ -23,11 +23,14 @@ async function getComments(parentId: string) {
   try {
     // originally passed in query instead of parentId in fetchy?
     commentResults = await fetchy(`/api/pins/comments/${parentId}`, "GET");
+    console.log("commentResults", commentResults);
   } catch (_) {
     return;
   }
   comments.value = commentResults["UnPinned Comments"];
-  pins.value = commentResults["Pinned Comments"];
+  pinnedComments.value = commentResults["Pinned Comments"];
+  console.log("comments.value", comments.value);
+  console.log("pinnedComments.value", pinnedComments.value);
 }
 
 function updateEditing(id: string) {
@@ -48,12 +51,12 @@ onBeforeMount(async () => {
   <section class="comments" v-if="loaded && viewComments === true">
     <createCommentForm :parent="props.parentId" @refreshComments="getComments($props.parentId)" />
     <!-- putting pinned comments first, need to troubleshoot pins -->
-    <article v-for="pinnedComment in pins" :key="pinnedComment._id">
-      <commentComponent v-if="editing !== pinnedComment.comment" :comment="pinnedComment.comment" :pinned="true" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+    <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
+      <commentComponent v-if="editing !== pinnedComment._id" :comment="pinnedComment" :isPinned="true" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
       <editCommentForm v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
     </article>
     <article v-for="comment in comments" :key="comment._id">
-      <commentComponent v-if="editing !== comment._id" :comment="comment" :pinned="false" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+      <commentComponent v-if="editing !== comment._id" :comment="comment" :isPinned="false" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
       <editCommentForm v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
     </article>
     <button class="pure-button" @click="toggleComments">Hide Comments</button>
