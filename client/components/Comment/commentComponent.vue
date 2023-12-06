@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const props = defineProps(["comment"]);
+const props = defineProps(["comment", "isPinned"]);
 const emit = defineEmits(["editComment", "refreshComments"]);
 const { currentUsername } = storeToRefs(useUserStore());
 
@@ -14,6 +14,7 @@ const hasImage = ref(false);
 const hasVideo = ref(false);
 const viewOptions = ref(false);
 const viewReplies = ref(false);
+const pinned = ref(false);
 
 const deleteComment = async () => {
   try {
@@ -40,6 +41,18 @@ const toggleReplies = async () => {
   }
 };
 
+const togglePin = async () => {
+  try {
+    if (pinned.value) {
+      // delete pin fetchy - need to make it so it deletes the pin with the commentId since I don't have it in here?
+    } else {
+      // create pin fetchy - easier
+    }
+  } catch {
+    return;
+  }
+};
+
 onBeforeMount(async () => {
   try {
     if (props.comment.image !== "") {
@@ -48,6 +61,7 @@ onBeforeMount(async () => {
     if (props.comment.video !== "") {
       hasVideo.value = true;
     }
+    pinned.value = props.isPinned !== undefined ? props.isPinned : false;
   } catch (_) {
     return;
   }
@@ -68,7 +82,8 @@ onBeforeMount(async () => {
       <li><button v-if="props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
       <li><button v-if="props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
       <li><button class="btn-small pure-button">Add Label</button></li>
-      <li><button class="btn-small pure-button">Pin/Unpin</button></li>
+      <li v-if="pinned"><button class="btn-small pure-button">Unpin</button></li>
+      <li v-else><button class="btn-small pure-button">Pin</button></li>
       <button class="options-button pure-button btn-small" @click="toggleOptions">Hide Options</button>
     </menu>
   </div>

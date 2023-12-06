@@ -49,11 +49,11 @@ onBeforeMount(async () => {
     <createCommentForm :parent="props.parentId" @refreshComments="getComments($props.parentId)" />
     <!-- putting pinned comments first, need to troubleshoot pins -->
     <article v-for="pinnedComment in pins" :key="pinnedComment._id">
-      <commentComponent v-if="editing !== pinnedComment.comment" :comment="pinnedComment.comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+      <commentComponent v-if="editing !== pinnedComment.comment" :comment="pinnedComment.comment" :pinned="true" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
       <editCommentForm v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
     </article>
     <article v-for="comment in comments" :key="comment._id">
-      <commentComponent v-if="editing !== comment._id" :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+      <commentComponent v-if="editing !== comment._id" :comment="comment" :pinned="false" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
       <editCommentForm v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
     </article>
     <button class="pure-button" @click="toggleComments">Hide Comments</button>
