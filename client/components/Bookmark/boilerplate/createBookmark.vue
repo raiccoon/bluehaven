@@ -3,7 +3,6 @@ import { fetchy } from "@/utils/fetchy";
 import { ref } from "vue";
 
 const isCreateBookmarkClicked = ref(false);
-const classId = ref("");
 const post = ref("");
 
 const displayMsg = ref(false);
@@ -14,11 +13,11 @@ const clickCreateBookmark = () => {
   isCreateBookmarkClicked.value = true;
 };
 
-const handleCreateBookmark = async (post: string, classId: string) => {
+const handleCreateBookmark = async (post: string) => {
   let bookmarkResults;
   try {
     bookmarkResults = await fetchy("/api/bookmarks", "POST", {
-      body: { post, classId },
+      body: { post },
     });
   } catch (_) {
     return;
@@ -29,7 +28,6 @@ const handleCreateBookmark = async (post: string, classId: string) => {
 };
 
 const emptyForm = () => {
-  classId.value = "";
   post.value = "";
   isCreateBookmarkClicked.value = false;
 };
@@ -44,9 +42,8 @@ const handleCancel = () => {
   <main>
     <div class="main">
       <button v-if="!isCreateBookmarkClicked" @click="clickCreateBookmark">Click here to create a bookmark!</button>
-      <form v-else @submit.prevent="handleCreateBookmark(post, classId)">
+      <form v-else @submit.prevent="handleCreateBookmark(post)">
         <input type="text" v-model="post" placeholder="Post Object Id" />
-        <input type="text" v-model="classId" placeholder="Class Object Id" />
         <button type="submit">Create</button>
         <button @click="handleCancel">Cancel</button>
       </form>

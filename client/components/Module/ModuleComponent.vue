@@ -4,8 +4,8 @@ import PostComponent from "@/components/Post/PostComponent.vue";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const loaded = ref(false);
 const props = defineProps(["module"]);
+let loaded = ref(false);
 let posts = ref<Array<Record<string, string>>>([]);
 
 const isModuleClicked = ref(false);

@@ -186,9 +186,10 @@ class Routes {
   // BOOKMARK
 
   @Router.post("/bookmarks")
-  async createBookmark(session: WebSessionDoc, post: ObjectId, classId: ObjectId) {
+  async createBookmark(session: WebSessionDoc, post: ObjectId) {
     const user = WebSession.getUser(session);
-    const created = await Bookmark.addBookmark(user, new ObjectId(post), new ObjectId(classId));
+    const classId = await Module.getClassOfPost(new ObjectId(post));
+    const created = await Bookmark.addBookmark(user, new ObjectId(post), classId!);
     return created;
   }
 
@@ -203,6 +204,22 @@ class Routes {
   async getBookmarkedPosts(session: WebSessionDoc) {
     const user = WebSession.getUser(session);
     return Bookmark.getBookmarkedPosts(user);
+  }
+
+  @Router.get("/modules/:_id/posts/bookmarked")
+  async getBookmarksByModule(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    const bookmarkedPosts = (await Bookmark.getBookmarkedPosts(user)).map((bookmark) => bookmark.post);
+    const postsInModule = (await Module.getPostsInModule(new ObjectId(_id))).map((id) => id.toString());
+    const bookmarksInModule = bookmarkedPosts.filter((bookmark) => postsInModule.includes(bookmark.toString()));
+    return Responses.posts(await Post.getPosts({ _id: { $in: bookmarksInModule } }));
+  }
+
+  @Router.get("/classes/id/:_id/posts/bookmarked")
+  async getBookmarksByClass(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    const bookmarkedPosts = (await Bookmark.getBookmarkedPosts(user)).filter((bookmark) => bookmark.classId.toString() === new ObjectId(_id).toString()).map((bookmark) => bookmark.post);
+    return Responses.posts(await Post.getPosts({ _id: { $in: bookmarkedPosts } }));
   }
 
   // PINS ROUTES
@@ -225,6 +242,15 @@ class Routes {
     return await Pin.deletePin(new ObjectId(_id));
   }
 
+  @Router.delete("/pins/comment/:_id")
+  async deletePinByCommentId(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    const post = await Comment.getPostParent(new ObjectId(_id));
+    const pinClass = await Module.getClassOfPost(new ObjectId(post.id));
+    await Class.assertIsInstructor(pinClass!, user);
+    return await Pin.deletePinByCommentId(new ObjectId(_id));
+  }
+
   @Router.get("/pins/:postId")
   async getPinsOnPost(session: WebSessionDoc, postId: ObjectId) {
     const user = WebSession.getUser(session);
@@ -237,13 +263,16 @@ class Routes {
   @Router.get("/pins/comments/:postId")
   async getCommentsPinnedOrder(postId: ObjectId) {
     // returns 2 sets, pinned comments followed by unpinned comments
-    const postObjectID = new ObjectId(postId);
-    const pinnedComments = await Pin.getPostPins(postObjectID);
-    let comments = await Comment.getCommentsByParent(postObjectID);
-    const pinnedCommentsAlone = pinnedComments.map((pinned) => pinned.comment.toString());
-    comments = comments.filter((comment) => pinnedCommentsAlone.indexOf(comment._id.toString()) === -1);
 
-    return { "Pinned Comments": pinnedComments, "UnPinned Comments": comments };
+    const postObjectID = new ObjectId(postId);
+    const pins = await Pin.getPostPins(postObjectID);
+    let comments = await Comment.getCommentsByParent(postObjectID);
+
+    const pinnedCommentsAlone = pins.map((pin) => pin.comment.toString());
+    comments = comments.filter((comment) => pinnedCommentsAlone.indexOf(comment._id.toString()) === -1);
+    const pinnedComments = await Promise.all(pins.map(async (pin) => await Comment.getComment(pin.comment)));
+
+    return { "Pinned Comments": await Responses.posts(pinnedComments), "UnPinned Comments": await Responses.posts(comments) };
   }
 
   // FRIENDS

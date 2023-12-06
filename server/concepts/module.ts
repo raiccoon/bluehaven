@@ -63,7 +63,7 @@ export default class ModuleConcept {
 
   async isPostInClass(classId: ObjectId, post: ObjectId) {
     const classOfPost = await this.getClassOfPost(post);
-    return classOfPost?.equals(classId);
+    return classOfPost?.toString() === classId.toString();
   }
 
   async addPost(post: ObjectId, module: ObjectId) {
