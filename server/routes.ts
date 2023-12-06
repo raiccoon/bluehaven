@@ -234,14 +234,14 @@ class Routes {
     return await Pin.deletePinByCommentId(new ObjectId(_id));
   }
 
-  // @Router.get("/pins/:postId")
-  // async getPinsOnPost(session: WebSessionDoc, postId: ObjectId) {
-  //   const user = WebSession.getUser(session);
-  //   const post = await Pin.getPostOfPin(new ObjectId(postId));
-  //   const pinClass = await Module.getClassOfPost(post);
-  //   await Class.assertIsMember(pinClass!, user);
-  //   return await Pin.getPostPins(postId);
-  // }
+  @Router.get("/pins/:postId")
+  async getPinsOnPost(session: WebSessionDoc, postId: ObjectId) {
+    const user = WebSession.getUser(session);
+    const post = await Pin.getPostOfPin(new ObjectId(postId));
+    const pinClass = await Module.getClassOfPost(post);
+    await Class.assertIsMember(pinClass!, user);
+    return await Pin.getPostPins(postId);
+  }
 
   @Router.get("/pins/comments/:postId")
   async getCommentsPinnedOrder(postId: ObjectId) {
