@@ -12,7 +12,7 @@ async function login() {
   try {
     await loginUser(username.value, password.value);
     void updateSession();
-    void router.push({ name: "Classes" });
+    void router.push({ path: "/classes" });
   } catch (e) {
     error.value = e instanceof Error ? e.message : "An error occurred";
   }

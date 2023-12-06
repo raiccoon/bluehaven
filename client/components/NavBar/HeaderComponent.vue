@@ -2,9 +2,9 @@
 import { RouterLink } from "vue-router";
 </script>
 <template>
-  <div class="container">
-    <img class="title" src="@/assets/images/logo.svg" />
-    <RouterLink :to="{ name: 'Home' }">
+  <div>
+    <RouterLink class="container" :to="{ name: 'Classes' }">
+      <img class="title" src="@/assets/images/logo.svg" />
       <img class="title" src="@/assets/images/title.png" />
     </RouterLink>
   </div>

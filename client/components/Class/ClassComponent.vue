@@ -3,8 +3,9 @@ import ClassHeader from "@/components/Class/ClassHeader.vue";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import router from "../../router";
+import ModuleListComponent from "../Module/ModuleListComponent.vue";
 
 const { currentUsername } = storeToRefs(useUserStore());
 const props = defineProps(["classId"]);
@@ -24,14 +25,15 @@ const checkIfAdmin = async () => {
   }
 };
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await checkIfAdmin();
 });
 </script>
 <template>
   <main>
     <ClassHeader :classId="props.classId" :isAdmin="isAdmin" />
-    <button @click="createPost">Create Post</button>
+    <button v-if="isAdmin" @click="createPost">Create Post</button>
+    <ModuleListComponent v-if="isAdmin" :classId="props.classId" />
   </main>
 </template>
 <style scoped>

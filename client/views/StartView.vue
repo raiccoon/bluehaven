@@ -15,7 +15,7 @@ onBeforeMount(async () => {
     // User is not logged in
   }
   if (isLoggedIn.value) {
-    void router.push("/home");
+    void router.push({ path: "/classes" });
   }
 });
 </script>

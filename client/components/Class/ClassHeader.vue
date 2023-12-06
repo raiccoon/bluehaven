@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { fetchy } from "@/utils/fetchy";
-import { ref, defineProps, onMounted } from "vue";
+import { ref, defineProps, onBeforeMount } from "vue";
 import router from "../../router";
 
 const props = defineProps(["classId", "isAdmin"]);
@@ -32,7 +32,7 @@ const removeSelf = async () => {
   }
 };
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await getClass();
 });
 </script>
@@ -41,6 +41,8 @@ onMounted(async () => {
   <main>
     <h1>{{ className }}</h1>
     <p v-if="isAdmin">Join code: {{ joinCode }}</p>
+    <button v-else>View Bookmarks</button>
+
     <button @click="removeSelf">Leave Class</button>
   </main>
 </template>
@@ -49,6 +51,12 @@ onMounted(async () => {
 @import "@/assets/classes.css";
 p {
   margin: 0px;
+  margin-bottom: 10px;
+}
+main {
+  border: solid black 1px;
+}
+h1 {
   margin-bottom: 10px;
 }
 </style>
