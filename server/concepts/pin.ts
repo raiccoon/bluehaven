@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { Filter, ObjectId } from "mongodb";
 
 import DocCollection, { BaseDoc } from "../framework/doc";
 import { NotAllowedError, NotFoundError } from "./errors";
@@ -32,11 +32,20 @@ export default class PinConcept {
     return { msg: "Pin deleted successfully!" };
   }
 
-  // async deletePinByCommentId(_id: ObjectId) {
-  //   // TODO: expose route
-  //   const pinDoc = await this.pins.readOne({ comment: _id });
-  //   return await this.deletePin(pinDoc!._id);
-  // }
+  async getPin(query: Filter<PinDoc>) {
+    const posts = await this.pins.readOne(query, {
+      sort: { dateUpdated: -1 },
+    });
+    return posts;
+  }
+
+  async deletePinByCommentId(comment: ObjectId) {
+    const pinDoc = await this.getPin({ comment });
+    if (pinDoc === null) {
+      throw new NotFoundError("Pin with comment ID {0} not found!", comment);
+    }
+    return await this.deletePin(pinDoc!._id);
+  }
 
   async getPostPins(post: ObjectId) {
     const pins = await this.pins.readMany({ post: post });

@@ -46,6 +46,7 @@ export default class CommentConcept {
     if (comment !== null) {
       return comment.parentId;
     }
+    throw new NotFoundError("Comment not found");
   }
 
   async getComment(commentId: ObjectId) {
@@ -102,6 +103,9 @@ export default class CommentConcept {
     let parent = await this.getParentOfComment(_id);
     while (await this.isComment(parent!)) {
       parent = await this.getParentOfComment(parent!);
+    }
+    if (parent === undefined) {
+      throw new NotFoundError("Unable to find post for comment {0}", _id);
     }
     return parent;
   }
