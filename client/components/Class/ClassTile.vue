@@ -3,6 +3,7 @@ import { fetchy } from "@/utils/fetchy";
 import { ref, defineProps, onBeforeMount } from "vue";
 import router from "../../router";
 
+const loaded = ref(false);
 const props = defineProps({
   _id: {
     type: String,
@@ -28,6 +29,7 @@ const getClass = async () => {
 
 onBeforeMount(async () => {
   await getClass();
+  loaded.value = true;
 });
 
 const goToClass = async () => {
@@ -37,7 +39,7 @@ const goToClass = async () => {
 
 <template>
   <main>
-    <button @click="goToClass" class="tile">
+    <button v-if="loaded" @click="goToClass" class="tile">
       <p class="className">{{ className }}</p>
     </button>
   </main>

@@ -3,8 +3,7 @@ import ClassList from "@/components/Class/ClassList.vue";
 </script>
 <template>
   <main>
-    <h1>Your Classes</h1>
-    <section>
+    <section class="top">
       <ClassList role="instruct" class="classList" />
     </section>
     <section>
@@ -16,5 +15,8 @@ import ClassList from "@/components/Class/ClassList.vue";
 @import "@/assets/classes.css";
 .classList {
   margin-top: 15px;
+}
+.top {
+  margin-top: 50px;
 }
 </style>
