@@ -12,7 +12,8 @@ const { isLoggedIn } = storeToRefs(useUserStore());
 
 const loaded = ref(false);
 // const props = defineProps(["parentId"]);
-const props = defineProps({ parentId: { type: String, required: true }, isReplies: { type: Boolean, default: false } });
+// const props = defineProps({ parentId: { type: String, required: true }, isReplies: { type: Boolean, default: false } });
+const props = defineProps(["parentId", "isReplies"]);
 let pinnedComments = ref<Array<Record<string, string>>>([]);
 let comments = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
