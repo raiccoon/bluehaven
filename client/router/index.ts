@@ -12,6 +12,7 @@ import NotFoundView from "../views/NotFoundView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import SettingView from "../views/SettingView.vue";
 import StartView from "../views/StartView.vue";
+import ViewBookmarksView from "../views/ViewBookmarksView.vue";
 import BoilerplateView from "../views/boilerplates/BoilerplateView.vue";
 
 const router = createRouter({
@@ -78,6 +79,12 @@ const router = createRouter({
       path: "/classes/:classId/createPost",
       name: "Create-Post",
       component: CreatePostView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/classes/:classId/bookmarks",
+      name: "Bookmarks",
+      component: ViewBookmarksView,
       meta: { requiresAuth: true },
     },
     {

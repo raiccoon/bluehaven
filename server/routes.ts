@@ -193,11 +193,23 @@ class Routes {
     return created;
   }
 
+  @Router.get("/bookmarks/")
+  async isBookmark(session: WebSessionDoc, post: ObjectId) {
+    const user = WebSession.getUser(session);
+    return await Bookmark.isBookmark(user, new ObjectId(post));
+  }
+
   @Router.delete("/bookmarks/:_id")
   async deleteBookmark(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
     await Bookmark.isAuthor(user, new ObjectId(_id));
     return await Bookmark.deleteBookmark(new ObjectId(_id));
+  }
+
+  @Router.delete("/bookmarks/")
+  async deleteBookmarkByPost(session: WebSessionDoc, post: ObjectId) {
+    const user = WebSession.getUser(session);
+    return await Bookmark.deleteBookmarkByPost(user, new ObjectId(post));
   }
 
   @Router.get("/bookmarks")

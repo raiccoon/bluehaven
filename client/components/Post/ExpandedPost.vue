@@ -6,9 +6,12 @@ import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import router from "../../router";
 import { fetchy } from "../../utils/fetchy";
+import ToggleBookmarkButton from "../Bookmark/ToggleBookmarkButton.vue";
 
 const hasImage = ref(false);
 const hasVideo = ref(false);
+
+const isBookmarked = ref(false);
 
 const props = defineProps(["postId", "author"]);
 const loaded = ref(false);
@@ -48,6 +51,22 @@ async function getPostById(_id: ObjectId) {
   }
 }
 
+async function isPostBookmarked(postId: string) {
+  let bookmarkResults;
+  try {
+    bookmarkResults = await fetchy(`/api/bookmarks`, "GET", {
+      query: { post: postId },
+    });
+  } catch (_) {
+    return;
+  }
+  isBookmarked.value = bookmarkResults;
+}
+
+async function refreshBookmark(postId: string) {
+  await isPostBookmarked(postId);
+}
+
 onBeforeMount(async () => {
   try {
     await getPostById(props.postId);
@@ -60,6 +79,7 @@ onBeforeMount(async () => {
 
 <template>
   <section class="article" v-if="loaded">
+    <ToggleBookmarkButton @updatedBookmarkState="refreshBookmark(post._id)" :postId="post._id" :isBookmarked="isBookmarked" />
     <p class="author">{{ props.author }}</p>
 
     <img v-if="hasImage" class="postMedia image" :src="post.image" />
