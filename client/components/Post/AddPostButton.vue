@@ -97,7 +97,7 @@ const handleCancel = () => {
               <textarea class="text" v-model="content" placeholder="Write your post here!"> </textarea>
             </div>
             <div class="previewArea">
-              <p>Preview your post here</p>
+              <p class="previewYourPostHere">Preview your post here</p>
               <div class="preview" ref="previewContainer">
                 <div v-html="livePreview"></div>
               </div>
@@ -119,7 +119,7 @@ const handleCancel = () => {
 h3 {
   margin-bottom: 0px;
 }
-p {
+.previewYourPostHere {
   text-align: center;
 }
 .container {
@@ -143,6 +143,7 @@ p {
   overflow-y: auto;
   padding: 8px;
   box-sizing: border-box;
+  text-align: left;
 }
 .text {
   margin-bottom: 5px;
