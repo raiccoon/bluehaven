@@ -11,6 +11,7 @@ const props = defineProps(["module"]);
 const emit = defineEmits(["refreshPosts"]);
 
 const isAddPostClicked = ref(false);
+const title = ref("");
 const content = ref("");
 const livePreview = ref("");
 
@@ -52,14 +53,18 @@ const clickAddPost = () => {
   isAddPostClicked.value = true;
 };
 
-const createPost = async (module: string, content: string, image: string, video: string) => {
+const createPost = async (module: string, title: string, content: string, image: string, video: string) => {
   if (!content.trim()) {
     error.value = "Do not leave the post content empty.";
     return;
   }
+  if (!title.trim()) {
+    error.value = "Please give your post a title.";
+    return;
+  }
   try {
     await fetchy("/api/posts", "POST", {
-      body: { module, content, image, video },
+      body: { module, title, content, image, video },
     });
     emptyForm();
     emit("refreshPosts");
@@ -73,12 +78,14 @@ const createPost = async (module: string, content: string, image: string, video:
 
 const emptyForm = () => {
   content.value = "";
+  title.value = "";
   error.value = "";
   isAddPostClicked.value = false;
 };
 
 const handleCancel = () => {
   content.value = "";
+  title.value = "";
   error.value = "";
   isAddPostClicked.value = false;
 };
@@ -89,15 +96,16 @@ const handleCancel = () => {
     <div @click="clickAddPost">Add Post</div>
     <div class="modal-background" v-if="isAddPostClicked">
       <div class="modal-content">
-        <form @submit.prevent="createPost(props.module._id, content, '', '')">
+        <form @submit.prevent="createPost(props.module._id, title, content, '', '')">
           <h3>Create a new post</h3>
+          <input class="title" v-model="title" type="text" placeholder="Enter post title" />
           <div class="container">
             <div class="textArea">
               <p class="placeholder"></p>
               <textarea class="text" v-model="content" placeholder="Write your post here! You can add images using markdown syntax."> </textarea>
             </div>
             <div class="previewArea">
-              <p>Preview your post here</p>
+              <p class="previewYourPostHere">Preview your post here</p>
               <div class="preview" ref="previewContainer">
                 <div v-html="livePreview"></div>
               </div>
@@ -116,10 +124,16 @@ const handleCancel = () => {
 </template>
 
 <style scoped>
+.title {
+  width: calc(100% - 5px);
+  padding: 8px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
 h3 {
   margin-bottom: 0px;
 }
-p {
+.previewYourPostHere {
   text-align: center;
 }
 .container {
@@ -143,6 +157,7 @@ p {
   overflow-y: auto;
   padding: 8px;
   box-sizing: border-box;
+  text-align: left;
 }
 .text {
   margin-bottom: 5px;
@@ -199,7 +214,7 @@ form {
   align-items: center;
   gap: 5px;
   width: 900px;
-  height: 650px;
+  height: 680px;
   margin-left: auto;
   margin-right: auto;
   @media (max-width: 1000px) {
