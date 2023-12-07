@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const props = defineProps(["comment"]);
+const props = defineProps(["comment", "isPinned"]);
 const emit = defineEmits(["editComment", "refreshComments"]);
 const { currentUsername } = storeToRefs(useUserStore());
 
@@ -40,6 +40,21 @@ const toggleReplies = async () => {
   }
 };
 
+const togglePin = async () => {
+  try {
+    if (props.isPinned) {
+      await fetchy(`/api/pins/comment/${props.comment._id}`, "DELETE");
+    } else {
+      await fetchy("/api/pins", "POST", {
+        body: { postId: props.comment.parentId, commentId: props.comment._id },
+      });
+    }
+  } catch {
+    return;
+  }
+  emit("refreshComments");
+};
+
 onBeforeMount(async () => {
   try {
     if (props.comment.image !== "") {
@@ -56,7 +71,10 @@ onBeforeMount(async () => {
 
 <template>
   <div class="comment-header">
-    <p class="author">{{ props.comment.author }}</p>
+    <div class="user-info">
+      <div class="author">{{ props.comment.author }}</div>
+      <em v-if="isPinned">(pinned)</em>
+    </div>
     <!-- labels -->
     <!-- <label class="label">label 1</label>
     <label class="label">label 2</label>
@@ -68,7 +86,8 @@ onBeforeMount(async () => {
       <li><button v-if="props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
       <li><button v-if="props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
       <li><button class="btn-small pure-button">Add Label</button></li>
-      <li><button class="btn-small pure-button">Pin/Unpin</button></li>
+      <li v-if="isPinned"><button class="btn-small pure-button" @click="togglePin">Unpin</button></li>
+      <li v-else><button class="btn-small pure-button" @click="togglePin">Pin</button></li>
       <button class="options-button pure-button btn-small" @click="toggleOptions">Hide Options</button>
     </menu>
   </div>
@@ -158,5 +177,11 @@ p {
   padding: 0.5rem;
   border-radius: 10%;
   color: white;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
 }
 </style>
