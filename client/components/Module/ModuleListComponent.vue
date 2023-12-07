@@ -34,11 +34,22 @@ onBeforeMount(async () => {
         <ModuleComponent :module="module" :isAdmin="isAdmin" @deleteModule="getModulesInClass()" />
       </article>
     </section>
-    <div v-else>No modules found.</div>
+    <div class="placeholder" v-else>No modules found.</div>
   </main>
 </template>
 
 <style scoped>
+.placeholder {
+  width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  @media (max-width: 1000px) {
+    width: calc(100vw - 100px);
+    max-width: 900px;
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+}
 main {
   display: flex;
   flex-direction: column;
