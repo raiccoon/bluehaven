@@ -6,6 +6,7 @@ import { NotAllowedError, NotFoundError } from "./errors";
 export interface ClassDoc extends BaseDoc {
   className: String;
   joinCode: String;
+  archived: boolean;
 }
 
 export interface MembershipDoc extends BaseDoc {
@@ -26,7 +27,7 @@ export default class ClassConcept {
 
   async createClass(user: ObjectId, className: string) {
     const joinCode = await this.createUniqueJoinCode();
-    const _id = await this.classes.createOne({ className, joinCode });
+    const _id = await this.classes.createOne({ className, joinCode, archived: false });
     await this.addInstructor(_id, user);
     return { msg: "Class created successfully!", class: await this.classes.readOne({ _id }) };
   }

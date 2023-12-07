@@ -81,12 +81,12 @@ class Routes {
   }
 
   @Router.post("/posts")
-  async createPost(session: WebSessionDoc, module: ObjectId, content: string, image: string, video: string) {
+  async createPost(session: WebSessionDoc, module: ObjectId, title: string, content: string, image: string, video: string) {
     const user = WebSession.getUser(session);
     const classId = await Module.getClassOfModule(new ObjectId(module));
     await Class.assertIsInstructor(new ObjectId(classId!), user);
 
-    const created = await Post.create(user, content, image, video);
+    const created = await Post.create(user, title, content, image, video);
     await Module.addPost(created.post!._id, new ObjectId(module));
     return { msg: created.msg, post: await Responses.post(created.post) };
   }
