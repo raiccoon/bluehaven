@@ -21,8 +21,18 @@ export default class BookmarkConcept {
     return createdBookmark;
   }
 
+  async isBookmark(owner: ObjectId, post: ObjectId) {
+    const bookmark = await this.bookmarks.readOne({ owner: owner, post: post });
+    return bookmark !== null;
+  }
+
   async deleteBookmark(_id: ObjectId) {
     await this.bookmarks.deleteOne({ _id });
+    return { msg: "Bookmark deleted successfully!" };
+  }
+
+  async deleteBookmarkByPost(owner: ObjectId, post: ObjectId) {
+    await this.bookmarks.deleteOne({ owner: owner, post: post });
     return { msg: "Bookmark deleted successfully!" };
   }
 
