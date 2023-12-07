@@ -474,10 +474,12 @@ class Routes {
 
   @Router.post("/comments/:commentId/labels")
   async assignLabel(session: WebSessionDoc, label: ObjectId, comment: ObjectId) {
-    // const user = WebSession.getUser(session);
-    // const class = this.getClassOfComment(class);
-    // await Label.assertIsLabelInClass(new ObjectId(label), class);
-    // await canEdit(user, comment);
+    const user = WebSession.getUser(session);
+    const classId = await this.getClassOfComment(new ObjectId(comment));
+    await Label.assertIsLabelInClass(new ObjectId(label), classId!);
+
+    const isInstructor = await Class.isInstructor(classId!, user);
+    await Comment.canEdit(user, comment, isInstructor);
     return await Label.assignLabel(new ObjectId(label), new ObjectId(comment));
   }
 
