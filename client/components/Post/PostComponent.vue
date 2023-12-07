@@ -55,7 +55,6 @@ onBeforeMount(async () => {
     <menu>
       <!-- expand button takes you to the large post view -->
       <li><button class="btn-small pure-button" @click="expandPost">Expand</button></li>
-      <li><button v-if="props.post.author == currentUsername" class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>
       <li><button v-if="props.post.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
     </menu>
     <article class="timestamp">
