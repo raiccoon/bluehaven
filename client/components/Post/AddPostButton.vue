@@ -4,6 +4,7 @@ import { fetchy } from "@/utils/fetchy";
 import { useToastStore } from "@/stores/toast";
 import { storeToRefs } from "pinia";
 import * as marked from "marked";
+
 const { toast } = storeToRefs(useToastStore());
 const error = ref("");
 const props = defineProps(["module"]);
@@ -11,17 +12,40 @@ const emit = defineEmits(["refreshPosts"]);
 
 const isAddPostClicked = ref(false);
 const content = ref("");
-const image = ref("");
-const video = ref("");
 const livePreview = ref("");
-
-watch(content, async (newValue) => {
-  livePreview.value = await renderMarkdown(newValue);
-});
 
 async function renderMarkdown(text: string) {
   return await marked.parse(text);
 }
+
+function renderImages(text: string, width: number): string {
+  const imageRegex = /\[image\](.*?)\[\/image\]/g; // [image]...[/image]
+
+  return text.replace(imageRegex, (_, imageUrl) => {
+    return `<img src="${imageUrl}" width="${width}">`;
+  });
+}
+
+function renderMP4(text: string, width: number): string {
+  const videoRegex = /\[mp4\](.*?)\[\/mp4\]/g; // [mp4]...[/mp4]
+
+  return text.replace(videoRegex, (_, videoUrl) => {
+    return `<video width="${width}" controls><source src="${videoUrl}" type="video/mp4" /></video>`;
+  });
+}
+
+function renderYouTube(text: string, width: number): string {
+  const youtubeRegex = /\[YouTube\](.*?)\[\/YouTube\]/g; // [YouTube]...[/YouTube]
+
+  return text.replace(youtubeRegex, (_, youtubeUrl) => {
+    return `<iframe width="${width}" height="${(width * 9) / 16}" src="${youtubeUrl}"></iframe>`;
+  });
+}
+
+watch(content, async (newValue) => {
+  const renderedImages = renderYouTube(renderMP4(renderImages(newValue, 298), 298), 298);
+  livePreview.value = await renderMarkdown(renderedImages);
+});
 
 const clickAddPost = () => {
   isAddPostClicked.value = true;
@@ -48,16 +72,12 @@ const createPost = async (module: string, content: string, image: string, video:
 
 const emptyForm = () => {
   content.value = "";
-  image.value = "";
-  video.value = "";
   error.value = "";
   isAddPostClicked.value = false;
 };
 
 const handleCancel = () => {
   content.value = "";
-  image.value = "";
-  video.value = "";
   error.value = "";
   isAddPostClicked.value = false;
 };
@@ -73,12 +93,11 @@ const handleCancel = () => {
           <div class="container">
             <div class="textArea">
               <p class="placeholder"></p>
-              <textarea v-model="content" placeholder="Write your post here."> </textarea>
-              <button>Add Multimedia</button>
+              <textarea class="text" v-model="content" placeholder="Write your post here!"> </textarea>
             </div>
             <div class="previewArea">
-              <p>Post Preview</p>
-              <div class="preview" v-html="livePreview"></div>
+              <p>Preview your post here</p>
+              <div id="preview" class="preview" v-html="livePreview"></div>
             </div>
           </div>
           <div class="modal-buttons">
@@ -94,6 +113,12 @@ const handleCancel = () => {
 </template>
 
 <style scoped>
+h3 {
+  margin-bottom: 0px;
+}
+p {
+  text-align: center;
+}
 .container {
   width: 100%;
   display: flex;
@@ -101,20 +126,37 @@ const handleCancel = () => {
   gap: 5px;
 }
 .textArea {
-  width: 47.5%;
+  width: calc(50% - 2.5px);
 }
 .previewArea {
-  width: 47.5%;
+  width: calc(50% - 2.5px);
 }
 .preview {
+  margin-bottom: 5px;
   border: solid black 1px;
   width: 100%;
-  height: 400px;
+  height: 500px;
   overflow: auto;
   overflow-y: auto;
   padding: 8px;
+  box-sizing: border-box;
+}
+.text {
+  margin-bottom: 5px;
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  height: 500px;
+  background-color: #e8f9ffff;
 }
 @media (max-width: 700px) {
+  p.placeholder {
+    display: none;
+  }
+  h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
   .container {
     display: flex;
     flex-direction: column;
@@ -125,6 +167,12 @@ const handleCancel = () => {
   }
   .previewArea {
     width: 100%;
+  }
+  .text {
+    height: 250px;
+  }
+  .preview {
+    height: 250px;
   }
 }
 .modal-background {
@@ -146,7 +194,7 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 5px;
   width: 900px;
   height: 650px;
   margin-left: auto;
@@ -157,15 +205,6 @@ form {
     margin-left: 50px;
     margin-right: 50px;
   }
-}
-textarea {
-  display: block;
-  margin-bottom: 10px;
-  padding: 8px;
-  width: 100%;
-  box-sizing: border-box;
-  height: 400px;
-  background-color: #e8f9ffff;
 }
 .modal-buttons {
   width: 100%;
