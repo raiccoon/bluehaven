@@ -7,6 +7,7 @@ import { onBeforeMount, ref } from "vue";
 import router from "../../router";
 import { fetchy } from "../../utils/fetchy";
 import ToggleBookmarkButton from "../Bookmark/ToggleBookmarkButton.vue";
+import EditPostButton from "./EditPostButton.vue";
 
 const hasImage = ref(false);
 const hasVideo = ref(false);
@@ -17,7 +18,6 @@ const props = defineProps(["postId", "author"]);
 const loaded = ref(false);
 
 let post = ref();
-const emit = defineEmits(["editPost", "refreshPosts"]);
 const { currentUsername } = storeToRefs(useUserStore());
 
 const deletePost = async () => {
@@ -27,7 +27,6 @@ const deletePost = async () => {
   } catch {
     return;
   }
-  emit("refreshPosts");
 };
 
 async function getPostById(_id: ObjectId) {
@@ -80,7 +79,7 @@ onBeforeMount(async () => {
 <template>
   <section class="article" v-if="loaded">
     <ToggleBookmarkButton @updatedBookmarkState="refreshBookmark(post._id)" :postId="post._id" :isBookmarked="isBookmarked" />
-    <p class="author">{{ props.author }}</p>
+    <p class="author">{{ post.author }}</p>
 
     <img v-if="hasImage" class="postMedia image" :src="post.image" />
     <!-- <img v-if="hasVideo" class="postMedia video" :src="props.post.video" /> -->
@@ -94,8 +93,8 @@ onBeforeMount(async () => {
     <div class="base">
       <menu>
         <!-- will implement editing within expanded view later? -->
-        <!-- <li><button v-if="props.author == currentUsername" class="btn-small pure-button" @click="emit('editPost', post._id)">Edit</button></li> -->
-        <li><button v-if="props.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
+        <li><EditPostButton :post="post" @editPost="getPostById(post._id)" /></li>
+        <li><button v-if="post.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
       </menu>
       <article class="timestamp">
         <p v-if="post.dateCreated !== post.dateUpdated">Edited on: {{ formatDate(post.dateUpdated) }}</p>
