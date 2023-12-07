@@ -12,13 +12,13 @@ const isAddLabelClicked = ref(false);
 
 let labelsInClass = ref(); //all labels in class*
 let selectedLabels = ref(); //labels selected by user in form*
-let labelsOnComment = ref(); //labels currently on comment
+let labelsOnComment = ref(); //labels on comment (before submission)
 
 //get class of post (parent) of comment
 //then get all labels for post
 //then use those as the options for the form
 //also get labels on comment and use those as the preselected values
-//listen for select/remove events from multiselector and add/remove labels from comment accordingly
+//listen for select/remove events from multiselector and add/remove labels from comment accordingly???
 
 const assignLabel = async (labelId: ObjectId) => {
   try {
@@ -41,7 +41,7 @@ const removeLabel = async (labelId: ObjectId) => {
 };
 
 const hasLabel = async (labelId: ObjectId) => {
-  for (const label of selectedLabels.value) {
+  for (const label of labelsOnComment.value) {
     if (label._id === labelId) {
       return true;
     }
@@ -49,14 +49,11 @@ const hasLabel = async (labelId: ObjectId) => {
   }
 };
 
-const handleLabelChange = async (labelId: ObjectId) => {
-  //   try {
-  //     await fetchy(`/api/comments/${props.comment.parentId}/labels`, "POST", {
-  //       body: { label: labelId },
-  //     });
-  //   } catch (_) {
-  //     return;
-  //   }
+const handleLabelChanges = async () => {
+  // for (const label of selectedLabels.value){
+  //     if (await hasLabel(label._id)) {
+  //     }
+  // }
 };
 
 onBeforeMount(async () => {
@@ -73,8 +70,11 @@ onBeforeMount(async () => {
     <fieldset>
       <legend>What is Your Favorite Pet?</legend>
       <!-- <option v-for="module in modules" :key="module._id" :value="module._id">{{ module.name }}</option> -->
-
-      <!-- <input type="checkbox" v-for="label in labelsInClass" :key="label._id" value="label._id" />{{ label.name }}<br /> -->
+      <label v-for="label in labelsInClass" :key="label._id">
+        <input type="checkbox" :value="label._id" />
+        {{ label.name }}
+      </label>
+      <!-- <input type="checkbox" v-for="label in labelsInClass" :key="label._id" :value="label._id" />{{ label.name }}<br /> -->
       <input type="checkbox" name="favorite_pet" value="Cats" />Cats<br />
       <input type="checkbox" name="favorite_pet" value="Dogs" />Dogs<br />
       <input type="checkbox" name="favorite_pet" value="Birds" />Birds<br />
