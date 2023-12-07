@@ -64,10 +64,7 @@ onBeforeMount(async () => {
     if (props.comment.video !== "") {
       hasVideo.value = true;
     }
-    console.log("HELLO");
     const classObj = await fetchy(`/api/posts/${props.comment.parentId}/class`, "GET");
-    console.log("classObj", classObj);
-    console.log("HELLO");
     isInstructor.value = await fetchy(`/api/classes/id/${classObj._id}/membership/isInstructor`, "GET", {
       query: { username: currentUsername.value },
     });
