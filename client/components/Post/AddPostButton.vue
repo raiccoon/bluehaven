@@ -3,7 +3,6 @@ import { ref, watch } from "vue";
 import { fetchy } from "@/utils/fetchy";
 import { useToastStore } from "@/stores/toast";
 import { storeToRefs } from "pinia";
-import katex from "katex";
 import * as marked from "marked";
 const { toast } = storeToRefs(useToastStore());
 const error = ref("");
@@ -69,15 +68,18 @@ const handleCancel = () => {
     <button class="click" @click="clickAddPost">Add Post</button>
     <div class="modal-background" v-if="isAddPostClicked">
       <div class="modal-content">
-        <form @submit.prevent="createPost(props.module._id, content, image, video)">
+        <form @submit.prevent="createPost(props.module._id, content, '', '')">
           <h3>Create a new post</h3>
           <div class="container">
-            <div class="textInputs">
-              <textarea class="content" v-model="content" placeholder="Write your post here."> </textarea>
-              <textarea class="media-link" v-model="image" placeholder="Paste a link to image media (optional)"> </textarea>
-              <textarea class="media-link" v-model="video" placeholder="Paste a link to video media (optional)"> </textarea>
+            <div class="textArea">
+              <p class="placeholder"></p>
+              <textarea v-model="content" placeholder="Write your post here."> </textarea>
+              <button>Add Multimedia</button>
             </div>
-            <div class="preview" v-html="livePreview"></div>
+            <div class="previewArea">
+              <p>Post Preview</p>
+              <div class="preview" v-html="livePreview"></div>
+            </div>
           </div>
           <div class="modal-buttons">
             <button class="submit" type="submit">Create Post</button>
@@ -95,30 +97,33 @@ const handleCancel = () => {
 .container {
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  border: solid black 1px;
+  justify-content: space-evenly;
+  gap: 5px;
 }
-.textInputs {
-  border: solid black 1px;
-  width: 50%;
+.textArea {
+  width: 47.5%;
+}
+.previewArea {
+  width: 47.5%;
 }
 .preview {
   border: solid black 1px;
-  width: 50%;
+  width: 100%;
+  height: 400px;
+  overflow: auto;
+  overflow-y: auto;
+  padding: 8px;
 }
 @media (max-width: 700px) {
   .container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border: solid black 1px;
   }
-  .textInputs {
-    border: solid black 1px;
+  .textArea {
     width: 100%;
   }
-  .preview {
-    border: solid black 1px;
+  .previewArea {
     width: 100%;
   }
 }
@@ -159,12 +164,8 @@ textarea {
   padding: 8px;
   width: 100%;
   box-sizing: border-box;
-}
-.media-link {
-  height: 40px;
-}
-.content {
   height: 400px;
+  background-color: #e8f9ffff;
 }
 .modal-buttons {
   width: 100%;

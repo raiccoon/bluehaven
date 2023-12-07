@@ -50,7 +50,6 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "marked": "^11.0.0",
-    "mathlive": "^0.98.1",
     "moment": "^2.29.4",
     "mongodb": "^5.7.0",
     "morgan": "^1.10.0",
