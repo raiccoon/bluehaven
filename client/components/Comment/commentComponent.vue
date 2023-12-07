@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const props = defineProps(["comment", "isPinned"]);
+const props = defineProps(["comment", "isPinned", "isReply"]);
 const emit = defineEmits(["editComment", "refreshComments"]);
 const { currentUsername } = storeToRefs(useUserStore());
 
@@ -64,10 +64,13 @@ onBeforeMount(async () => {
     if (props.comment.video !== "") {
       hasVideo.value = true;
     }
-    const classObj = await fetchy(`/api/posts/${props.comment.parentId}/class`, "GET");
-    isInstructor.value = await fetchy(`/api/classes/id/${classObj._id}/membership/isInstructor`, "GET", {
-      query: { username: currentUsername.value },
-    });
+    console.log("props.isReply", props.isReply);
+    if (!props.isReply) {
+      const classObj = await fetchy(`/api/posts/${props.comment.parentId}/class`, "GET");
+      isInstructor.value = await fetchy(`/api/classes/id/${classObj._id}/membership/isInstructor`, "GET", {
+        query: { username: currentUsername.value },
+      });
+    }
   } catch (_) {
     return;
   }
