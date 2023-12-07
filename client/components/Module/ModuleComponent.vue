@@ -32,7 +32,7 @@ onBeforeMount(async () => {
 
 <template>
   <main>
-    <ModuleHeader :module="module" @expand="clickModule" />
+    <ModuleHeader :module="module" @expand="clickModule" @refreshPosts="getPostsInModule" />
     <div class="posts" v-if="isModuleClicked && loaded && posts.length !== 0">
       <article v-for="post in posts" :key="post._id">
         <PostComponent :post="post" />

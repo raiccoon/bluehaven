@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import PostComponent from "@/components/Post/PostComponent.vue";
+import AddPostButton from "@/components/Post/AddPostButton.vue";
 import { ref } from "vue";
 
 const props = defineProps(["module"]);
-const emits = defineEmits(["expand"]);
+const emits = defineEmits(["expand", "refreshPosts"]);
 
 const isModuleClicked = ref(false);
 
@@ -11,13 +11,17 @@ const clickModule = () => {
   isModuleClicked.value = !isModuleClicked.value;
   emits("expand");
 };
+
+const refreshPosts = () => {
+  emits("refreshPosts");
+};
 </script>
 
 <template>
   <main>
     <div class="header">
       <div class="expand">
-        <button class="button">Add Post</button>
+        <AddPostButton :module="module" @refreshPosts="refreshPosts" />
         <button @click="clickModule" class="button">
           <p v-if="!isModuleClicked">Expand</p>
           <p v-else>Collapse</p>
