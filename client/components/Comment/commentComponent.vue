@@ -68,7 +68,6 @@ onBeforeMount(async () => {
     isInstructor.value = await fetchy(`/api/classes/id/${classObj._id}/membership/isInstructor`, "GET", {
       query: { username: currentUsername.value },
     });
-    console.log("isInstructor.value", isInstructor.value);
   } catch (_) {
     return;
   }
@@ -106,11 +105,12 @@ onBeforeMount(async () => {
   <!-- truncate text, can view full text by expanding -->
   <p class="text single-line">{{ props.comment.content }}</p>
   <div class="base">
-    <button v-if="!viewReplies" class="pure-button btn-small" @click="toggleReplies">View replies</button>
-    <p v-if="viewReplies" class="replies">
+    <!-- <button v-if="!viewReplies" class="pure-button btn-small" @click="toggleReplies">View replies</button> -->
+    <commentList :parentId="props.comment._id" :isReplies="true" />
+    <!-- <p v-if="viewReplies" class="replies">
       <button v-if="viewReplies" class="pure-button btn-small" @click="toggleReplies">Hide Replies</button>
       <commentList v-if="viewReplies" :parentId="props.comment._id" />
-    </p>
+    </p> -->
     <article class="timestamp">
       <p v-if="props.comment.dateCreated !== props.comment.dateUpdated">Edited on: {{ formatDate(props.comment.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.comment.dateCreated) }}</p>

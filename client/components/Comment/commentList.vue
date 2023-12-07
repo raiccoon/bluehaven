@@ -11,7 +11,8 @@ import { onBeforeMount, ref } from "vue";
 const { isLoggedIn } = storeToRefs(useUserStore());
 
 const loaded = ref(false);
-const props = defineProps(["parentId"]);
+// const props = defineProps(["parentId"]);
+const props = defineProps({ parentId: { type: String, required: true }, isReplies: { type: Boolean, default: false } });
 let pinnedComments = ref<Array<Record<string, string>>>([]);
 let comments = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
@@ -59,10 +60,12 @@ onBeforeMount(async () => {
       <commentComponent v-if="editing !== comment._id" :comment="comment" :isPinned="false" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
       <editCommentForm v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
     </article>
-    <button class="pure-button" @click="toggleComments">Hide Comments</button>
+    <button v-if="isReplies" class="pure-button btn-small" @click="toggleComments">Hide Replies</button>
+    <button v-else class="pure-button" @click="toggleComments">Hide Comments</button>
   </section>
   <section v-else-if="viewComments !== true">
-    <button class="pure-button view-comments" @click="toggleComments">View Comments</button>
+    <button v-if="isReplies" class="pure-button btn-small view-comments" @click="toggleComments">View Replies</button>
+    <button v-else class="pure-button view-comments" @click="toggleComments">View Comments</button>
   </section>
   <p v-else-if="loaded">No comments found</p>
   <p v-else>Loading...</p>
