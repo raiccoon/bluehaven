@@ -42,8 +42,8 @@ onBeforeMount(async () => {
     <h1>{{ className }}</h1>
     <p v-if="isAdmin">Join code: {{ joinCode }}</p>
     <button v-else>View Bookmarks</button>
-
-    <button @click="removeSelf">Leave Class</button>
+    <button v-if="isAdmin">Archive Class</button>
+    <button v-else @click="removeSelf">Leave Class</button>
   </main>
 </template>
 

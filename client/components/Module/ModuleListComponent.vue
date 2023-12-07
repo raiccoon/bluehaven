@@ -5,7 +5,7 @@ import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
 
 const loaded = ref(false);
-const props = defineProps(["classId"]);
+const props = defineProps(["classId", "isAdmin"]);
 let modules = ref<Array<Record<string, string>>>([]);
 
 const getModulesInClass = async () => {
@@ -28,12 +28,13 @@ onBeforeMount(async () => {
 
 <template>
   <main>
-    <CreateModuleButton :classId="props.classId" @moduleCreated="handleRefresh" />
+    <CreateModuleButton v-if="isAdmin" :classId="props.classId" @moduleCreated="handleRefresh" />
     <section class="modules" v-if="loaded && modules.length !== 0">
       <article v-for="module in modules" :key="module._id">
-        <ModuleComponent :module="module" />
+        <ModuleComponent :module="module" :isAdmin="isAdmin" />
       </article>
     </section>
+    <div v-else>No modules found.</div>
   </main>
 </template>
 

@@ -4,7 +4,7 @@ import PostComponent from "@/components/Post/PostComponent.vue";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const props = defineProps(["module"]);
+const props = defineProps(["module", "isAdmin"]);
 let loaded = ref(false);
 let posts = ref<Array<Record<string, string>>>([]);
 
@@ -32,7 +32,7 @@ onBeforeMount(async () => {
 
 <template>
   <main>
-    <ModuleHeader :module="module" @expand="clickModule" />
+    <ModuleHeader :module="module" :isAdmin="isAdmin" @expand="clickModule" @refreshPosts="getPostsInModule()" />
     <div class="posts" v-if="isModuleClicked && loaded && posts.length !== 0">
       <article v-for="post in posts" :key="post._id">
         <PostComponent :post="post" />

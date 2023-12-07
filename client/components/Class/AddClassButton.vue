@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { fetchy } from "@/utils/fetchy";
+import { useToastStore } from "@/stores/toast";
+import { storeToRefs } from "pinia";
 const error = ref("");
+const { toast } = storeToRefs(useToastStore());
 
 const emit = defineEmits(["classCreated"]);
 const isCreateClassClicked = ref(false);
@@ -16,14 +19,16 @@ const handleCreateClass = async (className: string) => {
     error.value = "Please enter a class name.";
     return;
   }
-
   try {
     await fetchy("/api/classes", "POST", {
       body: { className: className },
     });
     emptyForm();
     emit("classCreated");
-  } catch (_) {
+  } catch (e) {
+    if (toast.value !== null) {
+      error.value = toast.value.message;
+    }
     return;
   }
 };
