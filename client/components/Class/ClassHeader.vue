@@ -27,15 +27,8 @@ const getClass = async () => {
   joinCode.value = response.joinCode;
 };
 
-const removeSelf = async () => {
-  try {
-    await fetchy(`/api/classes/id/${props.classId}/membership`, "DELETE", {
-      query: { classId: props.classId },
-    });
-    void router.push({ name: "Classes" });
-  } catch (_) {
-    return;
-  }
+const viewBookmarks = async () => {
+  void router.push({ path: `/classes/${props.classId}/bookmarks` });
 };
 
 onBeforeMount(async () => {
@@ -51,8 +44,8 @@ onBeforeMount(async () => {
         <button v-if="isAdmin" class="button">
           <ViewLabelsButton :classId="props.classId" />
         </button>
-        <button v-else class="button">
-          <ViewBookmarksButton :classId="props.classId" />
+        <button v-else class="button" @click="viewBookmarks">
+          <ViewBookmarksButton />
         </button>
         <button v-if="isAdmin" class="button">
           <ArchiveClassButton :classId="props.classId" />
