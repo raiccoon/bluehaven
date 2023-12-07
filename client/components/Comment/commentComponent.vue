@@ -14,6 +14,7 @@ const hasImage = ref(false);
 const hasVideo = ref(false);
 const viewOptions = ref(false);
 const viewReplies = ref(false);
+let isInstructor = ref(false);
 
 const deleteComment = async () => {
   try {
@@ -63,6 +64,14 @@ onBeforeMount(async () => {
     if (props.comment.video !== "") {
       hasVideo.value = true;
     }
+    console.log("HELLO");
+    const classObj = await fetchy(`/api/posts/${props.comment.parentId}/class`, "GET");
+    console.log("classObj", classObj);
+    console.log("HELLO");
+    isInstructor.value = await fetchy(`/api/classes/id/${classObj._id}/membership/isInstructor`, "GET", {
+      query: { username: currentUsername.value },
+    });
+    console.log("isInstructor.value", isInstructor.value);
   } catch (_) {
     return;
   }
@@ -86,8 +95,8 @@ onBeforeMount(async () => {
       <li><button v-if="props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
       <li><button v-if="props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
       <li><button class="btn-small pure-button">Add Label</button></li>
-      <li v-if="isPinned"><button class="btn-small pure-button" @click="togglePin">Unpin</button></li>
-      <li v-else><button class="btn-small pure-button" @click="togglePin">Pin</button></li>
+      <li v-if="isPinned && isInstructor"><button class="btn-small pure-button" @click="togglePin">Unpin</button></li>
+      <li v-if="!isPinned && isInstructor"><button class="btn-small pure-button" @click="togglePin">Pin</button></li>
       <button class="options-button pure-button btn-small" @click="toggleOptions">Hide Options</button>
     </menu>
   </div>
