@@ -31,7 +31,7 @@ onBeforeMount(async () => {
     <CreateModuleButton v-if="isAdmin" :classId="props.classId" @moduleCreated="handleRefresh" />
     <section class="modules" v-if="loaded && modules.length !== 0">
       <article v-for="module in modules" :key="module._id">
-        <ModuleComponent :module="module" :isAdmin="isAdmin" />
+        <ModuleComponent :module="module" :isAdmin="isAdmin" @deleteModule="getModulesInClass()" />
       </article>
     </section>
     <div v-else>No modules found.</div>

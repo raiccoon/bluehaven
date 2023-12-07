@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import PublishModuleButton from "@/components/Module/PublishModuleButton.vue";
 import AddPostButton from "@/components/Post/AddPostButton.vue";
+import DeleteModuleButton from "@/components/Module/DeleteModuleButton.vue";
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
 
 const props = defineProps(["module", "isAdmin"]);
-const emits = defineEmits(["expand", "refreshPosts"]);
+const emits = defineEmits(["expand", "refreshPosts", "deleteModule"]);
 const _module = ref({ _id: "", name: "", description: "", hidden: true });
 
 const isModuleClicked = ref(false);
@@ -17,6 +18,10 @@ const clickModule = () => {
 
 const refreshPosts = () => {
   emits("refreshPosts");
+};
+
+const deleteModule = () => {
+  emits("deleteModule");
 };
 
 const refreshModule = async () => {
@@ -36,6 +41,9 @@ onBeforeMount(() => {
   <main>
     <div class="header">
       <div class="expand">
+        <button v-if="isAdmin" class="button">
+          <DeleteModuleButton :module="_module" @deleteModule="deleteModule" />
+        </button>
         <button v-if="isAdmin" class="button">
           <AddPostButton :module="_module" @refreshPosts="refreshPosts" />
         </button>
