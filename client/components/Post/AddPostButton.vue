@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { fetchy } from "@/utils/fetchy";
 import { useToastStore } from "@/stores/toast";
-import { storeToRefs } from "pinia";
+import { fetchy } from "@/utils/fetchy";
 import * as marked from "marked";
+import { storeToRefs } from "pinia";
+import { ref, watch } from "vue";
 
 const { toast } = storeToRefs(useToastStore());
 const error = ref("");
@@ -94,7 +94,7 @@ const handleCancel = () => {
           <div class="container">
             <div class="textArea">
               <p class="placeholder"></p>
-              <textarea class="text" v-model="content" placeholder="Write your post here!"> </textarea>
+              <textarea class="text" v-model="content" placeholder="Write your post here! You can add images using markdown syntax."> </textarea>
             </div>
             <div class="previewArea">
               <p>Preview your post here</p>
