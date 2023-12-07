@@ -47,6 +47,11 @@ export default class LabelConcept {
     return pairs.map((labelsOnComments) => labelsOnComments.label);
   }
 
+  async filterCommentsByLabel(comments: ObjectId[], label: ObjectId) {
+    const pairs = await this.labelsOnComments.readMany({ label: label, comment: { $in: comments } });
+    return pairs.map((labelOnComment) => labelOnComment.comment);
+  }
+
   async getLabelsInClass(classId: ObjectId) {
     return await this.labels.readMany({ classId });
   }

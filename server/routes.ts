@@ -498,6 +498,15 @@ class Routes {
     return await Label.getLabelsInClass(new ObjectId(classId));
   }
 
+  @Router.get("/posts/:_id/comments")
+  async filterCommentsByLabel(_id: ObjectId, filterByLabel: ObjectId) {
+    const comments = await Comment.getCommentsByParent(new ObjectId(_id));
+    return Label.filterCommentsByLabel(
+      comments.map((comment) => comment._id),
+      filterByLabel,
+    );
+  }
+
   @Router.get("/classes/id/:classId/labels/isLabelInClass")
   async isLabelInClass(classId: ObjectId, label: ObjectId) {
     return await Label.isLabelInClass(new ObjectId(label), new ObjectId(classId));
