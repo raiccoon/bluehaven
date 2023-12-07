@@ -15,17 +15,6 @@ export default class PostConcept {
 
   async create(author: ObjectId, content: string, image: string, video: string) {
     const _id = await this.posts.createOne({ author, content, image, video });
-    const imgur_expression = "imgur.com";
-    // referenced: https://www.tutorialspoint.com/typescript/typescript_string_search.htm
-    if ((image.search(imgur_expression) === -1 && image !== "") || (video.search(imgur_expression) === -1 && video !== "")) {
-      throw new NotAllowedError("All media links must be to imgur");
-    }
-    if (video.search(".mp4") === -1 && video !== "") {
-      throw new NotAllowedError("All video links should be in mp4 format");
-    }
-    if (image.search(".mp4") !== -1) {
-      throw new NotAllowedError(".mp4 should not be uploaded in an image link");
-    }
     return { msg: "Post successfully created!", post: await this.posts.readOne({ _id }) };
   }
 
