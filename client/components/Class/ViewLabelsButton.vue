@@ -15,17 +15,21 @@ const clickButton = () => {
   isButtonClicked.value = true;
 };
 
-const handleArchiveClass = async () => {
+const handleCreateLabel = async () => {
   try {
-    // TODO archive class
-    await fetchy(`/api/classes/id/${props.classId}/membership`, "DELETE", {
-      query: { classId: props.classId },
-    });
-    void router.push({ name: "Classes" });
+    // TODO api for creating a label
   } catch (e) {
     if (toast.value !== null) {
       error.value = toast.value.message;
     }
+    return;
+  }
+};
+
+const getLabels = async () => {
+  try {
+    // TODO api for getting all the labels
+  } catch (_) {
     return;
   }
 };
@@ -40,18 +44,7 @@ const handleCancel = () => {
     <div @click="clickButton">View Labels</div>
     <div class="modal-background" v-if="isButtonClicked">
       <div class="modal-content">
-        <form @submit.prevent="handleArchiveClass()">
-          <div class="text">
-            <h3>Are you sure you want to archive this class?</h3>
-            <p>You will still be able to see the class in your class archives.</p>
-          </div>
-          <div class="modal-buttons">
-            <button class="submit" type="submit">
-              <p>Archive</p>
-            </button>
-            <button class="cancel" type="button" @click="handleCancel">Cancel</button>
-          </div>
-        </form>
+        <div>Placeholder for label data</div>
       </div>
     </div>
   </main>
@@ -63,6 +56,11 @@ h3 {
 }
 p {
   text-align: center;
+}
+.modal-content {
+  background-color: white;
+  width: 400px;
+  height: 400px;
 }
 .modal-background {
   position: fixed;
