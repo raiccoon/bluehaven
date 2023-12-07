@@ -18,32 +18,33 @@ async function renderMarkdown(text: string) {
   return await marked.parse(text);
 }
 
-function renderImages(text: string, width: number): string {
+function renderImages(text: string): string {
   const imageRegex = /\[image\](.*?)\[\/image\]/g; // [image]...[/image]
 
   return text.replace(imageRegex, (_, imageUrl) => {
-    return `<img src="${imageUrl}" width="${width}">`;
+    return `<img src="${imageUrl}" width="100%">`;
   });
 }
 
-function renderMP4(text: string, width: number): string {
+function renderMP4(text: string): string {
   const videoRegex = /\[mp4\](.*?)\[\/mp4\]/g; // [mp4]...[/mp4]
 
   return text.replace(videoRegex, (_, videoUrl) => {
-    return `<video width="${width}" controls><source src="${videoUrl}" type="video/mp4" /></video>`;
+    return `<video width="100%" controls><source src="${videoUrl}" type="video/mp4" /></video>`;
   });
 }
 
-function renderYouTube(text: string, width: number): string {
+function renderYouTube(text: string): string {
   const youtubeRegex = /\[YouTube\](.*?)\[\/YouTube\]/g; // [YouTube]...[/YouTube]
 
   return text.replace(youtubeRegex, (_, youtubeUrl) => {
-    return `<iframe width="${width}" height="${(width * 9) / 16}" src="${youtubeUrl}"></iframe>`;
+    return `<iframe class="youtube-video" src="${youtubeUrl}"></iframe>`;
   });
 }
+const previewContainer = ref<HTMLElement | null>(null);
 
 watch(content, async (newValue) => {
-  const renderedImages = renderYouTube(renderMP4(renderImages(newValue, 298), 298), 298);
+  const renderedImages = renderYouTube(renderMP4(renderImages(newValue)));
   livePreview.value = await renderMarkdown(renderedImages);
 });
 
@@ -97,7 +98,9 @@ const handleCancel = () => {
             </div>
             <div class="previewArea">
               <p>Preview your post here</p>
-              <div id="preview" class="preview" v-html="livePreview"></div>
+              <div class="preview" ref="previewContainer">
+                <div v-html="livePreview"></div>
+              </div>
             </div>
           </div>
           <div class="modal-buttons">
