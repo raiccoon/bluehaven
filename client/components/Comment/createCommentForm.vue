@@ -28,6 +28,7 @@ const handleCreateComment = async (parent: string, content: string, image: strin
   }
   msg.value = commentResults;
   displayMsg.value = true;
+  isCreateCommentClicked.value = false;
   emit("refreshComments");
   emptyForm();
 };

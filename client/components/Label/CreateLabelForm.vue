@@ -1,16 +1,26 @@
 <script setup lang="ts">
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
+const error = ref("");
 
 const props = defineProps(["classId"]);
+const isCreateLabelClicked = ref(false);
 let name = ref("");
 
-const createLabel = async (name: string) => {
+const clickCreateLabel = () => {
+  isCreateLabelClicked.value = true;
+};
+
+const handleCreateLabel = async (name: string) => {
+  if (!name.trim()) {
+    error.value = "Please enter a label name.";
+    return;
+  }
   try {
-    // console.log("image", image);
     await fetchy(`/api/classes/id/${props.classId}/labels`, "POST", {
       body: { name },
     });
+    isCreateLabelClicked.value = false;
 
     //try console logging all labels in the class?
     const labelResults = await fetchy(`/api/classes/id/${props.classId}/labels`, "GET");
@@ -25,44 +35,36 @@ const emptyForm = () => {
   name.value = "";
 };
 
+const handleCancel = () => {
+  name.value = "";
+  error.value = "";
+  isCreateLabelClicked.value = false;
+};
+
 onBeforeMount(async () => {
   //beforemount stuff here
 });
 </script>
 
 <template>
-  <form @submit.prevent="createLabel(name)">
-    <label for="content">Create new label:</label>
-    <textarea id="media-link" v-model="name" placeholder="Label name"> </textarea>
-    <button type="submit" class="pure-button-primary pure-button">Create Label</button>
-  </form>
+  <main>
+    <button class="click" @click="clickCreateLabel">Create a Label</button>
+    <div class="modal-background" v-if="isCreateLabelClicked">
+      <div class="modal-content">
+        <form @submit.prevent="handleCreateLabel(name)">
+          <h3>Create a new label</h3>
+          <input type="text" id="media-link" v-model="name" placeholder="Label name" />
+          <div class="modal-buttons">
+            <button type="submit" class="submit">Create Label</button>
+            <button class="cancel" type="button" @click="handleCancel">Cancel</button>
+          </div>
+          <div class="error" v-if="error">{{ error }}</div>
+        </form>
+      </div>
+    </div>
+  </main>
 </template>
 
 <style scoped>
-form {
-  margin: 1em;
-  background-color: var(--base-bg);
-  border-radius: 1em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-  padding: 1em;
-}
-
-textarea {
-  font-family: inherit;
-  font-size: inherit;
-  height: 6em;
-  padding: 0.5em;
-  border-radius: 4px;
-  resize: none;
-}
-
-#media-link {
-  max-height: 20px;
-}
-
-.media-button {
-  max-width: 10rem;
-}
+@import "@/assets/popupButton.css";
 </style>
