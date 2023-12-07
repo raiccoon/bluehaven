@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import MenuButton from "@/components/NavBar/MenuButton.vue";
+import LogOutButton from "@/components/NavBar/LogOutButton.vue";
 
 import { ref, computed } from "vue";
 import { RouterLink, useRoute } from "vue-router";
@@ -24,16 +25,10 @@ const currentRouteName = computed(() => currentRoute.name);
   </button>
   <ul class="menu-items" :class="{ 'show-menu': showMenu }">
     <li>
-      <RouterLink :to="{ name: 'Classes' }" :class="{ underline: currentRouteName == 'Classes' }"> Your Classes </RouterLink>
-    </li>
-    <li>
       <RouterLink :to="{ name: 'Boilerplate' }" :class="{ underline: currentRouteName == 'Boilerplate' }"> Boilerplate (for testing) </RouterLink>
     </li>
     <li>
-      <RouterLink :to="{ name: 'Home' }" :class="{ underline: currentRouteName == 'Home' }"> Home </RouterLink>
-    </li>
-    <li>
-      <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings </RouterLink>
+      <LogOutButton />
     </li>
   </ul>
 </template>
@@ -50,6 +45,19 @@ a:hover {
   text-decoration: underline;
 }
 
+button {
+  font-size: large;
+  color: black;
+  text-decoration: none;
+  transition: text-decoration 0.3s ease;
+  background: transparent;
+  border: none;
+  border-radius: none;
+}
+
+button:hover {
+  text-decoration: underline;
+}
 ul {
   list-style-type: none;
   margin-left: auto;

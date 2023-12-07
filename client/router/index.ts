@@ -4,13 +4,10 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import AllClassesView from "../views/AllClassesView.vue";
 import ClassView from "../views/ClassView.vue";
-import CreatePostView from "../views/CreatePostView.vue";
 import ExpandedPostView from "../views/ExpandedPostView.vue";
-import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import RegisterView from "../views/RegisterView.vue";
-import SettingView from "../views/SettingView.vue";
 import StartView from "../views/StartView.vue";
 import ViewBookmarksView from "../views/ViewBookmarksView.vue";
 import BoilerplateView from "../views/boilerplates/BoilerplateView.vue";
@@ -34,12 +31,6 @@ const router = createRouter({
       component: RegisterView,
     },
     {
-      path: "/home",
-      name: "Home",
-      component: HomeView,
-      meta: { requiresAuth: true },
-    },
-    {
       path: "/boilerplate",
       name: "Boilerplate",
       component: BoilerplateView,
@@ -52,12 +43,6 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: "/setting",
-      name: "Settings",
-      component: SettingView,
-      meta: { requiresAuth: true },
-    },
-    {
       path: "/login",
       name: "Login",
       component: LoginView,
@@ -65,7 +50,7 @@ const router = createRouter({
       beforeEnter: (to, from) => {
         const { isLoggedIn } = storeToRefs(useUserStore());
         if (isLoggedIn.value) {
-          return { name: "Settings" };
+          return { name: "Classes" };
         }
       },
     },
@@ -73,12 +58,6 @@ const router = createRouter({
       path: "/classes/:classId",
       name: "Class",
       component: ClassView,
-      meta: { requiresAuth: true },
-    },
-    {
-      path: "/classes/:classId/createPost",
-      name: "Create-Post",
-      component: CreatePostView,
       meta: { requiresAuth: true },
     },
     {
