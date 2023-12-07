@@ -4,16 +4,11 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
-// import router from "../../router";
 import ModuleListComponent from "../Module/ModuleListComponent.vue";
 
 const { currentUsername } = storeToRefs(useUserStore());
 const props = defineProps(["classId"]);
 const isAdmin = ref(false);
-
-// function createPost() {
-//   void router.push({ path: `/classes/${props.classId.toString()}/createPost` });
-// }
 
 const checkIfAdmin = async () => {
   try {
@@ -32,8 +27,7 @@ onBeforeMount(async () => {
 <template>
   <main>
     <ClassHeader :classId="props.classId" :isAdmin="isAdmin" />
-    <!-- <button v-if="isAdmin" @click="createPost">Create Post</button> -->
-    <ModuleListComponent v-if="isAdmin" :classId="props.classId" />
+    <ModuleListComponent :classId="props.classId" :isAdmin="isAdmin" />
   </main>
 </template>
 <style scoped>

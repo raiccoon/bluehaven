@@ -50,10 +50,11 @@ onBeforeMount(async () => {
 .placeholder {
   width: 250px;
   height: 150px;
-  margin: 20px;
-}
-.enrolled {
-  margin-left: 20px;
+  margin: 0px;
+  text-align: left;
+  @media (max-width: 600px) {
+    text-align: center;
+  }
 }
 .tile-container {
   display: grid;

@@ -86,7 +86,7 @@ const handleCancel = () => {
 
 <template>
   <main>
-    <button class="click" @click="clickAddPost">Add Post</button>
+    <div @click="clickAddPost">Add Post</div>
     <div class="modal-background" v-if="isAddPostClicked">
       <div class="modal-content">
         <form @submit.prevent="createPost(props.module._id, content, '', '')">
