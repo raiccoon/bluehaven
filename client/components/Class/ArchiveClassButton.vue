@@ -17,11 +17,12 @@ const clickButton = () => {
 
 const handleArchiveClass = async () => {
   try {
+    window.alert("Sorry we haven't implemented class archives yet!");
     // TODO archive class
-    await fetchy(`/api/classes/id/${props.classId}/membership`, "DELETE", {
-      query: { classId: props.classId },
-    });
-    void router.push({ name: "Classes" });
+    // await fetchy(`/api/classes/id/${props.classId}/membership`, "DELETE", {
+    //   query: { classId: props.classId },
+    // });
+    // void router.push({ name: "Classes" });
   } catch (e) {
     if (toast.value !== null) {
       error.value = toast.value.message;
