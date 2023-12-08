@@ -29,6 +29,7 @@ const handleCreateComment = async (parent: string, content: string, image: strin
   msg.value = commentResults;
   displayMsg.value = true;
   emit("refreshComments");
+  isCreateCommentClicked.value = false;
   emptyForm();
 };
 
@@ -49,7 +50,7 @@ const handleCancel = () => {
 
 <template>
   <section class="main">
-    <button v-if="!isCreateCommentClicked" @click="clickCreateComment" class="pure-button">Click here to create a comment!</button>
+    <button v-if="!isCreateCommentClicked" @click="clickCreateComment" class="pure-button">Create a comment!</button>
     <form v-else @submit.prevent="handleCreateComment(props.parent, content, image, video)">
       <textarea type="text" v-model="image" id="media-link" placeholder="Image link (optional)"> </textarea>
       <textarea type="text" v-model="video" id="media-link" placeholder="Video link (optional)"> </textarea>
@@ -76,7 +77,7 @@ form {
   max-height: 70vh;
   margin: 1em;
   /* not the proper way to make this a good size lol */
-  width: 500px;
+  /* width: 500px; */
 }
 
 textarea {
@@ -91,6 +92,24 @@ textarea {
 button {
   margin: 1em;
   margin-right: 1rem;
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  border-radius: 500px;
+  transition-property: background-color, border-color, color, box-shadow, filter;
+  transition-duration: 0.3s;
+  border: 1px solid transparent;
+  letter-spacing: 2px;
+  min-width: 115px;
+  white-space: normal;
+  text-align: center;
+  padding: 5px 5px 5px;
+  color: #fff;
+  box-shadow: inset 0 0 0 2px #5190bbff;
+  background-color: #5190bbff;
+  height: 40px;
 }
 
 #media-link {
