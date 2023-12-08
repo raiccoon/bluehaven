@@ -74,6 +74,7 @@ onBeforeMount(async () => {
         {{ label.name }}
       </label>
       <!-- <input type="checkbox" v-for="label in labelsInClass" :key="label._id" :value="label._id" />{{ label.name }}<br /> -->
+
       <input type="checkbox" name="favorite_pet" value="Cats" />Cats<br />
       <input type="checkbox" name="favorite_pet" value="Dogs" />Dogs<br />
       <input type="checkbox" name="favorite_pet" value="Birds" />Birds<br />
