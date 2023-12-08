@@ -84,39 +84,33 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <section class="article" v-if="loaded">
-    <ToggleBookmarkButton @updatedBookmarkState="refreshBookmark(post._id)" :postId="post._id" :isBookmarked="isBookmarked" />
-    <p class="author">{{ post.author }}</p>
-
-    <img v-if="hasImage" class="postMedia image" :src="post.image" />
-    <!-- <img v-if="hasVideo" class="postMedia video" :src="props.post.video" /> -->
-    <video v-if="hasVideo" class="postMedia video" controls>
-      <source v-if="hasVideo" :src="post.video" type="video/mp4" />
-    </video>
-    <!-- placeholder media -->
-    <!-- <img class="postMedia" src="https://i.imgur.com/CWuBXGh.jpg" /> -->
-
-    <p class="text single-line">{{ post.content }}</p>
-    <div class="base">
-      <menu>
+  <main>
+    <section class="article" v-if="loaded">
+      <ToggleBookmarkButton @updatedBookmarkState="refreshBookmark(post._id)" :postId="post._id" :isBookmarked="isBookmarked" />
+        <p class="author">{{ post.author }}</p>
+        <p class="text single-line">{{ post.content }}</p>
+      <div class="base">
+        <menu>
         <!-- will implement editing within expanded view later? -->
-        <li><EditPostButton :post="post" @editPost="getPostById(post._id)" /></li>
-        <li><button v-if="post.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
-      </menu>
-      <article class="timestamp">
-        <p v-if="post.dateCreated !== post.dateUpdated">Edited on: {{ formatDate(post.dateUpdated) }}</p>
-        <p v-else>Created on: {{ formatDate(post.dateCreated) }}</p>
-      </article>
-    </div>
-  </section>
-  <h2 v-else>Loading...</h2>
+          <li><EditPostButton :post="post" @editPost="getPostById(post._id)" /></li>
+          <li><button v-if="post.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
+        </menu>
+        <article class="timestamp">
+          <p v-if="post.dateCreated !== post.dateUpdated">Edited on: {{ formatDate(post.dateUpdated) }}</p>
+          <p v-else>Created on: {{ formatDate(post.dateCreated) }}</p>
+        </article>
+      </div>
+    </section>
+    <p v-else>Loading...</p>
+  </main>
+
 </template>
 
 <style scoped>
-h2 {
-  text-align: center;
+main {
+  border: solid black 1px;
+  width: 400px;
 }
-
 p {
   margin: 0em;
 }
@@ -126,16 +120,13 @@ p {
   font-size: 1.2em;
 }
 .article {
-  margin: 1em;
-  width: 70vh;
+  border-radius: 15px;
+  width: 100%;
+  height: 100%;
   background-color: var(--base-bg);
-  border-radius: 1em;
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
-  padding: 1em;
-  overflow-y: auto;
-  max-height: 70vh;
+  box-sizing: border-box;
 }
 
 menu {
