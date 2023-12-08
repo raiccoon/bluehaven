@@ -66,7 +66,7 @@ onBeforeMount(async () => {
   </section>
   <section v-else-if="viewComments !== true">
     <button v-if="isReplies" class="pure-button btn-small view-comments" @click="toggleComments">View Replies</button>
-    <button v-else class="pure-button view-comments" @click="toggleComments">View Comments</button>
+    <button v-else class="pure-button view-comments" @click="toggleComments">View / Add Comments</button>
   </section>
   <p v-else-if="loaded">No comments found</p>
   <p v-else>Loading...</p>

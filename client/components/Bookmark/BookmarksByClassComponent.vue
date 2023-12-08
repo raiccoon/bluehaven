@@ -30,6 +30,7 @@ onBeforeMount(async () => {
       <PostComponent :post="post" />
     </article>
   </div>
+  <p class="center" v-else-if="loaded">No bookmarks found!</p>
 </template>
 
 <style scoped>
