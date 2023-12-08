@@ -193,4 +193,25 @@ p {
   flex-direction: row;
   gap: 1em;
 }
+
+button {
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 500px;
+  transition-property: background-color, border-color, color, box-shadow, filter;
+  transition-duration: 0.3s;
+  border: 1px solid transparent;
+  letter-spacing: 2px;
+  min-width: 70px;
+  white-space: normal;
+  text-align: center;
+  padding: 5px 5px 5px;
+  color: #5190bbff;
+  box-shadow: inset 0 0 0 2px #5190bbff;
+  background-color: white;
+  height: 40px;
+}
 </style>

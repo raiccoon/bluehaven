@@ -76,7 +76,7 @@ form {
   max-height: 70vh;
   margin: 1em;
   /* not the proper way to make this a good size lol */
-  width: 500px;
+  /* width: 500px; */
 }
 
 textarea {
@@ -91,6 +91,24 @@ textarea {
 button {
   margin: 1em;
   margin-right: 1rem;
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  border-radius: 500px;
+  transition-property: background-color, border-color, color, box-shadow, filter;
+  transition-duration: 0.3s;
+  border: 1px solid transparent;
+  letter-spacing: 2px;
+  min-width: 115px;
+  white-space: normal;
+  text-align: center;
+  padding: 5px 5px 5px;
+  color: #fff;
+  box-shadow: inset 0 0 0 2px #5190bbff;
+  background-color: #5190bbff;
+  height: 40px;
 }
 
 #media-link {

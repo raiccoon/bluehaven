@@ -62,11 +62,11 @@ onBeforeMount(async () => {
       <editCommentForm v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
     </article>
     <button v-if="isReplies" class="pure-button btn-small" @click="toggleComments">Hide Replies</button>
-    <button v-else class="pure-button" @click="toggleComments">Hide Comments</button>
+    <button v-else class="comment-visibility pure-button" @click="toggleComments">Hide Comments</button>
   </section>
   <section v-else-if="viewComments !== true">
     <button v-if="isReplies" class="pure-button btn-small view-comments" @click="toggleComments">View Replies</button>
-    <button v-else class="pure-button view-comments" @click="toggleComments">View Comments</button>
+    <button v-else class="comment-visibility pure-button view-comments" @click="toggleComments">View Comments</button>
   </section>
   <p v-else-if="loaded">No comments found</p>
   <p v-else>Loading...</p>
@@ -87,13 +87,16 @@ p,
 }
 
 article {
-  background-color: var(--base-bg);
+  background-color: white;
   border-radius: 1em;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #d6eaf9ff;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   padding: 1em;
-  width: 70vh;
+  /* width: 70vh; */
 }
 
 .posts {
@@ -110,5 +113,30 @@ article {
 .view-comments {
   gap: 1em;
   margin: 1em;
+}
+
+button {
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 1;
+  border-radius: 500px;
+  transition-property: background-color, border-color, color, box-shadow, filter;
+  transition-duration: 0.3s;
+  border: 1px solid transparent;
+  letter-spacing: 2px;
+  min-width: 70px;
+  white-space: normal;
+  text-align: center;
+  padding: 5px 5px 5px;
+  color: #5190bbff;
+  box-shadow: inset 0 0 0 2px #5190bbff;
+  background-color: white;
+  height: 40px;
+}
+
+.comment-visibility {
+  font-size: 14px;
 }
 </style>
