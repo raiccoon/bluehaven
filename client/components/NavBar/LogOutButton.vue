@@ -7,11 +7,11 @@ const { logoutUser } = useUserStore();
 const showModal = ref(false);
 
 async function logout() {
-  showModal.value = true; // Show the modal when logout is clicked
+  showModal.value = true;
 }
 
 function cancelLogout() {
-  showModal.value = false; // Hide the modal when cancel is clicked
+  showModal.value = false;
 }
 
 async function confirmLogout() {
