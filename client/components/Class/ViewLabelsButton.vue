@@ -55,7 +55,10 @@ onBeforeMount(async () => {
     <div @click="clickButton">View Labels</div>
     <div class="modal-background" v-if="isButtonClicked">
       <div class="modal-content">
-        <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
+        <h3>Class Labels</h3>
+        <div class="label-list">
+          <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
+        </div>
         <CreateLabelForm :classId="props.classId" @refreshLabels="getLabels" />
         <button type="button" class="cancel" @click="handleCancel">Cancel</button>
       </div>
@@ -73,7 +76,7 @@ p {
 .modal-content {
   background-color: white;
   width: 400px;
-  height: 400px;
+  height: 460px;
 }
 .modal-background {
   position: fixed;
@@ -178,5 +181,24 @@ form {
 }
 .placeholder {
   height: 18.4px;
+}
+
+.label-item {
+  margin: 1em;
+  font-size: 14px;
+  border-radius: 500px;
+  border: 1px solid transparent;
+  letter-spacing: 2px;
+  white-space: normal;
+  text-align: center;
+  padding: 5px 5px 5px;
+  color: #fff;
+  box-shadow: inset 0 0 0 2px #5190bbff;
+  background-color: #5190bbff;
+}
+
+.label-list {
+  max-height: 70%;
+  overflow-y: auto;
 }
 </style>
