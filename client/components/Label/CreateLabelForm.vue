@@ -6,6 +6,7 @@ const error = ref("");
 const props = defineProps(["classId"]);
 const isCreateLabelClicked = ref(false);
 let name = ref("");
+const emit = defineEmits(["refreshLabels"]);
 
 const clickCreateLabel = () => {
   isCreateLabelClicked.value = true;
@@ -20,11 +21,12 @@ const handleCreateLabel = async (name: string) => {
     await fetchy(`/api/classes/id/${props.classId}/labels`, "POST", {
       body: { name },
     });
+    emit("refreshLabels");
     isCreateLabelClicked.value = false;
 
     //try console logging all labels in the class?
-    const labelResults = await fetchy(`/api/classes/id/${props.classId}/labels`, "GET");
-    console.log("labelResults", labelResults);
+    // const labelResults = await fetchy(`/api/classes/id/${props.classId}/labels`, "GET");
+    // console.log("labelResults", labelResults);
   } catch (_) {
     return;
   }

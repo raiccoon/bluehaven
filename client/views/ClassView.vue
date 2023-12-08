@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Class from "@/components/Class/ClassComponent.vue";
-// delete label form later
 </script>
 <template>
   <main>
