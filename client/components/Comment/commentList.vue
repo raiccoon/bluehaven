@@ -84,6 +84,8 @@ p,
 .row {
   margin: 0 auto;
   /* max-width: 60em; */
+  width: 70%;
+  max-width: 750px;
 }
 
 article {
@@ -120,6 +122,7 @@ button {
   outline: none;
   cursor: pointer;
   font-size: 10px;
+  max-width: 100px;
   line-height: 1;
   border-radius: 500px;
   transition-property: background-color, border-color, color, box-shadow, filter;
@@ -131,7 +134,7 @@ button {
   text-align: center;
   padding: 5px 5px 5px;
   color: #5190bbff;
-  box-shadow: inset 0 0 0 2px #5190bbff;
+  box-shadow: inset 0 0 0 2px #d6eaf9ff;
   background-color: white;
   height: 40px;
 }

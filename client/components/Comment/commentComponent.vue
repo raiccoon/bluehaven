@@ -108,12 +108,7 @@ onBeforeMount(async () => {
   <!-- truncate text, can view full text by expanding -->
   <p class="text single-line">{{ props.comment.content }}</p>
   <div class="base">
-    <!-- <button v-if="!viewReplies" class="pure-button btn-small" @click="toggleReplies">View replies</button> -->
     <commentList :parentId="props.comment._id" :isReplies="true" />
-    <!-- <p v-if="viewReplies" class="replies">
-      <button v-if="viewReplies" class="pure-button btn-small" @click="toggleReplies">Hide Replies</button>
-      <commentList v-if="viewReplies" :parentId="props.comment._id" />
-    </p> -->
     <article class="timestamp">
       <p v-if="props.comment.dateCreated !== props.comment.dateUpdated">Edited on: {{ formatDate(props.comment.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.comment.dateCreated) }}</p>
@@ -210,7 +205,7 @@ button {
   text-align: center;
   padding: 5px 5px 5px;
   color: #5190bbff;
-  box-shadow: inset 0 0 0 2px #5190bbff;
+  box-shadow: inset 0 0 0 2px #d6eaf9ff;
   background-color: white;
   height: 40px;
 }

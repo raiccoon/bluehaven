@@ -29,6 +29,7 @@ const handleCreateComment = async (parent: string, content: string, image: strin
   msg.value = commentResults;
   displayMsg.value = true;
   emit("refreshComments");
+  isCreateCommentClicked.value = false;
   emptyForm();
 };
 
@@ -49,7 +50,7 @@ const handleCancel = () => {
 
 <template>
   <section class="main">
-    <button v-if="!isCreateCommentClicked" @click="clickCreateComment" class="pure-button">Click here to create a comment!</button>
+    <button v-if="!isCreateCommentClicked" @click="clickCreateComment" class="pure-button">Create a comment!</button>
     <form v-else @submit.prevent="handleCreateComment(props.parent, content, image, video)">
       <textarea type="text" v-model="image" id="media-link" placeholder="Image link (optional)"> </textarea>
       <textarea type="text" v-model="video" id="media-link" placeholder="Video link (optional)"> </textarea>
