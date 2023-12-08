@@ -79,6 +79,7 @@ onBeforeMount(async () => {
   } catch (_) {
     return;
   }
+  await refreshBookmark(props.postId);
 });
 </script>
 
