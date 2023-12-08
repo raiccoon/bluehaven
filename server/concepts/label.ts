@@ -42,6 +42,12 @@ export default class LabelConcept {
     return { msg: "Successfully removed label from comment!" };
   }
 
+  async removeAllLabels(comment: ObjectId) {
+    console.log(comment);
+    await this.labelsOnComments.deleteMany({ comment: comment });
+    return { msg: "Successfully removed all labels from comment!" };
+  }
+
   async getLabelsOnComment(comment: ObjectId) {
     const pairs = await this.labelsOnComments.readMany({ comment });
     return pairs.map((labelsOnComments) => labelsOnComments.label);
@@ -57,18 +63,19 @@ export default class LabelConcept {
   }
 
   async isLabelInClass(label: ObjectId, classId: ObjectId) {
-    return (await this.labels.readOne({ _id: label, classId })) != null;
+    return (await this.labels.readOne({ _id: label, classId })) !== null;
   }
 
   async assertIsLabelInClass(label: ObjectId, classId: ObjectId) {
-    if ((await this.labels.readOne({ _id: label, classId })) != null) {
+    console.log(label, classId);
+    if ((await this.labels.readOne({ _id: label, classId: classId })) === null) {
       throw new NotFoundError("Cannot find label in class");
     }
   }
 
   async assertLabelNotOnComment(label: ObjectId, comment: ObjectId) {
-    if ((await this.labelsOnComments.readOne({ label, comment })) == null) {
-      throw new NotFoundError("Cannot find label in class");
+    if ((await this.labelsOnComments.readOne({ label, comment })) !== null) {
+      throw new NotFoundError("Label is already on comment");
     }
   }
 
