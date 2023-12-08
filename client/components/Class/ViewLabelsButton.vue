@@ -37,7 +37,6 @@ const getLabels = async () => {
     return;
   }
   labels.value = labelResults;
-  console.log(labels.value);
 };
 
 const handleCancel = () => {
@@ -55,15 +54,49 @@ onBeforeMount(async () => {
     <div @click="clickButton">View Labels</div>
     <div class="modal-background" v-if="isButtonClicked">
       <div class="modal-content">
-        <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
-        <CreateLabelForm :classId="props.classId" @refreshLabels="getLabels" />
-        <button type="button" class="cancel" @click="handleCancel">Cancel</button>
+        <div>
+          <div class="cancelButton">
+            <button type="button" class="cancel close-btn" @click="handleCancel">
+              <i class="material-symbols-outlined">close</i>
+            </button>
+          </div>
+
+          <h3>Class Labels</h3>
+          <div class="label-list">
+            <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
+          </div>
+        </div>
+        <div class="createButton">
+          <CreateLabelForm :classId="props.classId" @refreshLabels="getLabels" />
+        </div>
       </div>
     </div>
   </main>
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap");
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
+.createButton {
+  margin-bottom: 10px;
+}
+.cancelButton {
+  width: 100%;
+  display: flex;
+  flex-direction: flex-end;
+}
+.cancel {
+  background: transparent;
+  border: none;
+  margin-top: 10px;
+  margin-left: 10px;
+}
 h3 {
   margin-bottom: 0px;
 }
@@ -73,7 +106,10 @@ p {
 .modal-content {
   background-color: white;
   width: 400px;
-  height: 400px;
+  height: 460px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .modal-background {
   position: fixed;
@@ -147,29 +183,6 @@ form {
 .submit:hover {
   transform: scale(1.04);
 }
-.cancel {
-  display: inline-block;
-  outline: none;
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-  border-radius: 500px;
-  transition-property: background-color, border-color, color, box-shadow, filter;
-  transition-duration: 0.3s;
-  border: 1px solid transparent;
-  letter-spacing: 2px;
-  min-width: 115px;
-  white-space: normal;
-  text-align: center;
-  padding: 5px 5px 5px;
-  color: #888888;
-  box-shadow: inset 0 0 0 2px #888888;
-  background-color: transparent;
-  height: 40px;
-}
-.cancel:hover {
-  transform: scale(1.04);
-}
 
 .error {
   display: flex;
@@ -178,5 +191,24 @@ form {
 }
 .placeholder {
   height: 18.4px;
+}
+
+.label-item {
+  margin: 1em;
+  font-size: 14px;
+  border-radius: 500px;
+  border: 1px solid transparent;
+  letter-spacing: 2px;
+  white-space: normal;
+  text-align: center;
+  padding: 5px 5px 5px;
+  color: #fff;
+  box-shadow: inset 0 0 0 2px #5190bbff;
+  background-color: #5190bbff;
+}
+
+.label-list {
+  max-height: 70%;
+  overflow-y: auto;
 }
 </style>

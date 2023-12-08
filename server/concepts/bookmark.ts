@@ -13,9 +13,11 @@ export default class BookmarkConcept {
   public readonly bookmarks = new DocCollection<BookmarkDoc>("bookmarks");
 
   async addBookmark(owner: ObjectId, post: ObjectId, classId: ObjectId) {
-    const bookMark = await this.bookmarks.readOne({ post: post });
-    if (bookMark !== null) {
-      throw new AlreadyBookmarkedError(owner, post);
+    const bookMarks = await this.bookmarks.readMany({ post: post });
+    for (const bookMark of bookMarks) {
+      if (bookMark !== null && bookMark.owner.toString() === owner.toString()) {
+        throw new AlreadyBookmarkedError(owner, post);
+      }
     }
     const createdBookmark = await this.bookmarks.createOne({ owner, post, classId });
     return createdBookmark;

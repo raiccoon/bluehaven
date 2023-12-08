@@ -5,6 +5,7 @@ import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import AddLabelForm from "../Label/AddLabelForm.vue";
 
 const props = defineProps(["comment", "isPinned", "isReply"]);
 const emit = defineEmits(["editComment", "refreshComments"]);
@@ -15,6 +16,10 @@ const hasVideo = ref(false);
 const viewOptions = ref(false);
 const viewReplies = ref(false);
 let isInstructor = ref(false);
+
+const labels = ref<Array<Record<string, string>>>([]);
+
+const isAddLabelModelOpen = ref(false);
 
 const deleteComment = async () => {
   try {
@@ -56,6 +61,18 @@ const togglePin = async () => {
   emit("refreshComments");
 };
 
+const toggleLabelModal = async () => {
+  isAddLabelModelOpen.value = !isAddLabelModelOpen.value;
+};
+
+const getLabelsOnComment = async () => {
+  try {
+    labels.value = await fetchy(`/api/comments/${props.comment._id}/labels`, "GET");
+  } catch {
+    return;
+  }
+};
+
 onBeforeMount(async () => {
   try {
     if (props.comment.image !== "") {
@@ -74,6 +91,7 @@ onBeforeMount(async () => {
   } catch (_) {
     return;
   }
+  await getLabelsOnComment();
 });
 </script>
 
@@ -93,7 +111,7 @@ onBeforeMount(async () => {
     <menu class="options" v-if="viewOptions">
       <li><button v-if="props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
       <li><button v-if="props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
-      <li><button class="btn-small pure-button">Add Label</button></li>
+      <li><button class="btn-small pure-button" @click="toggleLabelModal">Add Label</button></li>
       <li v-if="isPinned && isInstructor"><button class="btn-small pure-button" @click="togglePin">Unpin</button></li>
       <li v-if="!isPinned && isInstructor"><button class="btn-small pure-button" @click="togglePin">Pin</button></li>
       <button class="options-button pure-button btn-small" @click="toggleOptions">Hide Options</button>
@@ -114,6 +132,8 @@ onBeforeMount(async () => {
       <p v-else>Created on: {{ formatDate(props.comment.dateCreated) }}</p>
     </article>
   </div>
+
+  <AddLabelForm v-if="isAddLabelModelOpen" :comment="comment" :labels="labels" />
 </template>
 
 <style scoped>

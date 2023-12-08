@@ -58,7 +58,6 @@ const handleCancel = () => {
       <textarea type="text" v-model="content" placeholder="Comment content here"> </textarea>
       <div>
         <button type="submit" class="pure-button-primary pure-button">Create</button>
-        <button type="button" class="pure-button">+ Add Labels</button>
         <button @click="handleCancel" class="pure-button">Cancel</button>
       </div>
     </form>

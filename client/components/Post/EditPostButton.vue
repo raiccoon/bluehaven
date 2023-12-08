@@ -94,7 +94,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main>
+  <div>
     <div @click="clickEditPost">Edit Post</div>
     <div class="modal-background" v-if="isEditPostClicked">
       <div class="modal-content">
@@ -121,7 +121,7 @@ onMounted(async () => {
         </form>
       </div>
     </div>
-  </main>
+  </div>
 </template>
 
 <style scoped>

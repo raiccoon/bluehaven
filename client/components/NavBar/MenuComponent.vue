@@ -24,9 +24,9 @@ const currentRouteName = computed(() => currentRoute.name);
     <MenuButton />
   </button>
   <ul class="menu-items" :class="{ 'show-menu': showMenu }">
-    <li>
+    <!-- <li>
       <RouterLink :to="{ name: 'Boilerplate' }" :class="{ underline: currentRouteName == 'Boilerplate' }"> Boilerplate (for testing) </RouterLink>
-    </li>
+    </li> -->
     <li>
       <LogOutButton />
     </li>
