@@ -1,31 +1,19 @@
 <script setup lang="ts">
-import EditPostForm from "@/components/Post/EditPostForm.vue";
 import PostComponent from "@/components/Post/PostComponent.vue";
-import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
-import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
-
-const { isLoggedIn } = storeToRefs(useUserStore());
 
 const loaded = ref(false);
 const props = defineProps(["moduleId"]);
 let posts = ref<Array<Record<string, string>>>([]);
-let editing = ref("");
 
 const getPosts = async () => {
-  let moduleResults;
   try {
-    moduleResults = await fetchy(`/api/modules/${props.moduleId}/posts`, "GET");
+    posts.value = await fetchy(`/api/modules/${props.moduleId}/posts`, "GET");
   } catch (_) {
     return;
   }
-  posts.value = moduleResults;
 };
-
-function updateEditing(id: string) {
-  editing.value = id;
-}
 
 onBeforeMount(async () => {
   await getPosts();
@@ -36,8 +24,7 @@ onBeforeMount(async () => {
 <template>
   <section class="posts" v-if="loaded && posts.length !== 0">
     <article v-for="post in posts" :key="post._id">
-      <PostComponent v-if="editing !== post._id" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
-      <EditPostForm v-else :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+      <PostComponent :post="post" />
     </article>
   </section>
   <p v-else-if="loaded">No posts found</p>
