@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { fetchy } from "../../utils/fetchy";
 import router from "../../router";
+import * as marked from "marked";
 import { formatDate } from "@/utils/formatDate";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
@@ -11,10 +12,42 @@ const props = defineProps(["postId", "author"]);
 const loaded = ref(false);
 let post = ref({ _id: "", author: "", title: "", dateUpdated: new Date(), content: "" });
 let classId = ref("");
-const emit = defineEmits(["editPost", "refreshPosts"]);
 const isBookmarked = ref(false);
 const isAdmin = ref(false);
 const { currentUsername } = storeToRefs(useUserStore());
+const renderText = ref("");
+
+async function renderMarkdown(text: string) {
+  return await marked.parse(text);
+}
+
+async function render(text: string) {
+  renderText.value = await renderMarkdown(renderYouTube(renderMP4(renderImages(text))));
+}
+
+function renderImages(text: string): string {
+  const imageRegex = /\[image\](.*?)\[\/image\]/g; // [image]...[/image]
+
+  return text.replace(imageRegex, (_, imageUrl) => {
+    return `<img src="${imageUrl}" width="100%">`;
+  });
+}
+
+function renderMP4(text: string): string {
+  const videoRegex = /\[mp4\](.*?)\[\/mp4\]/g; // [mp4]...[/mp4]
+
+  return text.replace(videoRegex, (_, videoUrl) => {
+    return `<video width="100%" controls><source src="${videoUrl}" type="video/mp4" /></video>`;
+  });
+}
+
+function renderYouTube(text: string): string {
+  const youtubeRegex = /\[YouTube\](.*?)\[\/YouTube\]/g; // [YouTube]...[/YouTube]
+
+  return text.replace(youtubeRegex, (_, youtubeUrl) => {
+    return `<iframe class="youtube-video" src="${youtubeUrl}"></iframe>`;
+  });
+}
 
 const checkIfAdmin = async () => {
   try {
@@ -61,6 +94,7 @@ onBeforeMount(async () => {
   }
   await checkIfAdmin();
   await refreshBookmark(props.postId);
+  await render(post.value.content);
   loaded.value = true;
 });
 function goBack() {
@@ -116,7 +150,7 @@ const toggleBookmark = async () => {
       <div class="title">
         <h3 class="title">{{ post.title }}</h3>
       </div>
-      <p class="content">{{ post.content }}</p>
+      <p class="content" v-html="renderText"></p>
     </div>
     <p>By @{{ post.author }} on {{ formatDate(post.dateUpdated) }}</p>
   </main>
