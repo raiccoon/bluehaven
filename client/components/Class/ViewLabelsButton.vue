@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { fetchy } from "@/utils/fetchy";
 import { useToastStore } from "@/stores/toast";
+import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
-import router from "../../router";
+import { ref } from "vue";
 
 const { toast } = storeToRefs(useToastStore());
+let labels = ref<Array<Record<string, string>>>([]);
 const error = ref("");
 const props = defineProps(["classId"]);
 
@@ -18,6 +18,7 @@ const clickButton = () => {
 const handleCreateLabel = async () => {
   try {
     // TODO api for creating a label
+    // will add button when i get my component from label_frontend
   } catch (e) {
     if (toast.value !== null) {
       error.value = toast.value.message;
@@ -27,11 +28,15 @@ const handleCreateLabel = async () => {
 };
 
 const getLabels = async () => {
+  let labelResponse;
   try {
     // TODO api for getting all the labels
+    labelResponse = await fetchy(`/api/classes/id/${props.classId}/labels`, "GET");
+    console.log("labelResponse", labelResponse);
   } catch (_) {
     return;
   }
+  labels.value = labelResponse;
 };
 
 const handleCancel = () => {
@@ -44,7 +49,8 @@ const handleCancel = () => {
     <div @click="clickButton">View Labels</div>
     <div class="modal-background" v-if="isButtonClicked">
       <div class="modal-content">
-        <div>Placeholder for label data</div>
+        <div class="label-display" v-for="label in labels" :key="label._id">{{ label.name }}</div>
+        <button type="button" class="cancel" @click="handleCancel">Cancel</button>
       </div>
     </div>
   </main>
