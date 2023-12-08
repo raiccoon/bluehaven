@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { fetchy } from "@/utils/fetchy";
-import { ObjectId } from "mongodb";
 import { onBeforeMount, ref } from "vue";
 
 //this form is for adding labels to EXISTING comments (not for creating a new comment)
@@ -20,41 +19,41 @@ let labelsOnComment = ref(); //labels on comment (before submission)
 //also get labels on comment and use those as the preselected values
 //listen for select/remove events from multiselector and add/remove labels from comment accordingly???
 
-const assignLabel = async (labelId: ObjectId) => {
-  try {
-    await fetchy(`/api/comments/${props.comment.parentId}/labels`, "POST", {
-      body: { label: labelId },
-    });
-  } catch (_) {
-    return;
-  }
-};
+// const assignLabel = async (labelId: ObjectId) => {
+//   // try {
+//   //   await fetchy(`/api/comments/${props.comment.parentId}/labels`, "POST", {
+//   //     body: { label: labelId },
+//   //   });
+//   // } catch (_) {
+//   //   return;
+//   // }
+// };
 
-const removeLabel = async (labelId: ObjectId) => {
-  try {
-    await fetchy(`/api/comments/${props.comment.parentId}/labels`, "DELETE", {
-      query: { label: labelId },
-    });
-  } catch (_) {
-    return;
-  }
-};
+// const removeLabel = async (labelId: ObjectId) => {
+//   // try {
+//   //   await fetchy(`/api/comments/${props.comment.parentId}/labels`, "DELETE", {
+//   //     query: { label: labelId },
+//   //   });
+//   // } catch (_) {
+//   //   return;
+//   // }
+// };
 
-const hasLabel = async (labelId: ObjectId) => {
-  for (const label of labelsOnComment.value) {
-    if (label._id === labelId) {
-      return true;
-    }
-    return false;
-  }
-};
+// const hasLabel = async (labelId: ObjectId) => {
+//   // for (const label of labelsOnComment.value) {
+//   //   if (label._id === labelId) {
+//   //     return true;
+//   //   }
+//   //   return false;
+//   // }
+// };
 
-const handleLabelChanges = async () => {
-  // for (const label of selectedLabels.value){
-  //     if (await hasLabel(label._id)) {
-  //     }
-  // }
-};
+// const handleLabelChanges = async () => {
+//   // for (const label of selectedLabels.value){
+//   //     if (await hasLabel(label._id)) {
+//   //     }
+//   // }
+// };
 
 onBeforeMount(async () => {
   const classResult = await fetchy(`/api/comments/${props.comment._id}/class`, "GET");
@@ -66,7 +65,7 @@ onBeforeMount(async () => {
 
 <template>
   <!-- <input type="checkbox" v-for="label in labelsInClass" :key="label._id" value="label._id" />{{ label.name }}<br /> -->
-  <form @submit.prevent="assignLabel(name)">
+  <form @submit.prevent="">
     <fieldset>
       <legend>What is Your Favorite Pet?</legend>
       <!-- <option v-for="module in modules" :key="module._id" :value="module._id">{{ module.name }}</option> -->
