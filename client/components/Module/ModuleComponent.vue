@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ModuleHeader from "@/components/Module/ModuleHeader.vue";
-import PostComponent from "@/components/Post/PostComponent.vue";
+import PostTitle from "@/components/Post/PostTitle.vue";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
@@ -8,11 +8,13 @@ const props = defineProps(["module", "isAdmin"]);
 const emits = defineEmits(["deleteModule"]);
 let loaded = ref(false);
 let posts = ref<Array<Record<string, string>>>([]);
+const moduleId = props.module._id;
 
-const isModuleClicked = ref(false);
+const isModuleClicked = ref(localStorage.getItem(`isModuleClicked_${moduleId}`) === "true" || false);
 
 const clickModule = () => {
   isModuleClicked.value = !isModuleClicked.value;
+  localStorage.setItem(`isModuleClicked_${moduleId}`, isModuleClicked.value.toString());
 };
 
 const getPostsInModule = async () => {
@@ -32,6 +34,10 @@ const deleteModule = () => {
 onBeforeMount(async () => {
   await getPostsInModule();
   loaded.value = true;
+
+  if (localStorage.getItem(`isModuleClicked_${moduleId}`) === "true") {
+    isModuleClicked.value = true;
+  }
 });
 </script>
 
@@ -40,7 +46,7 @@ onBeforeMount(async () => {
     <ModuleHeader :module="module" :isAdmin="isAdmin" @expand="clickModule" @refreshPosts="getPostsInModule()" @deleteModule="deleteModule" />
     <div class="posts" v-if="isModuleClicked && loaded && posts.length !== 0">
       <article v-for="post in posts" :key="post._id">
-        <PostComponent :post="post" />
+        <PostTitle :post="post" />
       </article>
     </div>
     <p v-else-if="isModuleClicked">No posts to show.</p>
@@ -66,9 +72,5 @@ main {
   flex-direction: column;
   gap: 10px;
   margin-top: 10px;
-}
-article {
-  background-color: #eff0f6ff;
-  border-radius: 8px;
 }
 </style>

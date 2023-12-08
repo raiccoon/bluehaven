@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import PostHelp from "@/components/Post/PostHelp.vue";
 import { useToastStore } from "@/stores/toast";
 import { fetchy } from "@/utils/fetchy";
 import * as marked from "marked";
@@ -101,8 +102,8 @@ const handleCancel = () => {
           <input class="title" v-model="title" type="text" placeholder="Enter post title" />
           <div class="container">
             <div class="textArea">
-              <p class="placeholder"></p>
-              <textarea class="text" v-model="content" placeholder="Write your post here! You can add images using markdown syntax."> </textarea>
+              <PostHelp />
+              <textarea class="text" v-model="content" placeholder="Write your post here! You can use markdown syntax and add images and videos."> </textarea>
             </div>
             <div class="previewArea">
               <p class="previewYourPostHere">Preview your post here</p>
