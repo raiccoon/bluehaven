@@ -3,16 +3,15 @@ import { useToastStore } from "@/stores/toast";
 import { fetchy } from "@/utils/fetchy";
 import * as marked from "marked";
 import { storeToRefs } from "pinia";
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const { toast } = storeToRefs(useToastStore());
 const error = ref("");
-const props = defineProps(["module"]);
-const emit = defineEmits(["refreshPosts"]);
+const props = defineProps(["post"]);
+const emit = defineEmits(["editPost"]);
 
-const isAddPostClicked = ref(false);
-const title = ref("");
-const content = ref("");
+const isEditPostClicked = ref(false);
+const content = ref(props.post.content);
 const livePreview = ref("");
 
 async function renderMarkdown(text: string) {
@@ -44,30 +43,30 @@ function renderYouTube(text: string): string {
 }
 const previewContainer = ref<HTMLElement | null>(null);
 
-watch(content, async (newValue) => {
+watch(content, async (newValue: string) => {
   const renderedImages = renderYouTube(renderMP4(renderImages(newValue)));
   livePreview.value = await renderMarkdown(renderedImages);
 });
 
-const clickAddPost = () => {
-  isAddPostClicked.value = true;
+const clickEditPost = async () => {
+  isEditPostClicked.value = true;
+  content.value = props.post.content;
+  const renderedImages = renderYouTube(renderMP4(renderImages(props.post.content)));
+  livePreview.value = await renderMarkdown(renderedImages);
 };
 
-const createPost = async (module: string, title: string, content: string, image: string, video: string) => {
+const editPost = async (content: string, image: string, video: string) => {
   if (!content.trim()) {
     error.value = "Do not leave the post content empty.";
     return;
   }
-  if (!title.trim()) {
-    error.value = "Please give your post a title.";
-    return;
-  }
   try {
-    await fetchy("/api/posts", "POST", {
-      body: { module, title, content, image, video },
+    await fetchy(`/api/posts/${props.post._id}`, "PATCH", {
+      body: { update: { content: content, image: image, video: video } },
     });
+
+    emit("editPost");
     emptyForm();
-    emit("refreshPosts");
   } catch (e) {
     if (toast.value !== null) {
       error.value = toast.value.message;
@@ -77,42 +76,44 @@ const createPost = async (module: string, title: string, content: string, image:
 };
 
 const emptyForm = () => {
-  content.value = "";
-  title.value = "";
+  content.value = props.post.content;
   error.value = "";
-  isAddPostClicked.value = false;
+  isEditPostClicked.value = false;
 };
 
 const handleCancel = () => {
-  content.value = "";
-  title.value = "";
+  content.value = props.post.content;
   error.value = "";
-  isAddPostClicked.value = false;
+  isEditPostClicked.value = false;
 };
+
+onMounted(async () => {
+  const renderedImages = renderYouTube(renderMP4(renderImages(props.post.content)));
+  livePreview.value = await renderMarkdown(renderedImages);
+});
 </script>
 
 <template>
   <main>
-    <div @click="clickAddPost">Add Post</div>
-    <div class="modal-background" v-if="isAddPostClicked">
+    <div @click="clickEditPost">Edit Post</div>
+    <div class="modal-background" v-if="isEditPostClicked">
       <div class="modal-content">
-        <form @submit.prevent="createPost(props.module._id, title, content, '', '')">
-          <h3>Create a new post</h3>
-          <input class="title" v-model="title" type="text" placeholder="Enter post title" />
+        <form @submit.prevent="editPost(content, '', '')">
+          <h3>Edit post</h3>
           <div class="container">
             <div class="textArea">
               <p class="placeholder"></p>
-              <textarea class="text" v-model="content" placeholder="Write your post here! You can add images using markdown syntax."> </textarea>
+              <textarea class="text" v-model="content" placeholder="Write your post here!"> </textarea>
             </div>
             <div class="previewArea">
-              <p class="previewYourPostHere">Preview your post here</p>
+              <p>Preview your post here</p>
               <div class="preview" ref="previewContainer">
                 <div v-html="livePreview"></div>
               </div>
             </div>
           </div>
           <div class="modal-buttons">
-            <button class="submit" type="submit">Create Post</button>
+            <button class="submit" type="submit">Edit Post</button>
             <button class="cancel" type="button" @click="handleCancel">Cancel</button>
           </div>
           <div class="error" v-if="error">{{ error }}</div>
@@ -124,16 +125,10 @@ const handleCancel = () => {
 </template>
 
 <style scoped>
-.title {
-  width: calc(100% - 5px);
-  padding: 8px;
-  box-sizing: border-box;
-  margin-bottom: 10px;
-}
 h3 {
   margin-bottom: 0px;
 }
-.previewYourPostHere {
+p {
   text-align: center;
 }
 .container {
@@ -157,7 +152,6 @@ h3 {
   overflow-y: auto;
   padding: 8px;
   box-sizing: border-box;
-  text-align: left;
 }
 .text {
   margin-bottom: 5px;
@@ -214,7 +208,7 @@ form {
   align-items: center;
   gap: 5px;
   width: 900px;
-  height: 680px;
+  height: 650px;
   margin-left: auto;
   margin-right: auto;
   @media (max-width: 1000px) {
