@@ -23,6 +23,10 @@ const expandPost = async () => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300&display=swap');
+.text {
+  font-family: 'Assistant', sans-serif;
+}
 .material-symbols-outlined {
   font-variation-settings:
     "FILL" 0,
