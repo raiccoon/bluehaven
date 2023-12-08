@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { fetchy } from "@/utils/fetchy";
 import { useToastStore } from "@/stores/toast";
 import { storeToRefs } from "pinia";
-import router from "../../router";
+import { ref } from "vue";
+import CreateLabelForm from "../Label/CreateLabelForm.vue";
 
 const { toast } = storeToRefs(useToastStore());
 const error = ref("");
@@ -45,6 +44,8 @@ const handleCancel = () => {
     <div class="modal-background" v-if="isButtonClicked">
       <div class="modal-content">
         <div>Placeholder for label data</div>
+        <CreateLabelForm :classId="props.classId" />
+        <button type="button" class="cancel" @click="handleCancel">Cancel</button>
       </div>
     </div>
   </main>
