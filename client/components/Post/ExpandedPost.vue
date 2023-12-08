@@ -18,12 +18,15 @@ const props = defineProps(["postId", "author"]);
 const loaded = ref(false);
 
 let post = ref();
+let classId = ref();
+const emit = defineEmits(["editPost", "refreshPosts"]);
 const { currentUsername } = storeToRefs(useUserStore());
 
 const deletePost = async () => {
   try {
     await fetchy(`/api/posts/${post.value._id}`, "DELETE");
-    void router.push({ path: `/home` });
+    //push to class of post instead
+    void router.push({ path: `/classes/${classId.value}` });
   } catch {
     return;
   }
@@ -67,8 +70,11 @@ async function refreshBookmark(postId: string) {
 }
 
 onBeforeMount(async () => {
+  let classResult;
   try {
     await getPostById(props.postId);
+    classResult = await fetchy(`/api/posts/${props.postId}/class`, "GET");
+    classId.value = classResult._id;
     loaded.value = true;
   } catch (_) {
     return;
