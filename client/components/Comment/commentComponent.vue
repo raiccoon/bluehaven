@@ -17,6 +17,8 @@ const viewOptions = ref(false);
 const viewReplies = ref(false);
 let isInstructor = ref(false);
 
+const labels = ref<Array<Record<string, string>>>([]);
+
 const isAddLabelModelOpen = ref(false);
 
 const deleteComment = async () => {
@@ -63,6 +65,14 @@ const toggleLabelModal = async () => {
   isAddLabelModelOpen.value = !isAddLabelModelOpen.value;
 };
 
+const getLabelsOnComment = async () => {
+  try {
+    labels.value = await fetchy(`/api/comments/${props.comment._id}/labels`, "GET");
+  } catch {
+    return;
+  }
+};
+
 onBeforeMount(async () => {
   try {
     if (props.comment.image !== "") {
@@ -81,6 +91,7 @@ onBeforeMount(async () => {
   } catch (_) {
     return;
   }
+  await getLabelsOnComment();
 });
 </script>
 
@@ -122,7 +133,7 @@ onBeforeMount(async () => {
     </article>
   </div>
 
-  <AddLabelForm v-if="isAddLabelModelOpen" />
+  <AddLabelForm v-if="isAddLabelModelOpen" :comment="comment" :labels="labels" />
 </template>
 
 <style scoped>

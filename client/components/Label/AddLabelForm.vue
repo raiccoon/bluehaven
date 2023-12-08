@@ -4,14 +4,12 @@ import { onBeforeMount, ref } from "vue";
 
 //this form is for adding labels to EXISTING comments (not for creating a new comment)
 
-const error = ref("");
-
-const props = defineProps(["comment"]);
-const isAddLabelClicked = ref(false);
+const loaded = ref(false);
+const props = defineProps(["comment", "labels"]);
 
 let labelsInClass = ref(); //all labels in class*
-let selectedLabels = ref(); //labels selected by user in form*
-let labelsOnComment = ref(); //labels on comment (before submission)
+let selectedLabels = ref<Array<Record<string, string>>>([]); //labels selected by user in form*
+let labelsOnComment = ref(props.labels); //labels on comment (before submission)
 
 //get class of post (parent) of comment
 //then get all labels for post
@@ -48,40 +46,34 @@ let labelsOnComment = ref(); //labels on comment (before submission)
 //   // }
 // };
 
-// const handleLabelChanges = async () => {
-//   // for (const label of selectedLabels.value){
-//   //     if (await hasLabel(label._id)) {
-//   //     }
-//   // }
-// };
+const updateLabels = async () => {
+  await fetchy(`/api/comments/${props.comment._id}/labels/deleteAll`, "DELETE");
+  await fetchy(`/api/comments/${props.comment._id}/labels/addMany`, "POST", {
+    body: {
+      labels: selectedLabels.value.map((label) => label._id),
+    },
+  });
+};
 
 onBeforeMount(async () => {
   const classResult = await fetchy(`/api/comments/${props.comment._id}/class`, "GET");
-  labelsInClass.value = await fetchy(`/api/classes/id/${classResult._id}/labels`, "GET");
-  selectedLabels.value = await fetchy(`/api/comments/${props.comment._id}/labels`, "GET");
-  labelsOnComment.value = [...selectedLabels.value]; //create a copy of labels on comment
+
+  labelsInClass.value = await fetchy(`/api/classes/id/${classResult}/labels`, "GET");
+  // selectedLabels.value = labelsInClass.value.map((label: Record<string, string>) => [label, labelsOnComment.value.includes(label)]);
+  selectedLabels.value = [...labelsOnComment.value];
+  loaded.value = true;
 });
 </script>
 
 <template>
-  <!-- <input type="checkbox" v-for="label in labelsInClass" :key="label._id" value="label._id" />{{ label.name }}<br /> -->
-  <form @submit.prevent="">
-    <fieldset>
-      <legend>What is Your Favorite Pet?</legend>
-      <!-- <option v-for="module in modules" :key="module._id" :value="module._id">{{ module.name }}</option> -->
-      <label v-for="label in labelsInClass" :key="label._id">
-        <input type="checkbox" :value="label._id" />
-        {{ label.name }}
-      </label>
-      <!-- <input type="checkbox" v-for="label in labelsInClass" :key="label._id" :value="label._id" />{{ label.name }}<br /> -->
-
-      <input type="checkbox" name="favorite_pet" value="Cats" />Cats<br />
-      <input type="checkbox" name="favorite_pet" value="Dogs" />Dogs<br />
-      <input type="checkbox" name="favorite_pet" value="Birds" />Birds<br />
+  <form v-if="loaded" @submit.prevent="updateLabels">
+    <section v-for="label in labelsInClass" :key="label._id">
+      <input type="checkbox" :id="label._id" :value="label" v-model="selectedLabels" />
+      {{ label.name }}
       <br />
-      <!-- when submitting can just check what selections changed -->
-      <input type="submit" value="Submit" />
-    </fieldset>
+    </section>
+    {{ selectedLabels }}
+    <input type="submit" value="Submit" />
   </form>
 </template>
 

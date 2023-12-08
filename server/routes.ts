@@ -494,9 +494,31 @@ class Routes {
     return await Label.assignLabel(new ObjectId(label), new ObjectId(comment));
   }
 
+  @Router.post("/comments/:commentId/labels/addMany")
+  async assignLabels(session: WebSessionDoc, labels: ObjectId[], commentId: ObjectId) {
+    const user = WebSession.getUser(session);
+
+    const post = await Comment.getPostParent(new ObjectId(commentId));
+    const classId = await Module.getClassOfPost(post);
+    const isInstructor = await Class.isInstructor(classId!, user);
+    await Comment.canEdit(commentId, user, isInstructor);
+
+    for (const label of labels) {
+      await Label.assertIsLabelInClass(new ObjectId(label), classId!);
+      await Label.assignLabel(new ObjectId(label), new ObjectId(commentId));
+    }
+
+    return { msg: "Successfully added labels!" };
+  }
+
   @Router.delete("/comments/:commentId/labels")
   async removeLabel(label: ObjectId, comment: ObjectId) {
     return await Label.removeLabel(new ObjectId(label), new ObjectId(comment));
+  }
+
+  @Router.delete("/comments/:commentId/labels/deleteAll")
+  async removeLabels(commentId: ObjectId) {
+    return await Label.removeAllLabels(new ObjectId(commentId));
   }
 
   @Router.get("/comments/:commentId/labels")
