@@ -15,7 +15,7 @@ export default class BookmarkConcept {
   async addBookmark(owner: ObjectId, post: ObjectId, classId: ObjectId) {
     const bookMark = await this.bookmarks.readOne({ post: post });
     if (bookMark !== null) {
-      throw new AlreadyBookmarked(post);
+      throw new AlreadyBookmarkedError(owner, post);
     }
     const createdBookmark = await this.bookmarks.createOne({ owner, post, classId });
     return createdBookmark;
@@ -67,8 +67,11 @@ export class BookmarkAuthorNotMatchError extends NotAllowedError {
   }
 }
 
-export class AlreadyBookmarked extends NotAllowedError {
-  constructor(public readonly post: ObjectId) {
-    super("You have already bookmarked {0}", post);
+export class AlreadyBookmarkedError extends NotAllowedError {
+  constructor(
+    public readonly author: ObjectId,
+    public readonly post: ObjectId,
+  ) {
+    super("{0} has already bookmarked {1}!", author, post);
   }
 }
