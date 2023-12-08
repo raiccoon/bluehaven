@@ -28,6 +28,7 @@ const handleCreateComment = async (parent: string, content: string, image: strin
   }
   msg.value = commentResults;
   displayMsg.value = true;
+  isCreateCommentClicked.value = false;
   emit("refreshComments");
   isCreateCommentClicked.value = false;
   emptyForm();
@@ -57,6 +58,7 @@ const handleCancel = () => {
       <textarea type="text" v-model="content" placeholder="Comment content here"> </textarea>
       <div>
         <button type="submit" class="pure-button-primary pure-button">Create</button>
+        <button type="button" class="pure-button">+ Add Labels</button>
         <button @click="handleCancel" class="pure-button">Cancel</button>
       </div>
     </form>

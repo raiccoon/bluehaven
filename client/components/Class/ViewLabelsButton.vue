@@ -1,42 +1,53 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { fetchy } from "@/utils/fetchy";
 import { useToastStore } from "@/stores/toast";
+import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
-import router from "../../router";
+import { onBeforeMount, ref } from "vue";
+import CreateLabelForm from "../Label/CreateLabelForm.vue";
 
 const { toast } = storeToRefs(useToastStore());
 const error = ref("");
+const loaded = ref(false);
 const props = defineProps(["classId"]);
 
+let labels = ref<Array<Record<string, string>>>([]);
 const isButtonClicked = ref(false);
 
 const clickButton = () => {
   isButtonClicked.value = true;
 };
 
-const handleCreateLabel = async () => {
-  try {
-    // TODO api for creating a label
-  } catch (e) {
-    if (toast.value !== null) {
-      error.value = toast.value.message;
-    }
-    return;
-  }
-};
+// const handleCreateLabel = async () => {
+//   try {
+//     // TODO api for creating a label
+//   } catch (e) {
+//     if (toast.value !== null) {
+//       error.value = toast.value.message;
+//     }
+//     return;
+//   }
+// };
 
 const getLabels = async () => {
+  let labelResults;
   try {
     // TODO api for getting all the labels
+    labelResults = await fetchy(`/api/classes/id/${props.classId}/labels`, "GET");
   } catch (_) {
     return;
   }
+  labels.value = labelResults;
+  console.log(labels.value);
 };
 
 const handleCancel = () => {
   isButtonClicked.value = false;
 };
+
+onBeforeMount(async () => {
+  await getLabels();
+  loaded.value = true;
+});
 </script>
 
 <template>
@@ -44,7 +55,9 @@ const handleCancel = () => {
     <div @click="clickButton">View Labels</div>
     <div class="modal-background" v-if="isButtonClicked">
       <div class="modal-content">
-        <div>Placeholder for label data</div>
+        <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
+        <CreateLabelForm :classId="props.classId" @refreshLabels="getLabels" />
+        <button type="button" class="cancel" @click="handleCancel">Cancel</button>
       </div>
     </div>
   </main>
