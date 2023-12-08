@@ -37,7 +37,6 @@ const getLabels = async () => {
     return;
   }
   labels.value = labelResults;
-  console.log(labels.value);
 };
 
 const handleCancel = () => {
