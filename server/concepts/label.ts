@@ -43,14 +43,14 @@ export default class LabelConcept {
   }
 
   async removeAllLabels(comment: ObjectId) {
-    console.log(comment);
     await this.labelsOnComments.deleteMany({ comment: comment });
     return { msg: "Successfully removed all labels from comment!" };
   }
 
   async getLabelsOnComment(comment: ObjectId) {
     const pairs = await this.labelsOnComments.readMany({ comment });
-    return pairs.map((labelsOnComments) => labelsOnComments.label);
+    const labelIds = pairs.map((labelsOnComments) => labelsOnComments.label);
+    return this.labels.readMany({ _id: { $in: labelIds } });
   }
 
   async filterCommentsByLabel(comments: ObjectId[], label: ObjectId) {
@@ -67,7 +67,6 @@ export default class LabelConcept {
   }
 
   async assertIsLabelInClass(label: ObjectId, classId: ObjectId) {
-    console.log(label, classId);
     if ((await this.labels.readOne({ _id: label, classId: classId })) === null) {
       throw new NotFoundError("Cannot find label in class");
     }

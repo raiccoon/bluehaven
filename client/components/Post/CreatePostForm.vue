@@ -27,7 +27,6 @@ const getModulesInClass = async (classId: string) => {
 const createPost = async (module: string, content: string, image: string, video: string) => {
   // put back ? and check if undefined here or set as empty string, then check for empty string
   try {
-    console.log("image", image);
     await fetchy("/api/posts", "POST", {
       body: { module, content, image, video },
     });
