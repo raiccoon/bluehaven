@@ -44,12 +44,34 @@ onBeforeMount(async () => {
 <style scoped>
 form {
   margin: 1em;
-  background-color: var(--base-bg);
+  background-color: white;
   border-radius: 1em;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   padding: 1em;
+  box-shadow: inset 0 0 0 2px #d6eaf9ff;
+}
+
+.submit {
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 500px;
+  transition-property: background-color, border-color, color, box-shadow, filter;
+  transition-duration: 0.3s;
+  border: 1px solid transparent;
+  letter-spacing: 2px;
+  min-width: 70px;
+  white-space: normal;
+  text-align: center;
+  padding: 5px 5px 5px;
+  color: #5190bbff;
+  box-shadow: inset 0 0 0 2px #d6eaf9ff;
+  background-color: white;
+  height: 40px;
 }
 
 textarea {
