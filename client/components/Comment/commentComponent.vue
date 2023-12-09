@@ -133,6 +133,7 @@ onBeforeMount(async () => {
   </div>
 
   <AddLabelForm v-if="isAddLabelModelOpen" @updatedLabels="getLabelsOnComment" :comment="comment" :labels="labels" />
+  {{ labels.map((label) => label.name) }}
 </template>
 
 <style scoped>
