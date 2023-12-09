@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <div>
     <div>View Bookmarks</div>
-  </main>
+  </div>
 </template>

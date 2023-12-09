@@ -40,7 +40,7 @@ onBeforeMount(async () => {
     <h1>Your Bookmarks</h1>
     <div class="posts" v-if="loaded && posts.length !== 0">
       <article v-for="post in posts" :key="post._id">
-        <PostTitle :post="post" />
+        <PostTitle :post="post" :fromPage="'bookmarks'" />
       </article>
     </div>
   </main>

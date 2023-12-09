@@ -50,7 +50,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <main>
+  <div>
     <div @click="clickButton">View Labels</div>
     <div class="modal-background" v-if="isButtonClicked">
       <div class="modal-content">
@@ -71,7 +71,7 @@ onBeforeMount(async () => {
         </div>
       </div>
     </div>
-  </main>
+  </div>
 </template>
 
 <style scoped>

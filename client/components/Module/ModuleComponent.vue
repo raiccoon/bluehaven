@@ -17,6 +17,11 @@ const clickModule = () => {
   localStorage.setItem(`isModuleClicked_${moduleId}`, isModuleClicked.value.toString());
 };
 
+const expand = () => {
+  isModuleClicked.value = true;
+  localStorage.setItem(`isModuleClicked_${moduleId}`, isModuleClicked.value.toString());
+};
+
 const getPostsInModule = async () => {
   let moduleResults;
   try {
@@ -43,10 +48,10 @@ onBeforeMount(async () => {
 
 <template>
   <main>
-    <ModuleHeader :module="module" :isAdmin="isAdmin" @expand="clickModule" @refreshPosts="getPostsInModule()" @deleteModule="deleteModule" />
+    <ModuleHeader :module="module" :isAdmin="isAdmin" @expandMe="expand" @toggleClick="clickModule" @refreshPosts="getPostsInModule()" @deleteModule="deleteModule" />
     <div class="posts" v-if="isModuleClicked && loaded && posts.length !== 0">
       <article v-for="post in posts" :key="post._id">
-        <PostTitle :post="post" />
+        <PostTitle :post="post" :fromPage="'class'" />
       </article>
     </div>
     <p v-else-if="isModuleClicked">No posts to show.</p>

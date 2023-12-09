@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import PublishModuleButton from "@/components/Module/PublishModuleButton.vue";
+// import PublishModuleButton from "@/components/Module/PublishModuleButton.vue";
 import AddPostButton from "@/components/Post/AddPostButton.vue";
 import DeleteModuleButton from "@/components/Module/DeleteModuleButton.vue";
+import ModuleVisibility from "@/components/Module/ModuleVisibility.vue";
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
 
 const props = defineProps(["module", "isAdmin"]);
-const emits = defineEmits(["expand", "refreshPosts", "deleteModule"]);
+const emits = defineEmits(["toggleClick", "expandMe", "refreshPosts", "deleteModule"]);
 const _module = ref({ _id: "", name: "", description: "", hidden: true });
 
 const isModuleClicked = ref(false);
 
 const clickModule = () => {
   isModuleClicked.value = !isModuleClicked.value;
-  emits("expand");
+  emits("toggleClick");
 };
 
 const refreshPosts = () => {
@@ -45,10 +46,7 @@ onBeforeMount(() => {
           <DeleteModuleButton :module="_module" @deleteModule="deleteModule" />
         </button>
         <button v-if="isAdmin" class="button">
-          <AddPostButton :module="_module" @refreshPosts="refreshPosts" />
-        </button>
-        <button v-if="props.isAdmin" class="button">
-          <PublishModuleButton :module="_module" @toggleVisibility="refreshModule" />
+          <AddPostButton :module="_module" @expandMe="emits('expandMe')" @refreshPosts="refreshPosts" />
         </button>
         <button @click="clickModule" class="button">
           <span v-if="!isModuleClicked">
@@ -60,10 +58,11 @@ onBeforeMount(() => {
         </button>
       </div>
       <div class="headerText">
-        <h3 class="name">
+        <div v-if="isAdmin">
+          <ModuleVisibility :module="_module" @toggleVisibility="refreshModule" />
+        </div>
+        <h3 v-else class="name">
           {{ _module.name }}
-          <i v-if="_module.hidden" class="material-symbols-outlined eye">visibility_off</i>
-          <i v-else class="material-symbols-outlined eye">visibility</i>
         </h3>
         <p class="description">{{ _module.description }}</p>
       </div>
@@ -72,18 +71,6 @@ onBeforeMount(() => {
 </template>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap");
-.eye {
-  font-size: 16px;
-  opacity: 0.5;
-}
-.material-symbols-outlined {
-  font-variation-settings:
-    "FILL" 0,
-    "wght" 400,
-    "GRAD" 0,
-    "opsz" 24;
-}
 .name {
   margin: 15px;
   margin-top: 0px;

@@ -175,11 +175,8 @@ class Routes {
 
   @Router.get("/comments/:_id/class")
   async getClassOfComment(_id: ObjectId) {
-    let parent = await Comment.getParentOfComment(new ObjectId(_id));
-    while (await Comment.isComment(parent!)) {
-      parent = await Comment.getParentOfComment(parent!);
-    }
-    return await Module.getClassOfPost(parent!);
+    const post = await Comment.getPostParent(new ObjectId(_id));
+    return await Module.getClassOfPost(post);
   }
 
   // BOOKMARK
