@@ -4,6 +4,7 @@ import { fetchy } from "@/utils/fetchy";
 import * as marked from "marked";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
+import PostHelp from "@/components/Post/PostHelp.vue";
 
 const { toast } = storeToRefs(useToastStore());
 const error = ref("");
@@ -12,6 +13,7 @@ const emit = defineEmits(["editPost"]);
 
 const isEditPostClicked = ref(false);
 const content = ref(props.post.content);
+const title = ref(props.post.title);
 const livePreview = ref("");
 
 async function renderMarkdown(text: string) {
@@ -55,14 +57,18 @@ const clickEditPost = async () => {
   livePreview.value = await renderMarkdown(renderedImages);
 };
 
-const editPost = async (content: string, image: string, video: string) => {
+const editPost = async (title: string, content: string, image: string, video: string) => {
   if (!content.trim()) {
     error.value = "Do not leave the post content empty.";
     return;
   }
+  if (!title.trim()) {
+    error.value = "Please give your post a title.";
+    return;
+  }
   try {
     await fetchy(`/api/posts/${props.post._id}`, "PATCH", {
-      body: { update: { content: content, image: image, video: video } },
+      body: { update: { title: title, content: content, image: image, video: video } },
     });
 
     emit("editPost");
@@ -98,15 +104,16 @@ onMounted(async () => {
     <div @click="clickEditPost">Edit Post</div>
     <div class="modal-background" v-if="isEditPostClicked">
       <div class="modal-content">
-        <form @submit.prevent="editPost(content, '', '')">
+        <form @submit.prevent="editPost(title, content, '', '')">
           <h3>Edit post</h3>
+          <input class="title" v-model="title" type="text" placeholder="Enter post title" />
           <div class="container">
             <div class="textArea">
-              <p class="placeholder"></p>
-              <textarea class="text" v-model="content" placeholder="Write your post here!"> </textarea>
+              <PostHelp />
+              <textarea class="text" v-model="content" placeholder="Write your post here! You can use markdown syntax and add images and videos."> </textarea>
             </div>
             <div class="previewArea">
-              <p>Preview your post here</p>
+              <p class="previewYourPostHere">Preview your post here</p>
               <div class="preview" ref="previewContainer">
                 <div v-html="livePreview"></div>
               </div>
@@ -125,10 +132,16 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.title {
+  width: calc(100% - 5px);
+  padding: 8px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
 h3 {
   margin-bottom: 0px;
 }
-p {
+.previewYourPostHere {
   text-align: center;
 }
 .container {
@@ -152,6 +165,7 @@ p {
   overflow-y: auto;
   padding: 8px;
   box-sizing: border-box;
+  text-align: left;
 }
 .text {
   margin-bottom: 5px;
@@ -208,7 +222,7 @@ form {
   align-items: center;
   gap: 5px;
   width: 900px;
-  height: 650px;
+  height: 680px;
   margin-left: auto;
   margin-right: auto;
   @media (max-width: 1000px) {

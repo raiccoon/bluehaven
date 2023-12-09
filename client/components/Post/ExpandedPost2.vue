@@ -124,6 +124,10 @@ const toggleBookmark = async () => {
     return;
   }
 };
+const handleEditPost = async () => {
+  await getPostById(props.postId);
+  await render(post.value.content);
+};
 </script>
 <template>
   <main v-if="loaded" class="container">
@@ -138,7 +142,7 @@ const toggleBookmark = async () => {
         <div v-if="isAdmin">
           <div class="instructorButtons" v-if="post.author == currentUsername">
             <button class="editButton">
-              <EditPostButton :post="post" @editPost="getPostById(post._id)" />
+              <EditPostButton :post="post" @editPost="handleEditPost" />
             </button>
             <button class="deleteButton">
               <DeletePostButton :post="post" :classId="classId" />
