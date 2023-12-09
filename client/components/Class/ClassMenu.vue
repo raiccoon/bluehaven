@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
+import { ref } from "vue";
 import LeaveClassButton from "@/components/Class/LeaveClassButton.vue";
 import ArchiveClassButton from "@/components/Class/ArchiveClassButton.vue";
 import ViewLabelsButton from "@/components/Class/ViewLabelsButton.vue";
@@ -17,6 +17,12 @@ const viewBookmarks = async () => {
 };
 </script>
 <template>
+  <button class="button" id="bookmark" @click="viewBookmarks">
+    <ViewBookmarksButton />
+  </button>
+  <button v-if="!isAdmin" class="button">
+    <LeaveClassButton :classId="props.classId" />
+  </button>
   <div class="menu" v-if="isModuleClicked">
     <button v-if="isAdmin" class="button">
       <AddInstructor :classId="props.classId" />
@@ -24,19 +30,13 @@ const viewBookmarks = async () => {
     <button v-if="isAdmin" class="button">
       <ViewLabelsButton :classId="props.classId" />
     </button>
-    <button class="button" @click="viewBookmarks">
-      <ViewBookmarksButton />
-    </button>
     <button v-if="isAdmin" class="button">
       <ArchiveClassButton :classId="props.classId" />
     </button>
-    <button v-else class="button">
-      <LeaveClassButton :classId="props.classId" />
-    </button>
   </div>
-  <button @click="clickModule" class="buttonClick">
+  <button v-if="isAdmin" @click="clickModule" class="buttonClick">
     <span v-if="!isModuleClicked">
-      <div class="options">Options</div>
+      <div class="options-text">Options</div>
     </span>
     <span v-else>
       <i class="material-symbols-outlined close">close</i>
@@ -46,11 +46,23 @@ const viewBookmarks = async () => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap");
+
+#bookmark {
+  margin-right: 10px;
+}
+.buttonClick:hover {
+  .close {
+    transform: scale(1.1);
+  }
+  .options-text {
+    text-decoration: underline;
+  }
+}
 .menu {
   position: absolute;
   margin-right: 26px;
   margin-top: -10px;
-  padding: 20px; /* Initial padding */
+  padding: 20px;
   width: fit-content;
   height: fit-content;
   z-index: 99999;
