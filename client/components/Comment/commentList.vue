@@ -25,14 +25,11 @@ async function getComments(parentId: string) {
   try {
     // originally passed in query instead of parentId in fetchy?
     commentResults = await fetchy(`/api/pins/comments/${parentId}`, "GET");
-    // console.log("commentResults", commentResults);
   } catch (_) {
     return;
   }
   comments.value = commentResults["UnPinned Comments"];
   pinnedComments.value = commentResults["Pinned Comments"];
-  // console.log("comments.value", comments.value);
-  // console.log("pinnedComments.value", pinnedComments.value);
 }
 
 function updateEditing(id: string) {
