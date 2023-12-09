@@ -49,6 +49,14 @@ export default class CommentConcept {
     throw new NotFoundError("Comment not found");
   }
 
+  async assertParentPost(commentId: ObjectId, postId: ObjectId) {
+    const parentId = await this.getParentOfComment(commentId);
+    if (parentId.toString() !== postId.toString()) {
+      throw new CommentIsAReplyError();
+    }
+    return true;
+  }
+
   async getComment(commentId: ObjectId) {
     const commentDoc = await this.comments.readOne({ _id: commentId });
     if (commentDoc === null) {
@@ -143,5 +151,11 @@ export class CommentAuthorNotMatchError extends NotAllowedError {
     public readonly _id: ObjectId,
   ) {
     super("{0} is not the author of comment {1}!", author, _id);
+  }
+}
+
+export class CommentIsAReplyError extends NotAllowedError {
+  constructor() {
+    super("Please try again with a comment that is in response to a post!");
   }
 }
