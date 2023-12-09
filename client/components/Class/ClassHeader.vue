@@ -44,7 +44,7 @@ onBeforeMount(async () => {
         <button v-if="isAdmin" class="button">
           <ViewLabelsButton :classId="props.classId" />
         </button>
-        <button v-else class="button" @click="viewBookmarks">
+        <button class="button" @click="viewBookmarks">
           <ViewBookmarksButton />
         </button>
         <button v-if="isAdmin" class="button">

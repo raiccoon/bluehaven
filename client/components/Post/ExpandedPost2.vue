@@ -138,12 +138,10 @@ const toggleBookmark = async () => {
             </button>
           </div>
         </div>
-        <div v-else>
-          <button @click="toggleBookmark" class="bookmarkButton">
-            <i v-if="!isBookmarked" class="material-symbols-outlined eye">bookmark</i>
-            <i v-else class="material-symbols-outlined eye">bookmark_added</i>
-          </button>
-        </div>
+        <button @click="toggleBookmark" class="bookmarkButton">
+          <i v-if="!isBookmarked" class="material-symbols-outlined eye">bookmark</i>
+          <i v-else class="material-symbols-outlined eye">bookmark_added</i>
+        </button>
       </div>
     </div>
     <div class="post">
@@ -191,7 +189,7 @@ const toggleBookmark = async () => {
 .bookmarkButton {
   background: transparent;
   border: none;
-  margin-top: 10px;
+  margin-top: 6px;
   margin-right: 10px;
 }
 .editButton,
