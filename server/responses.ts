@@ -1,4 +1,5 @@
-import { User } from "./app";
+import { Post, User } from "./app";
+import { AlreadyBookmarkedError } from "./concepts/bookmark";
 import { CommentDoc } from "./concepts/comment";
 import { AlreadyFriendsError, FriendNotFoundError, FriendRequestAlreadyExistsError, FriendRequestDoc, FriendRequestNotFoundError } from "./concepts/friend";
 import { PostAuthorNotMatchError, PostDoc } from "./concepts/post";
@@ -39,6 +40,12 @@ export default class Responses {
     return requests.map((request, i) => ({ ...request, from: usernames[i], to: usernames[i + requests.length] }));
   }
 }
+
+Router.registerError(AlreadyBookmarkedError, async (e) => {
+  const username = (await User.getUserById(e.author)).username;
+  const post = await Post.getPosts({ _id: e.post });
+  return e.formatWith(username, post[0].title);
+});
 
 Router.registerError(PostAuthorNotMatchError, async (e) => {
   const username = (await User.getUserById(e.author)).username;
