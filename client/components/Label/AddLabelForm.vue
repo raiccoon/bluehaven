@@ -57,9 +57,7 @@ const updateLabels = async () => {
 
 onBeforeMount(async () => {
   const classResult = await fetchy(`/api/comments/${props.comment._id}/class`, "GET");
-
   labelsInClass.value = await fetchy(`/api/classes/id/${classResult}/labels`, "GET");
-  // selectedLabels.value = labelsInClass.value.map((label: Record<string, string>) => [label, labelsOnComment.value.includes(label)]);
   selectedLabels.value = [...labelsOnComment.value];
   loaded.value = true;
 });

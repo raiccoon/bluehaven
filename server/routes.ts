@@ -519,8 +519,8 @@ class Routes {
   }
 
   @Router.get("/comments/:commentId/labels")
-  async getLabelsOnComment(comment: ObjectId) {
-    return await Label.getLabelsOnComment(new ObjectId(comment));
+  async getLabelsOnComment(commentId: ObjectId) {
+    return await Label.getLabelsOnComment(new ObjectId(commentId));
   }
 
   @Router.get("/classes/id/:classId/labels")
