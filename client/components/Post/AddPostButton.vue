@@ -9,7 +9,7 @@ import { ref, watch } from "vue";
 const { toast } = storeToRefs(useToastStore());
 const error = ref("");
 const props = defineProps(["module"]);
-const emit = defineEmits(["refreshPosts"]);
+const emit = defineEmits(["expandMe", "refreshPosts"]);
 
 const isAddPostClicked = ref(false);
 const title = ref("");
@@ -51,6 +51,7 @@ watch(content, async (newValue) => {
 });
 
 const clickAddPost = () => {
+  emit("expandMe");
   isAddPostClicked.value = true;
 };
 
