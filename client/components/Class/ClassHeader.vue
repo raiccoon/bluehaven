@@ -6,6 +6,7 @@ import LeaveClassButton from "@/components/Class/LeaveClassButton.vue";
 import ArchiveClassButton from "@/components/Class/ArchiveClassButton.vue";
 import ViewLabelsButton from "@/components/Class/ViewLabelsButton.vue";
 import ViewBookmarksButton from "@/components/Class/ViewBookmarksButton.vue";
+import AddInstructor from "@/components/Class/AddInstructorButton.vue";
 
 import router from "../../router";
 
@@ -42,6 +43,9 @@ onBeforeMount(async () => {
       <BackButton :routeName="'Classes'" />
       <div class="right">
         <button v-if="isAdmin" class="button">
+          <AddInstructor :classId="props.classId" />
+        </button>
+        <button v-if="isAdmin" class="button">
           <ViewLabelsButton :classId="props.classId" />
         </button>
         <button class="button" @click="viewBookmarks">
@@ -65,6 +69,8 @@ onBeforeMount(async () => {
 .right {
   width: fit-content;
   display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .options {
   width: 100%;
@@ -72,8 +78,6 @@ onBeforeMount(async () => {
   justify-content: space-between;
 }
 .button {
-  margin-top: 5px;
-  margin-right: 15px;
   background-color: transparent;
   color: black;
   padding: 0px;

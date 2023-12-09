@@ -35,7 +35,7 @@ const handleCancel = () => {
 </script>
 
 <template>
-  <main>
+  <div>
     <div @click="clickButton">Leave Class</div>
     <div class="modal-background" v-if="isButtonClicked">
       <div class="modal-content">
@@ -53,7 +53,7 @@ const handleCancel = () => {
         </form>
       </div>
     </div>
-  </main>
+  </div>
 </template>
 
 <style scoped>
