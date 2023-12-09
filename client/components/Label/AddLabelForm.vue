@@ -6,45 +6,11 @@ import { onBeforeMount, ref } from "vue";
 
 const loaded = ref(false);
 const props = defineProps(["comment", "labels"]);
+const emit = defineEmits(["updatedLabels"]);
 
 let labelsInClass = ref(); //all labels in class*
 let selectedLabels = ref<Array<Record<string, string>>>([]); //labels selected by user in form*
 let labelsOnComment = ref(props.labels); //labels on comment (before submission)
-
-//get class of post (parent) of comment
-//then get all labels for post
-//then use those as the options for the form
-//also get labels on comment and use those as the preselected values
-//listen for select/remove events from multiselector and add/remove labels from comment accordingly???
-
-// const assignLabel = async (labelId: ObjectId) => {
-//   // try {
-//   //   await fetchy(`/api/comments/${props.comment.parentId}/labels`, "POST", {
-//   //     body: { label: labelId },
-//   //   });
-//   // } catch (_) {
-//   //   return;
-//   // }
-// };
-
-// const removeLabel = async (labelId: ObjectId) => {
-//   // try {
-//   //   await fetchy(`/api/comments/${props.comment.parentId}/labels`, "DELETE", {
-//   //     query: { label: labelId },
-//   //   });
-//   // } catch (_) {
-//   //   return;
-//   // }
-// };
-
-// const hasLabel = async (labelId: ObjectId) => {
-//   // for (const label of labelsOnComment.value) {
-//   //   if (label._id === labelId) {
-//   //     return true;
-//   //   }
-//   //   return false;
-//   // }
-// };
 
 const updateLabels = async () => {
   await fetchy(`/api/comments/${props.comment._id}/labels/deleteAll`, "DELETE");
@@ -53,6 +19,7 @@ const updateLabels = async () => {
       labels: selectedLabels.value.map((label) => label._id),
     },
   });
+  emit("updatedLabels");
 };
 
 onBeforeMount(async () => {
@@ -70,7 +37,6 @@ onBeforeMount(async () => {
       {{ label.name }}
       <br />
     </section>
-    {{ selectedLabels }}
     <input type="submit" value="Submit" />
   </form>
 </template>

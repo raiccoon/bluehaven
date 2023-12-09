@@ -132,7 +132,7 @@ onBeforeMount(async () => {
     </article>
   </div>
 
-  <AddLabelForm v-if="isAddLabelModelOpen" :comment="comment" :labels="labels" />
+  <AddLabelForm v-if="isAddLabelModelOpen" @updatedLabels="getLabelsOnComment" :comment="comment" :labels="labels" />
 </template>
 
 <style scoped>
