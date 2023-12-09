@@ -33,11 +33,11 @@ onBeforeMount(async () => {
 <template>
   <form v-if="loaded" @submit.prevent="updateLabels">
     <section v-for="label in labelsInClass" :key="label._id">
-      <input type="checkbox" :id="label._id" :value="label" v-model="selectedLabels" />
+      <input class="checkbox" type="checkbox" :id="label._id" :value="label" v-model="selectedLabels" />
       {{ label.name }}
       <br />
     </section>
-    <input type="submit" value="Submit" />
+    <input class="submit" type="submit" value="Submit" />
   </form>
 </template>
 
