@@ -16,7 +16,7 @@ const isBookmarked = ref(false);
 const isAdmin = ref(false);
 const { currentUsername } = storeToRefs(useUserStore());
 const renderText = ref("");
-
+const source = ref("");
 async function renderMarkdown(text: string) {
   return await marked.parse(text);
 }
@@ -84,6 +84,7 @@ async function refreshBookmark(postId: string) {
 }
 onBeforeMount(async () => {
   let classResult;
+  source.value = router.currentRoute.value.query.source?.toString() || "";
   try {
     await getPostById(props.postId);
     classResult = await fetchy(`/api/posts/${props.postId}/class`, "GET");
@@ -97,9 +98,15 @@ onBeforeMount(async () => {
   await render(post.value.content);
   loaded.value = true;
 });
+
 function goBack() {
-  void router.push({ path: `/classes/${classId.value}` });
+  if (source.value === "bookmarks") {
+    void router.push({ path: `/classes/${classId.value}/bookmarks` });
+  } else {
+    void router.push({ path: `/classes/${classId.value}` });
+  }
 }
+
 const toggleBookmark = async () => {
   try {
     if (isBookmarked.value) {

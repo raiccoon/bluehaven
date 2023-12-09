@@ -2,10 +2,20 @@
 import { formatDate } from "@/utils/formatDate";
 import router from "../../router";
 
-const props = defineProps(["post"]);
+const props = defineProps(["post", "fromPage"]);
 
 const expandPost = async () => {
-  void router.push({ path: `/expanded-post/${props.post._id}`, query: { author: props.post.author } });
+  if (props.fromPage === "bookmarks") {
+    void router.push({
+      path: `/expanded-post/${props.post._id}`,
+      query: { source: "bookmarks" },
+    });
+  } else {
+    void router.push({
+      path: `/expanded-post/${props.post._id}`,
+      query: { source: "class" },
+    });
+  }
 };
 </script>
 

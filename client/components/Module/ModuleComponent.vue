@@ -51,7 +51,7 @@ onBeforeMount(async () => {
     <ModuleHeader :module="module" :isAdmin="isAdmin" @expandMe="expand" @toggleClick="clickModule" @refreshPosts="getPostsInModule()" @deleteModule="deleteModule" />
     <div class="posts" v-if="isModuleClicked && loaded && posts.length !== 0">
       <article v-for="post in posts" :key="post._id">
-        <PostTitle :post="post" />
+        <PostTitle :post="post" :fromPage="'class'" />
       </article>
     </div>
     <p v-else-if="isModuleClicked">No posts to show.</p>
