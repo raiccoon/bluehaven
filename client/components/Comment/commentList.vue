@@ -40,27 +40,36 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <section class="comments" v-if="loaded && viewComments === true">
-    <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
-    <CreateCommentButton :parent="props.parentId" @refreshComments="getComments($props.parentId)" />
-    <!-- putting pinned comments first, need to troubleshoot pins -->
-    <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
-      <commentComponent v-if="editing !== pinnedComment._id" :comment="pinnedComment" :isPinned="true" :isReply="false" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
-      <EditCommentButton v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
-    </article>
-    <article v-for="comment in comments" :key="comment._id">
-      <commentComponent v-if="editing !== comment._id" :comment="comment" :isPinned="false" :isReply="props.isReplies" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
-      <EditCommentButton v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
-    </article>
-    <button v-if="isReplies" class="pure-button btn-small" @click="toggleComments">Hide Replies</button>
-    <button v-else class="comment-visibility pure-button" @click="toggleComments">Hide Comments</button>
-  </section>
-  <section v-else-if="viewComments !== true">
-    <button v-if="isReplies" class="pure-button btn-small view-comments" @click="toggleComments">View Replies</button>
-    <button v-else class="comment-visibility pure-button view-comments" @click="toggleComments">View Comments Section</button>
-  </section>
-  <p v-else-if="loaded">No comments found</p>
-  <p v-else>Loading...</p>
+  <div class="comment-section">
+    <section class="comments" v-if="loaded && viewComments === true">
+      <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
+      <CreateCommentButton :parent="props.parentId" @refreshComments="getComments($props.parentId)" />
+      <!-- putting pinned comments first, need to troubleshoot pins -->
+      <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
+        <commentComponent
+          v-if="editing !== pinnedComment._id"
+          :comment="pinnedComment"
+          :isPinned="true"
+          :isReply="false"
+          @refreshComments="getComments($props.parentId)"
+          @editComment="updateEditing"
+        />
+        <EditCommentButton v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+      </article>
+      <article v-for="comment in comments" :key="comment._id">
+        <commentComponent v-if="editing !== comment._id" :comment="comment" :isPinned="false" :isReply="props.isReplies" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+        <EditCommentButton v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+      </article>
+      <button v-if="isReplies" class="pure-button btn-small" @click="toggleComments">Hide Replies</button>
+      <button v-else class="comment-visibility pure-button" @click="toggleComments">Hide Comments</button>
+    </section>
+    <section v-else-if="viewComments !== true">
+      <button v-if="isReplies" class="pure-button btn-small view-comments" @click="toggleComments">View Replies</button>
+      <button v-else class="comment-visibility pure-button view-comments" @click="toggleComments">View Comments Section</button>
+    </section>
+    <p v-else-if="loaded">No comments found</p>
+    <p v-else>Loading...</p>
+  </div>
 </template>
 
 <style scoped>
@@ -68,19 +77,17 @@ section {
   display: flex;
   flex-direction: column;
   gap: 1em;
-  /* max-height: 60vh;
-  margin-top: 1em;
+  /* max-height: 500px; */
+  /* margin-top: 1em; */
   /* overflow: hidden; */
   /* overflow-y: scroll; */
 }
 
-section,
-p,
-.row {
-  margin: 0 auto;
-  /* max-width: 60em; */
-  width: 70%;
-  max-width: 750px;
+.comment-section {
+  max-height: 500px;
+  overflow: hidden;
+  overflow-y: scroll;
+  margin-top: 1em;
 }
 
 article {
@@ -93,20 +100,8 @@ article {
   flex-direction: column;
   gap: 0.5em;
   padding: 1em;
-  /* width: 70vh; */
+  width: 70vh;
 }
-
-.posts {
-  padding: 1em;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 auto;
-  max-width: 70em;
-}
-
 .view-comments {
   gap: 1em;
   margin: 1em;

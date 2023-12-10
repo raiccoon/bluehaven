@@ -247,5 +247,6 @@ button {
   padding: 0.5em;
   margin-left: 0.5em;
   margin-right: 0.5em;
+  white-space: nowrap;
 }
 </style>
