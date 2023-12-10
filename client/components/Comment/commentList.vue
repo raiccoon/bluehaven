@@ -6,6 +6,7 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
+import SelectLabelForm from "../Label/SelectLabelForm.vue";
 // import SearchPostForm from "./SearchPostForm.vue";
 
 const { isLoggedIn } = storeToRefs(useUserStore());
@@ -19,12 +20,12 @@ let comments = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 let viewComments = ref(false);
 
-async function getComments(parentId: string) {
-  let query: Record<string, string> = parentId !== undefined ? { parentId } : {};
+async function getComments(parentId: string, filterByLabel?: string) {
+  let query: Record<string, string> = filterByLabel !== undefined ? { filterByLabel } : {};
   let commentResults;
   try {
     // originally passed in query instead of parentId in fetchy?
-    commentResults = await fetchy(`/api/pins/comments/${parentId}`, "GET");
+    commentResults = await fetchy(`/api/posts/${parentId}/comments`, "GET", { query });
   } catch (_) {
     return;
   }
@@ -50,6 +51,7 @@ onBeforeMount(async () => {
   <section class="comments" v-if="loaded && viewComments === true">
     <createCommentForm :parent="props.parentId" @refreshComments="getComments($props.parentId)" />
     <!-- putting pinned comments first, need to troubleshoot pins -->
+    <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
     <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
       <commentComponent v-if="editing !== pinnedComment._id" :comment="pinnedComment" :isPinned="true" :isReply="false" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
       <editCommentForm v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />

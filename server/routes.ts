@@ -268,19 +268,31 @@ class Routes {
     return await Pin.getPostPins(postId);
   }
 
-  @Router.get("/pins/comments/:postId")
-  async getCommentsPinnedOrder(postId: ObjectId) {
+  @Router.get("/posts/:postId/comments")
+  async getCommentsPinnedOrder(postId: ObjectId, filterByLabel: ObjectId) {
     // returns 2 sets, pinned comments followed by unpinned comments
-
     const postObjectID = new ObjectId(postId);
-    const pins = await Pin.getPostPins(postObjectID);
+
+    // all (filtered) comments
     let comments = await Comment.getCommentsByParent(postObjectID);
+    if (filterByLabel) {
+      const commentIds = await Label.filterCommentsByLabel(
+        comments.map((comment) => comment._id),
+        new ObjectId(filterByLabel),
+      );
+      comments = await Comment.getComments({ _id: { $in: commentIds } });
+    }
 
-    const pinnedCommentsAlone = pins.map((pin) => pin.comment.toString());
-    comments = comments.filter((comment) => pinnedCommentsAlone.indexOf(comment._id.toString()) === -1);
-    const pinnedComments = await Promise.all(pins.map(async (pin) => await Comment.getComment(pin.comment)));
+    // get pinnedComments
+    const pins = await Pin.getPostPins(postObjectID);
+    const pinnedCommentIds = pins.map((pin) => pin.comment.toString());
 
-    return { "Pinned Comments": await Responses.posts(pinnedComments), "UnPinned Comments": await Responses.posts(comments) };
+    // separate pinned and unpinned comments
+    const pinnedComments: CommentDoc[] = [];
+    const unpinnedComments: CommentDoc[] = [];
+    comments.forEach((comment) => (pinnedCommentIds.includes(comment._id.toString()) ? pinnedComments : unpinnedComments).push(comment));
+
+    return { "Pinned Comments": await Responses.posts(pinnedComments), "UnPinned Comments": await Responses.posts(unpinnedComments) };
   }
 
   // FRIENDS
@@ -528,14 +540,14 @@ class Routes {
     return await Label.getLabelsInClass(new ObjectId(classId));
   }
 
-  @Router.get("/posts/:_id/comments")
-  async filterCommentsByLabel(_id: ObjectId, filterByLabel: ObjectId) {
-    const comments = await Comment.getCommentsByParent(new ObjectId(_id));
-    return Label.filterCommentsByLabel(
-      comments.map((comment) => comment._id),
-      filterByLabel,
-    );
-  }
+  // @Router.get("/posts/:_id/comments/")
+  // async filterCommentsByLabel(_id: ObjectId, filterByLabel: ObjectId) {
+  //   const comments = await Comment.getCommentsByParent(new ObjectId(_id));
+  //   return Label.filterCommentsByLabel(
+  //     comments.map((comment) => comment._id),
+  //     filterByLabel,
+  //   );
+  // }
 
   @Router.get("/classes/id/:classId/labels/isLabelInClass")
   async isLabelInClass(classId: ObjectId, label: ObjectId) {
