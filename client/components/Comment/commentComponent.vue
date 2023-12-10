@@ -116,6 +116,9 @@ onBeforeMount(async () => {
   </div>
 
   <!-- <labelsOnComment :comment="props.comment" /> -->
+  <div class="label-list">
+    <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
+  </div>
 
   <img v-if="hasImage" class="postMedia image" :src="props.comment.image" />
   <video v-if="hasVideo" class="postMedia video" controls>
@@ -134,9 +137,6 @@ onBeforeMount(async () => {
 
   <AddLabelForm v-if="isAddLabelModelOpen" @updatedLabels="getLabelsOnComment" :comment="comment" :labels="labels" />
   <!-- {{ labels.map((label) => label.name) }} -->
-  <div class="label-list">
-    <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
-  </div>
 </template>
 
 <style scoped>
@@ -236,6 +236,16 @@ button {
 .label-list {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  max-width: 100%;
+  overflow-x: scroll;
+}
+
+.label-item {
+  font-size: 12px;
+  background-color: #d6eaf9ff;
+  border-radius: 30%;
+  padding: 0.5em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
 }
 </style>

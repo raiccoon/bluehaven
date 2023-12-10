@@ -74,6 +74,10 @@ section {
   display: flex;
   flex-direction: column;
   gap: 1em;
+  /* max-height: 60vh;
+  margin-top: 1em;
+  /* overflow: hidden; */
+  /* overflow-y: scroll; */
 }
 
 section,
