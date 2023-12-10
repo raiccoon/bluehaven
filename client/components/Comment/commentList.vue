@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import commentComponent from "@/components/Comment/commentComponent.vue";
-import createCommentForm from "@/components/Comment/createCommentForm.vue";
+import CreateCommentButton from "@/components/Comment/CreateCommentButton.vue";
 import editCommentForm from "@/components/Comment/editCommentForm.vue";
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
@@ -41,8 +41,8 @@ onBeforeMount(async () => {
 
 <template>
   <section class="comments" v-if="loaded && viewComments === true">
-    <createCommentForm :parent="props.parentId" @refreshComments="getComments($props.parentId)" />
     <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
+    <CreateCommentButton :parent="props.parentId" @refreshComments="getComments($props.parentId)" />
     <!-- putting pinned comments first, need to troubleshoot pins -->
     <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
       <commentComponent v-if="editing !== pinnedComment._id" :comment="pinnedComment" :isPinned="true" :isReply="false" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
