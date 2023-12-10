@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import commentComponent from "@/components/Comment/commentComponent.vue";
 import CreateCommentButton from "@/components/Comment/CreateCommentButton.vue";
 import EditCommentButton from "@/components/Comment/EditCommentButton.vue";
-import { useUserStore } from "@/stores/user";
+import commentComponent from "@/components/Comment/commentComponent.vue";
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
 import SelectLabelForm from "../Label/SelectLabelForm.vue";
@@ -58,7 +57,7 @@ onBeforeMount(async () => {
   </section>
   <section v-else-if="viewComments !== true">
     <button v-if="isReplies" class="pure-button btn-small view-comments" @click="toggleComments">View Replies</button>
-    <button v-else class="comment-visibility pure-button view-comments" @click="toggleComments">View Comments</button>
+    <button v-else class="comment-visibility pure-button view-comments" @click="toggleComments">View Comments Section</button>
   </section>
   <p v-else-if="loaded">No comments found</p>
   <p v-else>Loading...</p>
@@ -105,7 +104,7 @@ article {
   display: flex;
   justify-content: space-between;
   margin: 0 auto;
-  /* max-width: 70em; */
+  max-width: 70em;
 }
 
 .view-comments {

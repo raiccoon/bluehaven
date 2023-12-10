@@ -11,6 +11,7 @@ const emit = defineEmits(["updatedLabels", "refreshComments"]);
 let labelsInClass = ref(); //all labels in class*
 let selectedLabels = ref<Array<Record<string, string>>>([]); //labels selected by user in form*
 let labelsOnComment = ref(props.labels); //labels on comment (before submission)
+let classHasLabels = ref(false);
 
 const updateLabels = async () => {
   await fetchy(`/api/comments/${props.comment._id}/labels/deleteAll`, "DELETE");
@@ -27,12 +28,15 @@ onBeforeMount(async () => {
   const classResult = await fetchy(`/api/comments/${props.comment._id}/class`, "GET");
   labelsInClass.value = await fetchy(`/api/classes/id/${classResult}/labels`, "GET");
   selectedLabels.value = [...labelsOnComment.value];
+  console.log("labelsInClass.value.length", labelsInClass.value.length);
+  classHasLabels.value = labelsInClass.value.length !== 0 ? true : false;
+  console.log("classHasLabels.value", classHasLabels.value);
   loaded.value = true;
 });
 </script>
 
 <template>
-  <form v-if="loaded" @submit.prevent="updateLabels">
+  <form v-if="loaded && classHasLabels" @submit.prevent="updateLabels">
     <section v-for="label in labelsInClass" :key="label._id">
       <input class="checkbox" type="checkbox" :id="label._id" :value="label" v-model="selectedLabels" />
       {{ label.name }}
@@ -40,6 +44,7 @@ onBeforeMount(async () => {
     </section>
     <input class="submit" type="submit" value="Submit" />
   </form>
+  <div v-if="loaded && !classHasLabels"><em>No labels associated with this class!</em></div>
 </template>
 
 <style scoped>
