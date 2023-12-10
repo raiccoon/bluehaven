@@ -6,7 +6,7 @@ import { onBeforeMount, ref } from "vue";
 
 const loaded = ref(false);
 const props = defineProps(["comment", "labels"]);
-const emit = defineEmits(["updatedLabels"]);
+const emit = defineEmits(["updatedLabels", "refreshComments"]);
 
 let labelsInClass = ref(); //all labels in class*
 let selectedLabels = ref<Array<Record<string, string>>>([]); //labels selected by user in form*
@@ -20,6 +20,7 @@ const updateLabels = async () => {
     },
   });
   emit("updatedLabels");
+  emit("refreshComments");
 };
 
 onBeforeMount(async () => {
