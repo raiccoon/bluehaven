@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import commentList from "@/components/Comment/commentList.vue";
+// import labelsOnComment from "@/components/Label/labelsOnComment.vue";
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
@@ -68,6 +69,7 @@ const toggleLabelModal = async () => {
 const getLabelsOnComment = async () => {
   try {
     labels.value = await fetchy(`/api/comments/${props.comment._id}/labels`, "GET");
+    emit("refreshComments");
   } catch {
     return;
   }
@@ -100,10 +102,6 @@ onBeforeMount(async () => {
       <div class="author">{{ props.comment.author }}</div>
       <em v-if="isPinned">(pinned)</em>
     </div>
-    <!-- labels -->
-    <!-- <label class="label">label 1</label>
-    <label class="label">label 2</label>
-    <label class="label">label 3</label> -->
 
     <!-- placeholder for triple dots -->
     <button v-if="!viewOptions" class="options-button pure-button btn-small" @click="toggleOptions">Options</button>
@@ -115,6 +113,11 @@ onBeforeMount(async () => {
       <li v-if="!isPinned && isInstructor"><button class="btn-small pure-button" @click="togglePin">Pin</button></li>
       <button class="options-button pure-button btn-small" @click="toggleOptions">Hide Options</button>
     </menu>
+  </div>
+
+  <!-- <labelsOnComment :comment="props.comment" /> -->
+  <div class="label-list">
+    <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
   </div>
 
   <img v-if="hasImage" class="postMedia image" :src="props.comment.image" />
@@ -133,7 +136,7 @@ onBeforeMount(async () => {
   </div>
 
   <AddLabelForm v-if="isAddLabelModelOpen" @updatedLabels="getLabelsOnComment" :comment="comment" :labels="labels" />
-  {{ labels.map((label) => label.name) }}
+  <!-- {{ labels.map((label) => label.name) }} -->
 </template>
 
 <style scoped>
@@ -228,5 +231,21 @@ button {
   box-shadow: inset 0 0 0 2px #d6eaf9ff;
   background-color: white;
   height: 40px;
+}
+
+.label-list {
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  overflow-x: scroll;
+}
+
+.label-item {
+  font-size: 12px;
+  background-color: #d6eaf9ff;
+  border-radius: 30%;
+  padding: 0.5em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
 }
 </style>

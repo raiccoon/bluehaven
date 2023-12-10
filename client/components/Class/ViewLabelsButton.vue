@@ -17,17 +17,6 @@ const clickButton = () => {
   isButtonClicked.value = true;
 };
 
-// const handleCreateLabel = async () => {
-//   try {
-//     // TODO api for creating a label
-//   } catch (e) {
-//     if (toast.value !== null) {
-//       error.value = toast.value.message;
-//     }
-//     return;
-//   }
-// };
-
 const getLabels = async () => {
   let labelResults;
   try {
