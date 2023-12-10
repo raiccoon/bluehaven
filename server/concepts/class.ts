@@ -67,15 +67,22 @@ export default class ClassConcept {
   async getClassesInstruct(user: ObjectId) {
     const memberships = await this.instructorMemberships.readMany({ user });
     const classIds = memberships.map((membership) => membership.classId);
-    const classes = await this.getClassesByIds(classIds);
-    return { msg: "Classs retrieved successfully!", classes };
+    const classes = await this.getClassesByIds(classIds, false);
+    return { msg: "Class retrieved successfully!", classes };
   }
 
   async getClassesEnroll(user: ObjectId) {
     const memberships = await this.studentMemberships.readMany({ user });
     const classIds = memberships.map((membership) => membership.classId);
-    const classes = await this.getClassesByIds(classIds);
-    return { msg: "Classs retrieved successfully!", classes };
+    const classes = await this.getClassesByIds(classIds, false);
+    return { msg: "Class retrieved successfully!", classes };
+  }
+
+  async getClassesArchive(user: ObjectId) {
+    const memberships = await this.instructorMemberships.readMany({ user });
+    const classIds = memberships.map((membership) => membership.classId);
+    const classes = await this.getClassesByIds(classIds, true);
+    return { msg: "Class retrieved successfully!", classes };
   }
 
   async assertIsInstructor(classId: ObjectId, user: ObjectId) {
@@ -156,8 +163,8 @@ export default class ClassConcept {
     return classDoc;
   }
 
-  private async getClassesByIds(classIds: ObjectId[]) {
-    const classDocs = await this.classes.readMany({ _id: { $in: classIds } });
+  private async getClassesByIds(classIds: ObjectId[], archived: boolean) {
+    const classDocs = await this.classes.readMany({ _id: { $in: classIds }, archived: archived });
     return classDocs;
   }
 
