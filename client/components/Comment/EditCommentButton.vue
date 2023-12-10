@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import PostHelp from "@/components/Post/PostHelp.vue";
+import { useToastStore } from "@/stores/toast";
 import { fetchy } from "@/utils/fetchy";
 import * as marked from "marked";
+import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
+import PostHelp from "@/components/Post/PostHelp.vue";
 
+const { toast } = storeToRefs(useToastStore());
 const error = ref("");
-const props = defineProps(["parent"]);
-const emit = defineEmits(["refreshComments"]);
+const props = defineProps(["comment"]);
+const emit = defineEmits(["editComment", "refreshComments"]);
 
 const isCreateCommentClicked = ref(false);
-const content = ref("");
+const content = ref(props.comment.content);
 const livePreview = ref("");
 
 async function renderMarkdown(text: string) {
@@ -46,35 +49,39 @@ watch(content, async (newValue) => {
   livePreview.value = await renderMarkdown(renderedImages);
 });
 
-const clickCreateComment = () => {
+const clickCreateComment = async () => {
   isCreateCommentClicked.value = true;
+  content.value = props.comment.content;
+  const renderedImages = renderYouTube(renderMP4(renderImages(props.comment.content)));
+  livePreview.value = await renderMarkdown(renderedImages);
 };
 
-const handleCreateComment = async (parent: string, content: string, image: string, video: string) => {
+const editComment = async (content: string, image: string, video: string) => {
   if (!content.trim()) {
     error.value = "Do not leave the comment empty.";
     return;
   }
   try {
-    await fetchy("/api/comments", "POST", {
-      body: { parent, content, image, video },
-    });
-  } catch (_) {
+    await fetchy(`/api/comments/${props.comment._id}`, "PATCH", { body: { update: { content: content, image: image, video: video } } });
+  } catch (e) {
+    if (toast.value !== null) {
+      error.value = toast.value.message;
+    }
     return;
   }
+  emit("editComment");
   emit("refreshComments");
   emptyForm();
-  isCreateCommentClicked.value = false;
 };
 
 const emptyForm = () => {
-  content.value = "";
+  content.value = props.comment.content;
   error.value = "";
   isCreateCommentClicked.value = false;
 };
 
 const handleCancel = () => {
-  content.value = "";
+  content.value = props.comment.content;
   error.value = "";
   isCreateCommentClicked.value = false;
 };
@@ -82,11 +89,11 @@ const handleCancel = () => {
 
 <template>
   <main>
-    <button class="button" @click="clickCreateComment">Create A Comment</button>
+    <button class="button" @click="clickCreateComment">Edit</button>
     <div class="modal-background" v-if="isCreateCommentClicked">
       <div class="modal-content">
-        <form @submit.prevent="handleCreateComment(props.parent, content, '', '')">
-          <h3>Create a new comment</h3>
+        <form @submit.prevent="editComment(content, '', '')">
+          <h3>Edit your comment</h3>
           <div class="container">
             <div class="textArea">
               <PostHelp />
@@ -100,7 +107,7 @@ const handleCancel = () => {
             </div>
           </div>
           <div class="modal-buttons">
-            <button class="submit" type="submit">Create Comment</button>
+            <button class="submit" type="submit">Edit Comment</button>
             <button class="cancel" type="button" @click="handleCancel">Cancel</button>
           </div>
           <div class="error" v-if="error">{{ error }}</div>
@@ -113,30 +120,13 @@ const handleCancel = () => {
 
 <style scoped>
 .button {
-  display: inline-block;
-  outline: none;
-  cursor: pointer;
-  font-size: 16px;
-  line-height: 1;
-  border-radius: 500px;
-  transition-property: background-color,border-color,color,box-shadow,filter;
-  transition-duration: .3s;
-  border: 1px solid transparent;
-  letter-spacing: 2px;
-  width: fit-content;
-  padding-left: 15px;
-  padding-right: 15px;
-  white-space: normal;
-  text-align: center;
-  padding: 10px 17px 10px;
-  color: #5190bbff;
-  box-shadow: inset 0 0 0 2px #5190bbff;
   background-color: transparent;
-  height: 52px;
+  color: black;
+  border: none;
+  box-shadow: none;
 }
 .button:hover {
-  color: #fff;
-  background-color: #5190bbff;
+  text-decoration: underline;
 }
 .title {
   width: calc(100% - 5px);
