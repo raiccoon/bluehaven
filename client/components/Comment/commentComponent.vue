@@ -73,6 +73,7 @@ const getLabelsOnComment = async () => {
   } catch {
     return;
   }
+  isAddLabelModelOpen.value = false;
 };
 
 onBeforeMount(async () => {
