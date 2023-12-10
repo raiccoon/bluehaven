@@ -126,7 +126,7 @@ onBeforeMount(async () => {
   </video>
 
   <!-- truncate text, can view full text by expanding -->
-  <p class="text single-line">{{ props.comment.content }}</p>
+  <p class="text content">{{ props.comment.content }}</p>
   <div class="base">
     <commentList :parentId="props.comment._id" :isReplies="true" />
     <article class="timestamp">
@@ -180,10 +180,9 @@ p {
   height: auto;
   align-self: center;
 }
-.text.single-line {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+
+.content {
+  overflow: scroll;
 }
 
 .comment-header {
