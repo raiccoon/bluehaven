@@ -32,7 +32,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <form v-if="loaded && len(labels) !== 0" @submit.prevent="updateLabels">
+  <form v-if="loaded" @submit.prevent="updateLabels">
     <section v-for="label in labelsInClass" :key="label._id">
       <input class="checkbox" type="checkbox" :id="label._id" :value="label" v-model="selectedLabels" />
       {{ label.name }}
@@ -40,7 +40,7 @@ onBeforeMount(async () => {
     </section>
     <input class="submit" type="submit" value="Submit" />
   </form>
-  <div><em>No labels associated with this class!</em></div>
+  <!-- <div v-if="labelsInClass.value.length === 0"><em>No labels associated with this class!</em></div> -->
 </template>
 
 <style scoped>
