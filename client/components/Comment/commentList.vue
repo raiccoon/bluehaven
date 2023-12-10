@@ -2,18 +2,11 @@
 import commentComponent from "@/components/Comment/commentComponent.vue";
 import createCommentForm from "@/components/Comment/createCommentForm.vue";
 import editCommentForm from "@/components/Comment/editCommentForm.vue";
-import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
-import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import SelectLabelForm from "../Label/SelectLabelForm.vue";
-// import SearchPostForm from "./SearchPostForm.vue";
-
-const { isLoggedIn } = storeToRefs(useUserStore());
 
 const loaded = ref(false);
-// const props = defineProps(["parentId"]);
-// const props = defineProps({ parentId: { type: String, required: true }, isReplies: { type: Boolean, default: false } });
 const props = defineProps(["parentId", "isReplies"]);
 let pinnedComments = ref<Array<Record<string, string>>>([]);
 let comments = ref<Array<Record<string, string>>>([]);
@@ -24,7 +17,6 @@ async function getComments(parentId: string, filterByLabel?: string) {
   let query: Record<string, string> = filterByLabel !== undefined ? { filterByLabel } : {};
   let commentResults;
   try {
-    // originally passed in query instead of parentId in fetchy?
     commentResults = await fetchy(`/api/posts/${parentId}/comments`, "GET", { query });
   } catch (_) {
     return;
@@ -50,8 +42,8 @@ onBeforeMount(async () => {
 <template>
   <section class="comments" v-if="loaded && viewComments === true">
     <createCommentForm :parent="props.parentId" @refreshComments="getComments($props.parentId)" />
-    <!-- putting pinned comments first, need to troubleshoot pins -->
     <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
+    <!-- putting pinned comments first, need to troubleshoot pins -->
     <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
       <commentComponent v-if="editing !== pinnedComment._id" :comment="pinnedComment" :isPinned="true" :isReply="false" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
       <editCommentForm v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
