@@ -369,6 +369,12 @@ class Routes {
     return await Class.getClassesEnroll(user);
   }
 
+  @Router.get("/classes/archive")
+  async getClassesArchive(session: WebSessionDoc) {
+    const user = WebSession.getUser(session);
+    return await Class.getClassesArchive(user);
+  }
+
   @Router.get("/classes/id/:classId/membership/isInstructor")
   async isInstructor(session: WebSessionDoc, classId: ObjectId, username: string) {
     const user = (await User.getUserByUsername(username))._id;
