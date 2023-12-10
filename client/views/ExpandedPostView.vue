@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import commentList from "@/components/Comment/commentList.vue";
-import ExpandedPost from "@/components/Post/ExpandedPost.vue";
 import ExpandedPost2 from "@/components/Post/ExpandedPost2.vue";
 </script>
 
