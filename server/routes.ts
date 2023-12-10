@@ -393,6 +393,13 @@ class Routes {
     return await Class.removeSelf(new ObjectId(classId), user);
   }
 
+  @Router.patch("/classes/id/:classId/archived")
+  async archiveClass(session: WebSessionDoc, classId: ObjectId) {
+    const user = WebSession.getUser(session);
+    await Class.assertIsInstructor(new ObjectId(classId), user);
+    return await Class.archiveClass(new ObjectId(classId));
+  }
+
   // MODULE
   @Router.post("/modules")
   async createModule(session: WebSessionDoc, classId: ObjectId, name: string, description?: string) {

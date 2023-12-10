@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { fetchy } from "@/utils/fetchy";
 import { useToastStore } from "@/stores/toast";
+import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
+import { ref } from "vue";
 import router from "../../router";
 
 const { toast } = storeToRefs(useToastStore());
@@ -17,12 +17,10 @@ const clickButton = () => {
 
 const handleArchiveClass = async () => {
   try {
-    window.alert("Sorry we haven't implemented class archives yet!");
-    // TODO archive class
-    // await fetchy(`/api/classes/id/${props.classId}/membership`, "DELETE", {
-    //   query: { classId: props.classId },
-    // });
-    // void router.push({ name: "Classes" });
+    await fetchy(`/api/classes/id/${props.classId}/archived`, "PATCH", {
+      query: { classId: props.classId },
+    });
+    void router.push({ name: "Classes" });
   } catch (e) {
     if (toast.value !== null) {
       error.value = toast.value.message;

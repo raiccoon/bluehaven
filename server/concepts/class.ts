@@ -124,12 +124,19 @@ export default class ClassConcept {
     return { msg: "Sucessfully exited class!" };
   }
 
+  async archiveClass(classId: ObjectId) {
+    await this.classExists(classId);
+    await this.classes.updateOne({ _id: classId }, { archived: true });
+    // await this.studentMemberships.deleteMany({ classId: classId });
+    return await this.classes.readOne({ _id: classId });
+  }
+
   // Helpers
 
   private async classExists(_id: ObjectId) {
     const maybeClass = this.classes.readOne({ _id });
     if (maybeClass === null) {
-      throw new NotFoundError("Collection not found!");
+      throw new NotFoundError("Class not found!");
     }
   }
 
