@@ -30,7 +30,7 @@ section {
   margin: 10px;
   margin-bottom: 0px;
   flex: 1;
-  max-width: 50%;
+  /* max-width: 50%; */
   border-radius: 8px;
   display: flex;
   justify-content: center;
@@ -45,7 +45,6 @@ section {
     width: 90%;
     height: 100%;
     margin: 10px auto;
-
   }
 }
 </style>

@@ -4,27 +4,21 @@ import CreateCommentButton from "@/components/Comment/CreateCommentButton.vue";
 import EditCommentButton from "@/components/Comment/EditCommentButton.vue";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
-import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
-// import SearchPostForm from "./SearchPostForm.vue";
-
-const { isLoggedIn } = storeToRefs(useUserStore());
+import SelectLabelForm from "../Label/SelectLabelForm.vue";
 
 const loaded = ref(false);
-// const props = defineProps(["parentId"]);
-// const props = defineProps({ parentId: { type: String, required: true }, isReplies: { type: Boolean, default: false } });
 const props = defineProps(["parentId", "isReplies"]);
 let pinnedComments = ref<Array<Record<string, string>>>([]);
 let comments = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 let viewComments = ref(false);
 
-async function getComments(parentId: string) {
-  let query: Record<string, string> = parentId !== undefined ? { parentId } : {};
+async function getComments(parentId: string, filterByLabel?: string) {
+  let query: Record<string, string> = filterByLabel !== undefined ? { filterByLabel } : {};
   let commentResults;
   try {
-    // originally passed in query instead of parentId in fetchy?
-    commentResults = await fetchy(`/api/pins/comments/${parentId}`, "GET");
+    commentResults = await fetchy(`/api/posts/${parentId}/comments`, "GET", { query });
   } catch (_) {
     return;
   }
@@ -48,6 +42,7 @@ onBeforeMount(async () => {
 
 <template>
   <section class="comments" v-if="loaded && viewComments === true">
+    <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
     <CreateCommentButton :parent="props.parentId" @refreshComments="getComments($props.parentId)" />
     <!-- putting pinned comments first, need to troubleshoot pins -->
     <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
