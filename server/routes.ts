@@ -238,6 +238,9 @@ class Routes {
     const postClass = await Module.getClassOfPost(new ObjectId(postId));
     await Class.assertIsInstructor(new ObjectId(postClass!), user);
     const created = await Pin.addPin(new ObjectId(postId), new ObjectId(commentId));
+    await Comment.assertParentPost(commentId, postId);
+    // const parent = await Comment.getParentOfComment(new ObjectId(commentId));
+    // check parent is the post
     return created;
   }
 
