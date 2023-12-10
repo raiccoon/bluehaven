@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AddClassButton from "@/components/Class/AddClassButton.vue";
-import JoinClassButton from "@/components/Class/JoinClassButton.vue";
 import ClassTile from "@/components/Class/ClassTile.vue";
+import JoinClassButton from "@/components/Class/JoinClassButton.vue";
 import { fetchy } from "@/utils/fetchy";
 import { defineProps, onBeforeMount, ref } from "vue";
 
@@ -9,12 +9,14 @@ const loaded = ref(false);
 const props = defineProps({
   role: String,
 });
-const classIDs = ref<string[]>([]);
+// const classIDs = ref<string[]>([]);
+const classes = ref<Array<Record<string, string>>>([]);
 
 const getClasses = async () => {
   try {
     const response = await fetchy(`/api/classes/${props.role}`, "GET");
-    classIDs.value = response.classes.map((classItem: { _id: String }) => classItem._id);
+    // classIDs.value = response.classes.map((classItem: { _id: String }) => classItem._id);
+    classes.value = response.classes;
   } catch (error) {
     console.error("Error fetching classes:", error);
   }
@@ -39,8 +41,8 @@ onBeforeMount(async () => {
       <JoinClassButton @classJoined="handleRefresh" />
     </div>
     <div v-if="loaded" class="tile-container">
-      <div v-if="classIDs.length === 0" class="placeholder">No classes to show.</div>
-      <ClassTile v-for="classID in classIDs" :key="classID" :_id="classID" />
+      <div v-if="classes.length === 0" class="placeholder">No classes to show.</div>
+      <ClassTile v-for="classObj in classes" :key="classObj._id" :classObject="classObj" />
     </div>
   </main>
 </template>

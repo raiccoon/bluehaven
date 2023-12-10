@@ -9,6 +9,9 @@ import ClassList from "@/components/Class/ClassList.vue";
     <section>
       <ClassList role="enroll" class="classList" />
     </section>
+    <section>
+      <ClassList role="archive" class="classList" />
+    </section>
   </main>
 </template>
 <style scoped>
