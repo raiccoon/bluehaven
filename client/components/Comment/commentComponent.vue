@@ -104,11 +104,11 @@ onBeforeMount(async () => {
     </div>
 
     <!-- placeholder for triple dots -->
-    <button v-if="!viewOptions" class="options-button pure-button btn-small" @click="toggleOptions">Options</button>
+    <button v-if="!viewOptions && (isInstructor || props.comment.author == currentUsername)" class="options-button pure-button btn-small" @click="toggleOptions">Options</button>
     <menu class="options" v-if="viewOptions">
-      <li><button v-if="props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
-      <li><button v-if="props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
-      <li><button class="btn-small pure-button" @click="toggleLabelModal">Add Label</button></li>
+      <li><button v-if="isInstructor || props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
+      <li><button v-if="isInstructor || props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
+      <li v-if="isInstructor || props.comment.author == currentUsername"><button class="btn-small pure-button" @click="toggleLabelModal">Add Label</button></li>
       <li v-if="isPinned && isInstructor"><button class="btn-small pure-button" @click="togglePin">Unpin</button></li>
       <li v-if="!isPinned && isInstructor"><button class="btn-small pure-button" @click="togglePin">Pin</button></li>
       <button class="options-button pure-button btn-small" @click="toggleOptions">Hide Options</button>

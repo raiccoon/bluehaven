@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import commentComponent from "@/components/Comment/commentComponent.vue";
 import CreateCommentButton from "@/components/Comment/CreateCommentButton.vue";
 import EditCommentButton from "@/components/Comment/EditCommentButton.vue";
-import { useUserStore } from "@/stores/user";
+import commentComponent from "@/components/Comment/commentComponent.vue";
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
 import SelectLabelForm from "../Label/SelectLabelForm.vue";
@@ -105,7 +104,7 @@ article {
   display: flex;
   justify-content: space-between;
   margin: 0 auto;
-  /* max-width: 70em; */
+  max-width: 70em;
 }
 
 .view-comments {
