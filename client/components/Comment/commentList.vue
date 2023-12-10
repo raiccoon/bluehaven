@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import commentComponent from "@/components/Comment/commentComponent.vue";
 import CreateCommentButton from "@/components/Comment/CreateCommentButton.vue";
-import editCommentForm from "@/components/Comment/editCommentForm.vue";
+import EditCommentButton from "@/components/Comment/EditCommentButton.vue";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
@@ -52,11 +52,11 @@ onBeforeMount(async () => {
     <!-- putting pinned comments first, need to troubleshoot pins -->
     <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
       <commentComponent v-if="editing !== pinnedComment._id" :comment="pinnedComment" :isPinned="true" :isReply="false" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
-      <editCommentForm v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+      <EditCommentButton v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
     </article>
     <article v-for="comment in comments" :key="comment._id">
       <commentComponent v-if="editing !== comment._id" :comment="comment" :isPinned="false" :isReply="props.isReplies" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
-      <editCommentForm v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+      <EditCommentButton v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
     </article>
     <button v-if="isReplies" class="pure-button btn-small" @click="toggleComments">Hide Replies</button>
     <button v-else class="comment-visibility pure-button" @click="toggleComments">Hide Comments</button>
@@ -118,7 +118,7 @@ article {
   margin: 1em;
 }
 
-button {
+/* button {
   display: inline-block;
   outline: none;
   cursor: pointer;
@@ -138,7 +138,7 @@ button {
   box-shadow: inset 0 0 0 2px #d6eaf9ff;
   background-color: white;
   height: 40px;
-}
+} */
 
 .comment-visibility {
   font-size: 14px;
