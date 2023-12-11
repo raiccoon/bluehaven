@@ -132,6 +132,7 @@ const handleCancel = () => {
   color: #5190bbff;
   box-shadow: inset 0 0 0 2px #5190bbff;
   background-color: white;
+  margin-bottom: 15px;
 }
 
 .reply {

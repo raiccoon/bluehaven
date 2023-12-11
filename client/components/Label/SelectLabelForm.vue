@@ -25,38 +25,48 @@ onBeforeMount(async () => {
       <option :value="undefined">View all</option>
       <option v-for="label in labelsInClass" :key="label._id" :value="label._id">{{ label.name }}</option>
     </select>
-    <input class="submit" type="submit" value="Submit" />
+    <div class="submitButton">
+      <button class="submit" type="submit" value="Submit">Submit</button>
+    </div>
   </form>
 </template>
 
 <style scoped>
 form {
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 15px;
+  margin-right: 15px;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #d6eaf9ff;
+  padding: 20px;
+  border: solid black 1px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+}
+select {
+  width: 260px;
+}
+select#selectedLabel {
+  margin-bottom: 0px;
+  background-color: white;
+}
+.submitButton {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 .submit {
-  display: inline-block;
-  outline: none;
-  cursor: pointer;
-  font-size: 12px;
-  line-height: 1;
-  border-radius: 500px;
-  transition-property: background-color, border-color, color, box-shadow, filter;
-  transition-duration: 0.3s;
-  border: 1px solid transparent;
-  letter-spacing: 2px;
-  min-width: 70px;
-  white-space: normal;
   text-align: center;
-  padding: 5px 5px 5px;
-  color: #5190bbff;
-  box-shadow: inset 0 0 0 2px #d6eaf9ff;
-  background-color: white;
-  height: 40px;
+  background-color: transparent;
+  border: none;
+  transform: background-color 0.3s ease;
+  margin: 7px;
+  margin-bottom: 0px;
 }
-
-#selectedLabel {
-  padding: 0.3em;
-  margin: 0.5em;
+.submit:hover {
+  text-decoration: underline;
 }
 </style>

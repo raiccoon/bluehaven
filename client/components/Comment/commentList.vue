@@ -45,8 +45,8 @@ onBeforeMount(async () => {
     <div class="container" v-if="viewComments">
       <div @click="toggleComments" class="hideButton">Hide</div>
       <CreateCommentButton :parent="props.parentId" :isReply="props.isReplies" @refreshComments="getComments($props.parentId)" />
+      <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
       <div class="filterPlusComments" v-if="comments.length || pinnedComments.length">
-        <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
         <div class="comment-section" v-if="viewComments">
           <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
             <commentComponent
@@ -73,7 +73,8 @@ onBeforeMount(async () => {
         </div>
       </div>
       <div class="noCommentsMessage" v-else>
-        <p>No comments found</p>
+        <p v-if="isReplies">No replies found</p>
+        <p v-else>No comments found</p>
       </div>
     </div>
     <div class="bigboycontainer" v-else>
@@ -104,7 +105,7 @@ onBeforeMount(async () => {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-right: 7px;
+  margin-right: 30px;
   margin-top: 5px;
 }
 .hideButton:hover {
