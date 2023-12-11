@@ -42,6 +42,7 @@ onBeforeMount(async () => {
 <template>
   <div class="main" v-if="loaded">
     <div class="container" v-if="viewComments">
+      <div @click="toggleComments" class="hideButton">Hide</div>
       <CreateCommentButton :parent="props.parentId" :isReply="props.isReplies" @refreshComments="getComments($props.parentId)" />
       <div class="filterPlusComments" v-if="comments.length || pinnedComments.length">
         <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
@@ -74,13 +75,20 @@ onBeforeMount(async () => {
         <p>No comments found</p>
       </div>
     </div>
-    <div class="bigButton" v-else>
+    <div class="bigboycontainer" v-else>
       <button v-if="isReplies" @click="toggleComments">Reply Section</button>
-      <button v-else @click="toggleComments">Comment Section</button>
+      <div class="bigboy" v-else @click="toggleComments">
+        <p class="commentSectionText">
+          <span class="comment">View</span><br>
+          <span class="comment">Comment</span><br>
+          <span class="section">Section</span><br>
+          <i class="material-symbols-outlined eye">double_arrow</i>
+        </p>
+      </div>
     </div>
     <section class="hideButtons" v-if="viewComments">
       <button v-if="isReplies" @click="toggleComments">Collapse Replies</button>
-      <button v-else @click="toggleComments">Collapse Comments</button>
+      <!-- <button v-else @click="toggleComments">Collapse Comments</button> -->
     </section>
   </div>
   <div v-else>
@@ -89,6 +97,49 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap");
+.hideButton {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 7px;
+  margin-top: 5px;
+}
+.hideButton:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
+.commentSectionText {
+  margin-left: 10px;
+  margin-right: 10px;
+  text-align: center;
+}
+.bigboycontainer {
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+}
+.bigboy {
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+  background-color: #eff0f6ff;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.bigboy:hover {
+  background-color: rgb(180, 204, 227);
+}
 .main {
   display: flex;
   flex-direction: column;
@@ -101,7 +152,6 @@ onBeforeMount(async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   height: 100%;
   box-sizing: border-box;
 }
@@ -116,7 +166,7 @@ onBeforeMount(async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: calc(100% - 44px);
+  max-height: calc(100% - 54px);
   overflow-y: scroll;
 }
 

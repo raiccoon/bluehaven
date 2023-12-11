@@ -131,8 +131,7 @@ const handleCancel = () => {
   padding: 12px 10px 12px;
   color: #5190bbff;
   box-shadow: inset 0 0 0 2px #5190bbff;
-  background-color: transparent;
-  margin-top: 5px;
+  background-color: white;
 }
 
 .reply {

@@ -15,6 +15,8 @@ import ExpandedPost2 from "@/components/Post/ExpandedPost2.vue";
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Assistant:wght@300&display=swap");
+
 .container {
   height: 87vh;
   display: flex;
@@ -24,6 +26,7 @@ import ExpandedPost2 from "@/components/Post/ExpandedPost2.vue";
   padding-left: 10px;
   padding-right: 10px;
   gap: 10px;
+  font-family: "Assistant", sans-serif;
 }
 h1 {
   text-align: center;
@@ -55,13 +58,15 @@ h1 {
 
   .post {
     width: 100%;
+    height: 50%;
     flex: 1;
   }
 
   .comments {
     width: 100%;
     margin-top: 10px;
-    max-height: 20%;
+    height: 50%;
+    flex: 1;
   }
 }
 </style>
