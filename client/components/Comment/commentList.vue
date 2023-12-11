@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import CreateCommentButton from "@/components/Comment/CreateCommentButton.vue";
-import EditCommentButton from "@/components/Comment/EditCommentButton.vue";
 import commentComponent from "@/components/Comment/commentComponent.vue";
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
@@ -24,6 +23,7 @@ async function getComments(parentId: string, filterByLabel?: string) {
   }
   comments.value = commentResults["UnPinned Comments"];
   pinnedComments.value = commentResults["Pinned Comments"];
+  editing.value = "";
 }
 
 function updateEditing(id: string) {
