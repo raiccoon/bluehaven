@@ -117,23 +117,22 @@ const handleCancel = () => {
   display: inline-block;
   outline: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
   border-radius: 500px;
   transition-property: background-color, border-color, color, box-shadow, filter;
   transition-duration: 0.3s;
   border: 1px solid transparent;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   width: fit-content;
-  padding-left: 15px;
-  padding-right: 15px;
+  height: fit-content;
   white-space: normal;
   text-align: center;
-  padding: 10px 17px 10px;
+  padding: 12px 10px 12px;
   color: #5190bbff;
   box-shadow: inset 0 0 0 2px #5190bbff;
   background-color: transparent;
-  height: 52px;
+  margin-top: 5px;
 }
 
 .reply {

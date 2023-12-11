@@ -30,6 +30,10 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
+form {
+  margin-left: 10px;
+  margin-right: 10px;
+}
 .submit {
   display: inline-block;
   outline: none;
