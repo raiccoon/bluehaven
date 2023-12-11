@@ -12,6 +12,7 @@ let pinnedComments = ref<Array<Record<string, string>>>([]);
 let comments = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 let viewComments = ref(false);
+let isInstructor = ref(false);
 
 async function getComments(parentId: string, filterByLabel?: string) {
   let query: Record<string, string> = filterByLabel !== undefined ? { filterByLabel } : {};

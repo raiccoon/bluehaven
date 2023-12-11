@@ -105,7 +105,6 @@ onBeforeMount(async () => {
       <em v-if="isPinned">(pinned)</em>
     </div>
 
-    <!-- placeholder for triple dots -->
     <button v-if="!viewOptions && (isInstructor || props.comment.author == currentUsername)" class="options-button pure-button btn-small" @click="toggleOptions">Options</button>
     <menu class="options" v-if="viewOptions">
       <li><button v-if="isInstructor || props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
@@ -117,7 +116,6 @@ onBeforeMount(async () => {
     </menu>
   </div>
 
-  <!-- <labelsOnComment :comment="props.comment" /> -->
   <div class="label-list">
     <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
   </div>
@@ -132,13 +130,13 @@ onBeforeMount(async () => {
   <div class="base">
     <commentList :parentId="props.comment._id" :isReplies="true" />
     <article class="timestamp">
-      <p v-if="props.comment.dateCreated !== props.comment.dateUpdated">Edited on: {{ formatDate(props.comment.dateUpdated) }}</p>
+      <p v-if="props.comment.dateCreated !== props.comment.dateUpdated && !props.comment.instructorEdited">Edited on: {{ formatDate(props.comment.dateUpdated) }}</p>
+      <p v-else-if="props.comment.dateCreated !== props.comment.dateUpdated && props.comment.instructorEdited">Edited by Instructor on: {{ formatDate(props.comment.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.comment.dateCreated) }}</p>
     </article>
   </div>
 
   <AddLabelForm v-if="isAddLabelModelOpen" @updatedLabels="getLabelsOnComment" :comment="comment" :labels="labels" />
-  <!-- {{ labels.map((label) => label.name) }} -->
 </template>
 
 <style scoped>
