@@ -98,45 +98,42 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="comment-header">
-    <div class="user-info">
-      <div v-if="isInstructor || props.comment.author == currentUsername" class="author">{{ props.comment.author }}</div>
-      <div v-else class="author">Anonymous</div>
-      <em v-if="isPinned">(pinned)</em>
-      <em v-if="props.comment.instructorEdited">(instructor edited)</em>
+  <div class="comment-container">
+    <div class="comment-header">
+      <div class="user-info">
+        <div v-if="isInstructor || props.comment.author == currentUsername" class="author">{{ props.comment.author }}</div>
+        <div v-else class="author">Anonymous</div>
+        <em v-if="isPinned">(pinned)</em>
+        <em v-if="props.comment.instructorEdited">(instructor edited)</em>
+      </div>
+
+      <button v-if="!viewOptions && (isInstructor || props.comment.author == currentUsername)" class="options-button pure-button btn-small" @click="toggleOptions">Options</button>
+      <menu class="options" v-if="viewOptions">
+        <li><button v-if="isInstructor || props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
+        <li><button v-if="isInstructor || props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
+        <li v-if="isInstructor || props.comment.author == currentUsername"><button class="btn-small pure-button" @click="toggleLabelModal">Add Label</button></li>
+        <li v-if="isPinned && isInstructor"><button class="btn-small pure-button" @click="togglePin">Unpin</button></li>
+        <li v-if="!isPinned && isInstructor"><button class="btn-small pure-button" @click="togglePin">Pin</button></li>
+        <button class="options-button pure-button btn-small" @click="toggleOptions">Hide Options</button>
+      </menu>
     </div>
 
-    <button v-if="!viewOptions && (isInstructor || props.comment.author == currentUsername)" class="options-button pure-button btn-small" @click="toggleOptions">Options</button>
-    <menu class="options" v-if="viewOptions">
-      <li><button v-if="isInstructor || props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
-      <li><button v-if="isInstructor || props.comment.author == currentUsername" class="btn-small pure-button" @click="emit('editComment', props.comment._id)">Edit</button></li>
-      <li v-if="isInstructor || props.comment.author == currentUsername"><button class="btn-small pure-button" @click="toggleLabelModal">Add Label</button></li>
-      <li v-if="isPinned && isInstructor"><button class="btn-small pure-button" @click="togglePin">Unpin</button></li>
-      <li v-if="!isPinned && isInstructor"><button class="btn-small pure-button" @click="togglePin">Pin</button></li>
-      <button class="options-button pure-button btn-small" @click="toggleOptions">Hide Options</button>
-    </menu>
+    <div class="label-list">
+      <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
+    </div>
+
+    <!-- truncate text, can view full text by expanding -->
+    <p class="text content">{{ props.comment.content }}</p>
+    <div class="base">
+      <commentList :parentId="props.comment._id" :isReplies="true" />
+      <article class="timestamp">
+        <p v-if="props.comment.dateCreated !== props.comment.dateUpdated">Edited on: {{ formatDate(props.comment.dateUpdated) }}</p>
+        <p v-else>{{ formatDate(props.comment.dateCreated) }}</p>
+      </article>
+    </div>
+
+    <AddLabelForm v-if="isAddLabelModelOpen" @updatedLabels="getLabelsOnComment" :comment="comment" :labels="labels" />
   </div>
-
-  <div class="label-list">
-    <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
-  </div>
-
-  <img v-if="hasImage" class="postMedia image" :src="props.comment.image" />
-  <video v-if="hasVideo" class="postMedia video" controls>
-    <source v-if="hasVideo" :src="props.comment.video" type="video/mp4" />
-  </video>
-
-  <!-- truncate text, can view full text by expanding -->
-  <p class="text content">{{ props.comment.content }}</p>
-  <div class="base">
-    <commentList :parentId="props.comment._id" :isReplies="true" />
-    <article class="timestamp">
-      <p v-if="props.comment.dateCreated !== props.comment.dateUpdated">Edited on: {{ formatDate(props.comment.dateUpdated) }}</p>
-      <p v-else>Created on: {{ formatDate(props.comment.dateCreated) }}</p>
-    </article>
-  </div>
-
-  <AddLabelForm v-if="isAddLabelModelOpen" @updatedLabels="getLabelsOnComment" :comment="comment" :labels="labels" />
 </template>
 
 <style scoped>
