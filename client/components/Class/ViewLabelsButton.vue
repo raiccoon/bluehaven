@@ -68,7 +68,7 @@ onBeforeMount(async () => {
           </div>
         </div>
 
-        <div class="createButton" v-if="isArchived">
+        <div class="createButton" v-if="!isArchived">
           <CreateLabelForm :classId="props.classId" @refreshLabels="refreshLabels" />
         </div>
       </div>
