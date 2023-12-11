@@ -117,12 +117,17 @@ class Routes {
   @Router.post("/comments")
   async createComment(session: WebSessionDoc, parent: ObjectId, content: string, image: string, video: string) {
     const user = WebSession.getUser(session);
-    const created = await Comment.create(user, new ObjectId(parent), content, image, video);
-    if (created.comment !== null) {
-      const parentPost = await Comment.getPostParent(created.comment._id);
-      const commentClass = await Module.getClassOfPost(parentPost!);
-      await Class.assertIsMember(commentClass!, user);
+
+    let parentPost = new ObjectId(parent);
+    if (await Comment.isComment(new ObjectId(parent))) {
+      parentPost = await Comment.getPostParent(new ObjectId(parent));
     }
+
+    const commentClass = await Module.getClassOfPost(parentPost!);
+    await Class.assertIsMember(commentClass!, user);
+    await Class.assertIsNotArchived(commentClass!);
+
+    const created = await Comment.create(user, new ObjectId(parent), content, image, video);
     return { msg: created.msg, comment: await Responses.post(created.comment) };
   }
 
