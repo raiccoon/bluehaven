@@ -16,7 +16,16 @@ const clickModule = () => {
       <button @click="emit('togglePin')" v-if="isInstructor" class="button">
         {{ isPinned ? "Unpin" : "Pin" }}
       </button>
-      <button @click="emit('toggleLabelModal')" v-if="isInstructor || isAuthor" class="button">Add Label</button>
+      <button
+        @click="
+          emit('toggleLabelModal');
+          isMenuOpen = false;
+        "
+        v-if="isInstructor || isAuthor"
+        class="button"
+      >
+        Add Label
+      </button>
       <EditCommentButton v-if="isInstructor || isAuthor" :comment="comment" @refreshComments="emit('refreshComments')" @editComment="emit('editComment')" />
       <button @click="emit('deleteComment')" v-if="isInstructor || isAuthor" class="button">Delete</button>
     </div>
