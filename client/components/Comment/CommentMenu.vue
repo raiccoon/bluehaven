@@ -18,7 +18,7 @@ const clickModule = () => {
       </button>
       <button
         @click="
-          emit('toggleLabelModal');
+          emit('openLabelModal');
           isMenuOpen = false;
         "
         v-if="isInstructor || isAuthor"

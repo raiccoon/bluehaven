@@ -37,11 +37,13 @@ onBeforeMount(async () => {
 
 <template>
   <form v-if="loaded && classHasLabels" @submit.prevent="updateLabels">
-    <section v-for="label in labelsInClass" :key="label._id" class="scrollable">
-      <input class="checkbox" type="checkbox" :id="label._id" :value="label" v-model="selectedLabels" />
-      <div class="labelName">{{ label.name }}</div>
-      <br />
-    </section>
+    <div class="labels">
+      <section v-for="label in labelsInClass" :key="label._id" class="scrollable">
+        <input class="checkbox" type="checkbox" :id="label._id" :value="label" v-model="selectedLabels" />
+        <div class="labelName">{{ label.name }}</div>
+        <br />
+      </section>
+    </div>
     <div class="buttonSection">
       <input class="submit" type="submit" value="Submit" />
       <button @click="emit('closeLabelModal')" class="cancel" type="button">Cancel</button>
@@ -53,9 +55,18 @@ onBeforeMount(async () => {
 <style scoped>
 .scrollable {
   width: 100%;
-  overflow-x: scroll;
+  /* overflow-x: scroll; */
   overflow-y: hidden;
   white-space: nowrap;
+}
+
+.labels {
+  max-height: 200px;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 .close {
   font-size: 18px;
