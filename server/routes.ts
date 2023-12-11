@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Bookmark, Class, Comment, Friend, Label, Module, Pin, Post, User, WebSession } from "./app";
+import { Bookmark, Class, Comment, Label, Module, Pin, Post, User, WebSession } from "./app";
 import { CommentDoc } from "./concepts/comment";
 import { PostDoc } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
@@ -159,6 +159,7 @@ class Routes {
 
     const parentPost = await Comment.getPostParent(new ObjectId(_id));
     const commentClass = await Module.getClassOfPost(parentPost!);
+    await Class.assertIsNotArchived(commentClass!);
 
     const isInstructor = await Class.isInstructor(commentClass!, user);
     await Comment.canEdit(new ObjectId(_id), user, isInstructor);
@@ -177,6 +178,7 @@ class Routes {
 
     const parentPost = await Comment.getPostParent(new ObjectId(_id));
     const commentClass = await Module.getClassOfPost(parentPost!);
+    await Class.assertIsNotArchived(commentClass!);
 
     const isInstructor = await Class.isInstructor(commentClass!, user);
     await Comment.canEdit(new ObjectId(_id), user, isInstructor);
@@ -247,6 +249,8 @@ class Routes {
     const user = WebSession.getUser(session);
     const postClass = await Module.getClassOfPost(new ObjectId(postId));
     await Class.assertIsInstructor(new ObjectId(postClass!), user);
+    await Class.assertIsNotArchived(postClass!);
+
     const created = await Pin.addPin(new ObjectId(postId), new ObjectId(commentId));
     await Comment.assertParentPost(commentId, postId);
     // const parent = await Comment.getParentOfComment(new ObjectId(commentId));
@@ -260,6 +264,8 @@ class Routes {
     const post = await Pin.getPostOfPin(new ObjectId(_id));
     const pinClass = await Module.getClassOfPost(post);
     await Class.assertIsInstructor(pinClass!, user);
+    await Class.assertIsNotArchived(pinClass!);
+
     return await Pin.deletePin(new ObjectId(_id));
   }
 
@@ -269,6 +275,8 @@ class Routes {
     const post = await Comment.getPostParent(new ObjectId(_id));
     const pinClass = await Module.getClassOfPost(new ObjectId(post.id));
     await Class.assertIsInstructor(pinClass!, user);
+    await Class.assertIsNotArchived(pinClass!);
+
     return await Pin.deletePinByCommentId(new ObjectId(_id));
   }
 
@@ -278,6 +286,8 @@ class Routes {
     const post = await Pin.getPostOfPin(new ObjectId(postId));
     const pinClass = await Module.getClassOfPost(post);
     await Class.assertIsMember(pinClass!, user);
+    await Class.assertIsNotArchived(pinClass!);
+
     return await Pin.getPostPins(postId);
   }
 
@@ -306,54 +316,6 @@ class Routes {
     comments.forEach((comment) => (pinnedCommentIds.includes(comment._id.toString()) ? pinnedComments : unpinnedComments).push(comment));
 
     return { "Pinned Comments": await Responses.posts(pinnedComments), "UnPinned Comments": await Responses.posts(unpinnedComments) };
-  }
-
-  // FRIENDS
-  @Router.get("/friends")
-  async getFriends(session: WebSessionDoc) {
-    const user = WebSession.getUser(session);
-    return await User.idsToUsernames(await Friend.getFriends(user));
-  }
-
-  @Router.delete("/friends/:friend")
-  async removeFriend(session: WebSessionDoc, friend: string) {
-    const user = WebSession.getUser(session);
-    const friendId = (await User.getUserByUsername(friend))._id;
-    return await Friend.removeFriend(user, friendId);
-  }
-
-  @Router.get("/friend/requests")
-  async getRequests(session: WebSessionDoc) {
-    const user = WebSession.getUser(session);
-    return await Responses.friendRequests(await Friend.getRequests(user));
-  }
-
-  @Router.post("/friend/requests/:to")
-  async sendFriendRequest(session: WebSessionDoc, to: string) {
-    const user = WebSession.getUser(session);
-    const toId = (await User.getUserByUsername(to))._id;
-    return await Friend.sendRequest(user, toId);
-  }
-
-  @Router.delete("/friend/requests/:to")
-  async removeFriendRequest(session: WebSessionDoc, to: string) {
-    const user = WebSession.getUser(session);
-    const toId = (await User.getUserByUsername(to))._id;
-    return await Friend.removeRequest(user, toId);
-  }
-
-  @Router.put("/friend/accept/:from")
-  async acceptFriendRequest(session: WebSessionDoc, from: string) {
-    const user = WebSession.getUser(session);
-    const fromId = (await User.getUserByUsername(from))._id;
-    return await Friend.acceptRequest(fromId, user);
-  }
-
-  @Router.put("/friend/reject/:from")
-  async rejectFriendRequest(session: WebSessionDoc, from: string) {
-    const user = WebSession.getUser(session);
-    const fromId = (await User.getUserByUsername(from))._id;
-    return await Friend.rejectRequest(fromId, user);
   }
 
   // CLASS
@@ -436,6 +398,8 @@ class Routes {
   async createModule(session: WebSessionDoc, classId: ObjectId, name: string, description?: string) {
     const user = WebSession.getUser(session);
     await Class.assertIsInstructor(new ObjectId(classId), user);
+    await Class.assertIsNotArchived(new ObjectId(classId));
+
     return await Module.createModule(new ObjectId(classId), name, description);
   }
 
@@ -488,12 +452,16 @@ class Routes {
   }
 
   @Router.put("/post/:_id/module")
-  async relocatePost(post: ObjectId, module: ObjectId) {
-    return await Module.relocatePost(new ObjectId(post), new ObjectId(module));
+  async relocatePost(_id: ObjectId, module: ObjectId) {
+    const classId = await Module.getClassOfPost(new ObjectId(_id));
+    await Class.assertIsNotArchived(new ObjectId(classId));
+    return await Module.relocatePost(new ObjectId(_id), new ObjectId(module));
   }
 
   @Router.delete("/modules/:_id")
   async deleteModule(_id: ObjectId) {
+    const classId = await Module.getClassOfModule(new ObjectId(_id));
+    await Class.assertIsNotArchived(new ObjectId(classId));
     const posts = await Module.getPostsInModule(new ObjectId(_id));
     for (const post of posts) {
       await Post.delete(new ObjectId(post));
@@ -506,23 +474,21 @@ class Routes {
     return await Module.updateModuleVisibility(new ObjectId(_id), hidden);
   }
 
-  // MODULE - TEMP ROUTES FOR TESTING
-  @Router.post("/modules/:module/posts")
-  async addPost(post: ObjectId, module: ObjectId) {
-    return await Module.addPost(new ObjectId(post), new ObjectId(module));
-  }
-
   // LABELs
   @Router.post("/classes/id/:classId/labels")
   async createLabel(classId: ObjectId, name: string) {
+    await Class.assertIsNotArchived(new ObjectId(classId));
     return await Label.createLabel(new ObjectId(classId), name);
   }
 
   @Router.post("/comments/:commentId/labels")
   async assignLabel(session: WebSessionDoc, label: ObjectId, comment: ObjectId) {
     const user = WebSession.getUser(session);
-    const classId = await this.getClassOfComment(new ObjectId(comment));
+    const post = await Comment.getPostParent(new ObjectId(comment));
+    const classId = await Module.getClassOfPost(post);
     await Label.assertIsLabelInClass(new ObjectId(label), classId!);
+
+    await Class.assertIsNotArchived(new ObjectId(classId));
 
     const isInstructor = await Class.isInstructor(classId!, user);
     await Comment.canEdit(user, comment, isInstructor);
@@ -535,6 +501,9 @@ class Routes {
 
     const post = await Comment.getPostParent(new ObjectId(commentId));
     const classId = await Module.getClassOfPost(post);
+
+    await Class.assertIsNotArchived(new ObjectId(classId));
+
     const isInstructor = await Class.isInstructor(classId!, user);
     await Comment.canEdit(commentId, user, isInstructor);
 
@@ -547,12 +516,20 @@ class Routes {
   }
 
   @Router.delete("/comments/:commentId/labels")
-  async removeLabel(label: ObjectId, comment: ObjectId) {
-    return await Label.removeLabel(new ObjectId(label), new ObjectId(comment));
+  async removeLabel(label: ObjectId, commentId: ObjectId) {
+    const post = await Comment.getPostParent(new ObjectId(commentId));
+    const classId = await Module.getClassOfPost(post);
+    await Class.assertIsNotArchived(classId!);
+
+    return await Label.removeLabel(new ObjectId(label), new ObjectId(commentId));
   }
 
   @Router.delete("/comments/:commentId/labels/deleteAll")
   async removeLabels(commentId: ObjectId) {
+    const post = await Comment.getPostParent(new ObjectId(commentId));
+    const classId = await Module.getClassOfPost(post);
+    await Class.assertIsNotArchived(classId!);
+
     return await Label.removeAllLabels(new ObjectId(commentId));
   }
 
@@ -565,15 +542,6 @@ class Routes {
   async getLabelsInClass(classId: ObjectId) {
     return await Label.getLabelsInClass(new ObjectId(classId));
   }
-
-  // @Router.get("/posts/:_id/comments/")
-  // async filterCommentsByLabel(_id: ObjectId, filterByLabel: ObjectId) {
-  //   const comments = await Comment.getCommentsByParent(new ObjectId(_id));
-  //   return Label.filterCommentsByLabel(
-  //     comments.map((comment) => comment._id),
-  //     filterByLabel,
-  //   );
-  // }
 
   @Router.get("/classes/id/:classId/labels/isLabelInClass")
   async isLabelInClass(classId: ObjectId, label: ObjectId) {

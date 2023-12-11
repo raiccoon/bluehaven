@@ -44,6 +44,8 @@ export default class ClassConcept {
   async inviteInstructor(classId: ObjectId, inviter: ObjectId, invitee: ObjectId) {
     await this.classExists(classId);
     await this.assertIsInstructor(classId, inviter);
+    await this.assertIsNotArchived(classId);
+
     if (await this.isInstructor(classId, invitee)) {
       throw new NotAllowedError("User is already an instructor of this class!");
     }
@@ -60,6 +62,7 @@ export default class ClassConcept {
     if (await this.isMember(classDoc._id, student)) {
       throw new NotAllowedError("You are already in this class!");
     }
+    await this.assertIsNotArchived(classDoc._id);
     await this.addStudent(classDoc._id, student);
     return { msg: "Joined class!", classId: classDoc._id };
   }
