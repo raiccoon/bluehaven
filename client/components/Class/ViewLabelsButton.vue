@@ -9,6 +9,7 @@ const { toast } = storeToRefs(useToastStore());
 const error = ref("");
 const loaded = ref(false);
 const props = defineProps(["classId"]);
+const showMsg = ref(false);
 
 let labels = ref<Array<Record<string, string>>>([]);
 const isButtonClicked = ref(false);
@@ -28,8 +29,18 @@ const getLabels = async () => {
   labels.value = labelResults;
 };
 
+const refreshLabels = async () => {
+  try {
+    await getLabels();
+    showMsg.value = true;
+  } catch (_) {
+    return;
+  }
+};
+
 const handleCancel = () => {
   isButtonClicked.value = false;
+  showMsg.value = false;
 };
 
 onBeforeMount(async () => {
@@ -49,14 +60,16 @@ onBeforeMount(async () => {
               <i class="material-symbols-outlined">close</i>
             </button>
           </div>
-
+          <p v-if="showMsg" class="labelCreated"><em>Label created!</em></p>
           <h3>Class Labels</h3>
+
           <div class="label-list">
             <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
           </div>
         </div>
+
         <div class="createButton">
-          <CreateLabelForm :classId="props.classId" @refreshLabels="getLabels" />
+          <CreateLabelForm :classId="props.classId" @refreshLabels="refreshLabels" />
         </div>
       </div>
     </div>
@@ -65,6 +78,10 @@ onBeforeMount(async () => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap");
+
+.labelCreated {
+  /* padding: 0.2em; */
+}
 .material-symbols-outlined {
   font-variation-settings:
     "FILL" 0,
@@ -95,7 +112,7 @@ p {
 .modal-content {
   background-color: white;
   width: 400px;
-  height: 460px;
+  height: 470px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -197,7 +214,7 @@ form {
 }
 
 .label-list {
-  max-height: 70%;
-  overflow-y: auto;
+  max-height: 310px;
+  overflow-y: scroll;
 }
 </style>
