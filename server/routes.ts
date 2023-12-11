@@ -84,6 +84,7 @@ class Routes {
     const user = WebSession.getUser(session);
     const classId = await Module.getClassOfModule(new ObjectId(module));
     await Class.assertIsInstructor(new ObjectId(classId!), user);
+    await Class.assertIsNotArchived(classId!);
 
     const created = await Post.create(user, title, content, image, video);
     await Module.addPost(created.post!._id, new ObjectId(module));
@@ -93,7 +94,10 @@ class Routes {
   @Router.patch("/posts/:_id")
   async updatePost(session: WebSessionDoc, _id: ObjectId, update: Partial<PostDoc>) {
     const user = WebSession.getUser(session);
-    await Post.isAuthor(user, new ObjectId(_id));
+    const classId = await Module.getClassOfPost(new ObjectId(_id));
+    await Class.assertIsInstructor(new ObjectId(classId!), user);
+    await Class.assertIsNotArchived(classId!);
+
     return await Post.update(new ObjectId(_id), update);
   }
 
@@ -102,6 +106,7 @@ class Routes {
     const user = WebSession.getUser(session);
     const classId = await Module.getClassOfPost(new ObjectId(_id));
     await Class.assertIsInstructor(new ObjectId(classId!), user);
+    await Class.assertIsNotArchived(classId!);
 
     await Module.removePost(new ObjectId(_id));
     return Post.delete(new ObjectId(_id));

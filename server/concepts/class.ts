@@ -122,6 +122,13 @@ export default class ClassConcept {
     }
   }
 
+  async assertIsNotArchived(classId: ObjectId) {
+    await this.classExists(classId);
+    if ((await this.classes.readOne({ _id: classId }))!.archived) {
+      throw new NotAllowedError("This class is archived. Restore the class to make changes.");
+    }
+  }
+
   async removeSelf(classId: ObjectId, user: ObjectId) {
     if (await this.isInstructor(classId, user)) {
       await this.deleteInstructor(classId, user);
