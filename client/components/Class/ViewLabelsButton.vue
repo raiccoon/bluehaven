@@ -197,7 +197,7 @@ form {
 }
 
 .label-list {
-  max-height: 70%;
-  overflow-y: auto;
+  max-height: 300px;
+  overflow-y: scroll;
 }
 </style>

@@ -23,10 +23,6 @@ const handleCreateLabel = async (name: string) => {
     });
     emit("refreshLabels");
     isCreateLabelClicked.value = false;
-
-    //try console logging all labels in the class?
-    // const labelResults = await fetchy(`/api/classes/id/${props.classId}/labels`, "GET");
-    // console.log("labelResults", labelResults);
   } catch (_) {
     return;
   }
