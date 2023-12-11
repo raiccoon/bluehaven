@@ -103,9 +103,9 @@ onBeforeMount(async () => {
       <div v-if="isInstructor || props.comment.author == currentUsername" class="author">{{ props.comment.author }}</div>
       <div v-else class="author">Anonymous</div>
       <em v-if="isPinned">(pinned)</em>
+      <em v-if="props.comment.instructorEdited">(instructor edited)</em>
     </div>
 
-    <!-- placeholder for triple dots -->
     <button v-if="!viewOptions && (isInstructor || props.comment.author == currentUsername)" class="options-button pure-button btn-small" @click="toggleOptions">Options</button>
     <menu class="options" v-if="viewOptions">
       <li><button v-if="isInstructor || props.comment.author == currentUsername" class="button-error btn-small pure-button" @click="deleteComment">Delete</button></li>
@@ -117,7 +117,6 @@ onBeforeMount(async () => {
     </menu>
   </div>
 
-  <!-- <labelsOnComment :comment="props.comment" /> -->
   <div class="label-list">
     <div class="label-item" v-for="label in labels" :key="label._id">{{ label.name }}</div>
   </div>
@@ -138,10 +137,13 @@ onBeforeMount(async () => {
   </div>
 
   <AddLabelForm v-if="isAddLabelModelOpen" @updatedLabels="getLabelsOnComment" :comment="comment" :labels="labels" />
-  <!-- {{ labels.map((label) => label.name) }} -->
 </template>
 
 <style scoped>
+.instructorEdited {
+  color: gray;
+}
+
 p {
   margin: 0em;
 }
