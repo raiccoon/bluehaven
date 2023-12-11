@@ -40,54 +40,84 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="comment-section">
-    <section class="comments" v-if="loaded && viewComments === true">
-      <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
+  <div class="main" v-if="loaded">
+    <div class="container" v-if="viewComments">
       <CreateCommentButton :parent="props.parentId" :isReply="props.isReplies" @refreshComments="getComments($props.parentId)" />
-      <!-- putting pinned comments first, need to troubleshoot pins -->
-      <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
-        <commentComponent
-          v-if="editing !== pinnedComment._id"
-          :comment="pinnedComment"
-          :isPinned="true"
-          :isReply="false"
-          @refreshComments="getComments($props.parentId)"
-          @editComment="updateEditing"
-        />
-        <EditCommentButton v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
-      </article>
-      <article v-for="comment in comments" :key="comment._id">
-        <commentComponent v-if="editing !== comment._id" :comment="comment" :isPinned="false" :isReply="props.isReplies" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
-        <EditCommentButton v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
-      </article>
-      <button v-if="isReplies" class="pure-button btn-small" @click="toggleComments">Hide Replies</button>
-      <button v-else class="comment-visibility pure-button" @click="toggleComments">Hide Comments</button>
+      <div class="filterPlusComments" v-if="comments.length || pinnedComments.length">
+        <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
+        <div class="comment-section" v-if="viewComments">
+          <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
+            <commentComponent
+              v-if="editing !== pinnedComment._id"
+              :comment="pinnedComment"
+              :isPinned="true"
+              :isReply="false"
+              @refreshComments="getComments($props.parentId)"
+              @editComment="updateEditing"
+            />
+            <EditCommentButton v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+          </article>
+          <article v-for="comment in comments" :key="comment._id">
+            <commentComponent
+              v-if="editing !== comment._id"
+              :comment="comment"
+              :isPinned="false"
+              :isReply="props.isReplies"
+              @refreshComments="getComments($props.parentId)"
+              @editComment="updateEditing"
+            />
+            <EditCommentButton v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+          </article>
+        </div>
+      </div>
+      <div class="noCommentsMessage" v-else>
+        <p>No comments found</p>
+      </div>
+    </div>
+    <div class="bigButton" v-else>
+      <button v-if="isReplies" @click="toggleComments">Reply Section</button>
+      <button v-else @click="toggleComments">Comment Section</button>
+    </div>
+    <section class="hideButtons" v-if="viewComments">
+      <button v-if="isReplies" @click="toggleComments">Collapse Replies</button>
+      <button v-else @click="toggleComments">Collapse Comments</button>
     </section>
-    <section v-else-if="viewComments !== true">
-      <button v-if="isReplies" class="pure-button btn-small view-comments" @click="toggleComments">View Replies</button>
-      <button v-else class="comment-visibility pure-button view-comments" @click="toggleComments">View Comments Section</button>
-    </section>
-    <p v-else-if="loaded">No comments found</p>
-    <p v-else>Loading...</p>
+  </div>
+  <div v-else>
+    <p>Loading...</p>
   </div>
 </template>
 
 <style scoped>
-section {
+.main {
   display: flex;
   flex-direction: column;
-  gap: 1em;
-  /* max-height: 500px; */
-  /* margin-top: 1em; */
-  /* overflow: hidden; */
-  /* overflow-y: scroll; */
+  align-items: center;
+  height: 100%;
+  box-sizing: border-box;
+}
+.container {
+  border: solid rgb(255, 0, 0) 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  box-sizing: border-box;
+}
+.filterPlusComments {
+  border: solid rgb(0, 185, 34) 1px;
+  height: calc(100% - 63px);
 }
 
 .comment-section {
-  max-height: 500px;
-  overflow: hidden;
+  border: solid rgb(0, 249, 249) 1px;
   overflow-y: scroll;
-  margin-top: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: calc(100% - 44px);
+  overflow-y: scroll;
 }
 
 article {
@@ -102,35 +132,5 @@ article {
   padding: 1em;
   width: 85%;
   max-width: 550px;
-}
-.view-comments {
-  gap: 1em;
-  margin: 1em;
-}
-
-/* button {
-  display: inline-block;
-  outline: none;
-  cursor: pointer;
-  font-size: 10px;
-  max-width: 100px;
-  line-height: 1;
-  border-radius: 500px;
-  transition-property: background-color, border-color, color, box-shadow, filter;
-  transition-duration: 0.3s;
-  border: 1px solid transparent;
-  letter-spacing: 2px;
-  min-width: 70px;
-  white-space: normal;
-  text-align: center;
-  padding: 5px 5px 5px;
-  color: #5190bbff;
-  box-shadow: inset 0 0 0 2px #d6eaf9ff;
-  background-color: white;
-  height: 40px;
-} */
-
-.comment-visibility {
-  font-size: 14px;
 }
 </style>
