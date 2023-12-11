@@ -131,9 +131,9 @@ export default class ClassConcept {
     return { msg: "Sucessfully exited class!" };
   }
 
-  async archiveClass(classId: ObjectId) {
+  async updateIsClassArchived(classId: ObjectId, archived: boolean) {
     await this.classExists(classId);
-    await this.classes.updateOne({ _id: classId }, { archived: true });
+    await this.classes.updateOne({ _id: classId }, { archived });
     // await this.studentMemberships.deleteMany({ classId: classId });
     return await this.classes.readOne({ _id: classId });
   }

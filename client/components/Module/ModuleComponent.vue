@@ -4,7 +4,7 @@ import PostTitle from "@/components/Post/PostTitle.vue";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const props = defineProps(["module", "isAdmin"]);
+const props = defineProps(["module", "isAdmin", "isArchived"]);
 const emits = defineEmits(["deleteModule"]);
 let loaded = ref(false);
 let posts = ref<Array<Record<string, string>>>([]);
@@ -48,7 +48,7 @@ onBeforeMount(async () => {
 
 <template>
   <main>
-    <ModuleHeader :module="module" :isAdmin="isAdmin" @expandMe="expand" @toggleClick="clickModule" @refreshPosts="getPostsInModule()" @deleteModule="deleteModule" />
+    <ModuleHeader :module="module" :isAdmin="isAdmin" :isArchived="isArchived" @expandMe="expand" @toggleClick="clickModule" @refreshPosts="getPostsInModule()" @deleteModule="deleteModule" />
     <div class="posts" v-if="isModuleClicked && loaded && posts.length !== 0">
       <article v-for="post in posts" :key="post._id">
         <PostTitle :post="post" :fromPage="'class'" />

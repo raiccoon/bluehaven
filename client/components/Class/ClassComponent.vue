@@ -8,7 +8,11 @@ import ModuleListComponent from "../Module/ModuleListComponent.vue";
 
 const { currentUsername } = storeToRefs(useUserStore());
 const props = defineProps(["classId"]);
+
+const classObj = ref<Record<string, string>>();
 const isAdmin = ref(false);
+const isArchived = ref();
+const loaded = ref(false);
 
 const checkIfAdmin = async () => {
   try {
@@ -20,14 +24,27 @@ const checkIfAdmin = async () => {
   }
 };
 
+const getClass = async () => {
+  let response;
+  try {
+    response = await fetchy(`/api/classes/id/${props.classId}`, "GET");
+  } catch (_) {
+    return;
+  }
+  classObj.value = response;
+  isArchived.value = classObj.value!.archived;
+};
+
 onBeforeMount(async () => {
   await checkIfAdmin();
+  await getClass();
+  loaded.value = true;
 });
 </script>
 <template>
-  <main>
-    <ClassHeader :classId="props.classId" :isAdmin="isAdmin" />
-    <ModuleListComponent :classId="props.classId" :isAdmin="isAdmin" />
+  <main v-if="loaded">
+    <ClassHeader :classObj="classObj" :isAdmin="isAdmin" :isArchived="isArchived" />
+    <ModuleListComponent :classId="props.classId" :isAdmin="isAdmin" :isArchived="isArchived" />
   </main>
 </template>
 <style scoped>

@@ -15,10 +15,10 @@ const clickButton = () => {
   isButtonClicked.value = true;
 };
 
-const handleArchiveClass = async () => {
+const handleUnArchiveClass = async () => {
   try {
     await fetchy(`/api/classes/id/${props.classId}/archived`, "PATCH", {
-      body: { archived: true },
+      body: { archived: false },
     });
     void router.push({ name: "Classes" });
   } catch (e) {
@@ -36,17 +36,17 @@ const handleCancel = () => {
 
 <template>
   <div>
-    <div @click="clickButton">Archive Class</div>
+    <div @click="clickButton">Restore Class</div>
     <div class="modal-background" v-if="isButtonClicked">
       <div class="modal-content">
-        <form @submit.prevent="handleArchiveClass()">
+        <form @submit.prevent="handleUnArchiveClass()">
           <div class="text">
-            <h3>Are you sure you want to archive this class?</h3>
-            <p>You will still be able to see the class in your class archives.</p>
+            <h3>Restore this class?</h3>
+            <p>You will be able to make edits and re-invite students to join the class.</p>
           </div>
           <div class="modal-buttons">
             <button class="submit" type="submit">
-              <p>Archive</p>
+              <p>Restore</p>
             </button>
             <button class="cancel" type="button" @click="handleCancel">Cancel</button>
           </div>
