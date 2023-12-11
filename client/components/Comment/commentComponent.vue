@@ -100,7 +100,8 @@ onBeforeMount(async () => {
 <template>
   <div class="comment-header">
     <div class="user-info">
-      <div class="author">{{ props.comment.author }}</div>
+      <div v-if="isInstructor || props.comment.author == currentUsername" class="author">{{ props.comment.author }}</div>
+      <div v-else class="author">Anonymous</div>
       <em v-if="isPinned">(pinned)</em>
     </div>
 
@@ -247,5 +248,6 @@ button {
   padding: 0.5em;
   margin-left: 0.5em;
   margin-right: 0.5em;
+  white-space: nowrap;
 }
 </style>
