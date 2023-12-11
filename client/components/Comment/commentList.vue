@@ -67,7 +67,7 @@ onBeforeMount(async () => {
             @refreshComments="getComments($props.parentId)"
             @editComment="updateEditing"
           />
-          <EditCommentButton v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+          <!-- <EditCommentButton v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" /> -->
         </article>
       </div>
       <div class="noCommentsMessage" v-if="!(comments.length || pinnedComments.length)">
