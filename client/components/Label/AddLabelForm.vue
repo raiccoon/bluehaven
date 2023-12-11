@@ -61,7 +61,7 @@ onBeforeMount(async () => {
 }
 
 .labels {
-  max-height: 50px;
+  max-height: 200px;
   overflow-x: hidden;
 }
 
