@@ -5,22 +5,25 @@ import { ref } from "vue";
 const props = defineProps(["comment", "viewOptions", "isInstructor", "isAuthor", "isPinned"]);
 const emit = defineEmits(["toggleOptions", "deleteComment", "editComment", "toggleLabelModal", "togglePin", "refreshComments"]);
 
-const isModuleClicked = ref(false);
+const isMenuOpen = ref(false);
 const clickModule = () => {
-  isModuleClicked.value = !isModuleClicked.value;
+  isMenuOpen.value = !isMenuOpen.value;
 };
 </script>
 <template>
-  <div class="menu" v-if="isModuleClicked">
-    <button @click="emit('togglePin')" v-if="isInstructor" class="button">
-      {{ isPinned ? "Unpin" : "Pin" }}
-    </button>
-    <button @click="emit('toggleLabelModal')" v-if="isInstructor || isAuthor" class="button">Add Label</button>
-    <EditCommentButton v-if="isInstructor || isAuthor" :comment="comment" @refreshComments="emit('refreshComments')" @editComment="emit('editComment')" />
-    <button @click="emit('deleteComment')" v-if="isInstructor || isAuthor" class="button">Delete</button>
+  <div class="menu-container">
+    <div class="menu" v-if="isMenuOpen">
+      <button @click="emit('togglePin')" v-if="isInstructor" class="button">
+        {{ isPinned ? "Unpin" : "Pin" }}
+      </button>
+      <button @click="emit('toggleLabelModal')" v-if="isInstructor || isAuthor" class="button">Add Label</button>
+      <EditCommentButton v-if="isInstructor || isAuthor" :comment="comment" @refreshComments="emit('refreshComments')" @editComment="emit('editComment')" />
+      <button @click="emit('deleteComment')" v-if="isInstructor || isAuthor" class="button">Delete</button>
+    </div>
   </div>
+
   <button v-if="!viewOptions && (isInstructor || isAuthor)" @click="clickModule" class="buttonClick">
-    <span v-if="!isModuleClicked">
+    <span v-if="!isMenuOpen">
       <!-- <div class="options-text">Options</div> -->
       <i class="material-symbols-outlined close">more_vert</i>
     </span>
@@ -44,6 +47,13 @@ const clickModule = () => {
     text-decoration: underline;
   }
 }
+
+.menu-container {
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
 .menu {
   position: absolute;
   margin-left: 135px;
