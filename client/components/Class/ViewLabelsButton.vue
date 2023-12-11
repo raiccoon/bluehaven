@@ -8,7 +8,7 @@ import CreateLabelForm from "../Label/CreateLabelForm.vue";
 const { toast } = storeToRefs(useToastStore());
 const error = ref("");
 const loaded = ref(false);
-const props = defineProps(["classId"]);
+const props = defineProps(["classId", "isArchived"]);
 const showMsg = ref(false);
 
 let labels = ref<Array<Record<string, string>>>([]);
@@ -68,7 +68,7 @@ onBeforeMount(async () => {
           </div>
         </div>
 
-        <div class="createButton">
+        <div class="createButton" v-if="isArchived">
           <CreateLabelForm :classId="props.classId" @refreshLabels="refreshLabels" />
         </div>
       </div>

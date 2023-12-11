@@ -29,7 +29,7 @@ const viewBookmarks = async () => {
       <AddInstructor :classId="props.classId" />
     </button>
     <button v-if="isAdmin" class="button">
-      <ViewLabelsButton :classId="props.classId" />
+      <ViewLabelsButton :classId="props.classId" isArchived />
     </button>
     <button v-if="isAdmin && !isArchived" class="button">
       <ArchiveClassButton :classId="props.classId" />
