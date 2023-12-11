@@ -15,22 +15,28 @@ import ExpandedPost2 from "@/components/Post/ExpandedPost2.vue";
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Assistant:wght@300&display=swap");
+
 .container {
-  border: solid black 1px;
   height: 87vh;
   display: flex;
   align-items: center;
   box-sizing: border-box;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  gap: 10px;
+  font-family: "Assistant", sans-serif;
 }
 h1 {
   text-align: center;
 }
-
 .post {
-  border: solid black 1px;
+  border: solid rgb(0, 0, 0) 1px;
   height: 100%;
   box-sizing: border-box;
   flex: 1;
+  border-radius: 8px;
   display: flex;
   justify-content: center;
 }
@@ -43,5 +49,24 @@ h1 {
   border-radius: 8px;
   display: flex;
   justify-content: center;
+}
+
+@media (max-width: 800px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .post {
+    width: 100%;
+    height: 50%;
+    flex: 1;
+  }
+
+  .comments {
+    width: 100%;
+    margin-top: 10px;
+    height: 50%;
+    flex: 1;
+  }
 }
 </style>

@@ -130,7 +130,7 @@ const handleEditPost = async () => {
 };
 </script>
 <template>
-  <main v-if="loaded" class="container">
+  <div v-if="loaded" class="post-container">
     <div class="buttons">
       <button class="back-button" @click="goBack()">
         <svg height="19.4px" viewBox="0 0 512 512" width="16px" xmlns="http://www.w3.org/2000/svg">
@@ -159,33 +159,48 @@ const handleEditPost = async () => {
       <div class="title">
         <h3 class="title">{{ post.title }}</h3>
       </div>
+      <p class="footer">By @{{ post.author }} on {{ formatDate(post.dateUpdated) }}</p>
       <p class="content" v-html="renderText"></p>
     </div>
-    <p>By @{{ post.author }} on {{ formatDate(post.dateUpdated) }}</p>
-  </main>
+  </div>
 </template>
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Assistant:wght@300&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap");
-.post {
-  flex-grow: 1;
+.post-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  box-sizing: border-box;
+  border-radius: 10px;
+  height: 100%;
+  width: 100%;
+}
+.buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 20px;
+}
+.post {
+  border-top: solid black 1px;
+  padding-left: 10px;
+  padding-right: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow-y: scroll;
+}
+.footer {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 5px;
 }
 .title {
   width: 100%;
   text-align: center;
-}
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  padding: 10px;
-  padding-top: 0px;
+  margin-bottom: 2px;
 }
 .instructorButtons {
   display: flex;
@@ -214,28 +229,17 @@ const handleEditPost = async () => {
 .deleteButton:hover {
   text-decoration: underline;
 }
-.buttons {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
+
 .optionButtons {
   display: flex;
 }
-main {
-  border: solid black 1px;
-  border-radius: 10px;
-  margin-top: 15px;
-  width: 500px;
-  height: 600px;
-}
 @media (max-width: 800px) {
-  main {
+  .container {
     height: 400px;
   }
 }
 .back-button {
+  margin-top: 10px;
   background-color: transparent;
   color: black;
   padding: 0px;
@@ -246,8 +250,7 @@ main {
   position: relative;
   display: flex;
   align-items: center;
-  margin-top: 5px;
-  font-family: 'Assistant', sans-serif;
+  font-family: "Assistant", sans-serif;
 }
 .icon svg {
   fill: black;
