@@ -63,8 +63,12 @@ const togglePin = async () => {
   emit("refreshComments");
 };
 
-const toggleLabelModal = async () => {
-  isAddLabelModelOpen.value = !isAddLabelModelOpen.value;
+const openLabelModal = async () => {
+  isAddLabelModelOpen.value = true;
+};
+
+const closeLabelModel = async () => {
+  isAddLabelModelOpen.value = false;
 };
 
 const getLabelsOnComment = async () => {
@@ -116,7 +120,7 @@ onBeforeMount(async () => {
         @toggleOptions="toggleOptions"
         @deleteComment="deleteComment"
         @editComment="emit('editComment', props.comment._id)"
-        @toggleLabelModal="toggleLabelModal"
+        @openLabelModal="openLabelModal"
         @togglePin="togglePin"
         @refreshComments="emit('refreshComments')"
       />
@@ -135,7 +139,7 @@ onBeforeMount(async () => {
     <div class="base">
       <commentList :parentId="props.comment._id" :isReplies="true" />
     </div>
-    <AddLabelForm v-if="isAddLabelModelOpen" @updatedLabels="getLabelsOnComment" :comment="comment" :labels="labels" />
+    <AddLabelForm v-if="isAddLabelModelOpen" @updatedLabels="getLabelsOnComment" :comment="comment" :labels="labels" @closeLabelModal="closeLabelModel" />
   </div>
 </template>
 
