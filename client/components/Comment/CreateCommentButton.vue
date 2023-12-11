@@ -5,7 +5,7 @@ import * as marked from "marked";
 import { ref, watch } from "vue";
 
 const error = ref("");
-const props = defineProps(["parent"]);
+const props = defineProps(["parent", "isReply"]);
 const emit = defineEmits(["refreshComments"]);
 
 const isCreateCommentClicked = ref(false);
@@ -82,7 +82,8 @@ const handleCancel = () => {
 
 <template>
   <main>
-    <button class="button" @click="clickCreateComment">Create A Comment</button>
+    <button v-if="!props.isReply" class="button" @click="clickCreateComment">Create A Comment</button>
+    <button v-else class="button reply" @click="clickCreateComment">Create A Reply</button>
     <div class="modal-background" v-if="isCreateCommentClicked">
       <div class="modal-content">
         <form @submit.prevent="handleCreateComment(props.parent, content, '', '')">
@@ -119,8 +120,8 @@ const handleCancel = () => {
   font-size: 16px;
   line-height: 1;
   border-radius: 500px;
-  transition-property: background-color,border-color,color,box-shadow,filter;
-  transition-duration: .3s;
+  transition-property: background-color, border-color, color, box-shadow, filter;
+  transition-duration: 0.3s;
   border: 1px solid transparent;
   letter-spacing: 2px;
   width: fit-content;
@@ -133,6 +134,11 @@ const handleCancel = () => {
   box-shadow: inset 0 0 0 2px #5190bbff;
   background-color: transparent;
   height: 52px;
+}
+
+.reply {
+  font-size: 12px;
+  height: 42px;
 }
 .button:hover {
   color: #fff;

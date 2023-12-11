@@ -43,7 +43,7 @@ onBeforeMount(async () => {
   <div class="comment-section">
     <section class="comments" v-if="loaded && viewComments === true">
       <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
-      <CreateCommentButton :parent="props.parentId" @refreshComments="getComments($props.parentId)" />
+      <CreateCommentButton :parent="props.parentId" :isReply="props.isReplies" @refreshComments="getComments($props.parentId)" />
       <!-- putting pinned comments first, need to troubleshoot pins -->
       <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
         <commentComponent
@@ -100,7 +100,8 @@ article {
   flex-direction: column;
   gap: 0.5em;
   padding: 1em;
-  width: 70vh;
+  width: 85%;
+  max-width: 550px;
 }
 .view-comments {
   gap: 1em;
