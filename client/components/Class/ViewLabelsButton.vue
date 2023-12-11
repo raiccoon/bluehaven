@@ -214,7 +214,7 @@ form {
 }
 
 .label-list {
-  max-height: 300px;
+  max-height: 310px;
   overflow-y: scroll;
 }
 </style>
