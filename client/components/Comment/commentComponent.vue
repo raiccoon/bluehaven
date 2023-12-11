@@ -121,15 +121,8 @@ onBeforeMount(async () => {
         @refreshComments="emit('refreshComments')"
       />
     </div>
-
-
-
     <!-- truncate text, can view full text by expanding -->
     <p class="text content">{{ props.comment.content }}</p>
-    <div class="base">
-      <commentList :parentId="props.comment._id" :isReplies="true" />
-    </div>
-
     <CommentFooter
       :authorName="props.comment.author"
       :isEdited="props.comment.dateCreated !== props.comment.dateUpdated"
@@ -139,7 +132,9 @@ onBeforeMount(async () => {
       :isInstructor="isInstructor"
       :isAuthor="props.comment.author == currentUsername"
     />
-
+    <div class="base">
+      <commentList :parentId="props.comment._id" :isReplies="true" />
+    </div>
     <AddLabelForm v-if="isAddLabelModelOpen" @updatedLabels="getLabelsOnComment" :comment="comment" :labels="labels" />
   </div>
 </template>
@@ -190,12 +185,9 @@ p {
 
 .base {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-}
-
-.base article:only-child {
-  margin-left: auto;
+  width: 100%;
 }
 
 .postMedia {
