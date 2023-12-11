@@ -16,7 +16,6 @@ import ExpandedPost2 from "@/components/Post/ExpandedPost2.vue";
 
 <style scoped>
 .container {
-  border: solid black 1px;
   height: 87vh;
   display: flex;
   align-items: center;
@@ -29,12 +28,12 @@ import ExpandedPost2 from "@/components/Post/ExpandedPost2.vue";
 h1 {
   text-align: center;
 }
-
 .post {
-  border: solid black 1px;
+  border: solid rgb(0, 0, 0) 1px;
   height: 100%;
   box-sizing: border-box;
   flex: 1;
+  border-radius: 8px;
   display: flex;
   justify-content: center;
 }
@@ -47,5 +46,22 @@ h1 {
   border-radius: 8px;
   display: flex;
   justify-content: center;
+}
+
+@media (max-width: 800px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .post {
+    width: 100%;
+    flex: 1;
+  }
+
+  .comments {
+    width: 100%;
+    margin-top: 10px;
+    max-height: 20%;
+  }
 }
 </style>
