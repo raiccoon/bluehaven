@@ -21,6 +21,10 @@ import ExpandedPost2 from "@/components/Post/ExpandedPost2.vue";
   display: flex;
   align-items: center;
   box-sizing: border-box;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  gap: 10px;
 }
 h1 {
   text-align: center;
