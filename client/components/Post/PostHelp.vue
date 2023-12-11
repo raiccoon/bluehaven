@@ -19,20 +19,20 @@ const handleCancel = () => {
     <div class="modal-content">
       <div class="textContent">
         <div class="section">
-          <p style="text-align: left;">Here is how to insert an image:</p>
-          <p style="text-align: center; font-family: monospace;">[image]image_url[\image]</p>
+          <p style="text-align: left">Here is how to insert an image:</p>
+          <p style="text-align: center; font-family: monospace">[image]image_url[/image]</p>
         </div>
         <div class="section">
-          <p style="text-align: left;">Here is how to insert an mp4 video:</p>
-          <p style="text-align: center; font-family: monospace;">[mp4]video_url[/mp4]</p>
+          <p style="text-align: left">Here is how to insert an mp4 video:</p>
+          <p style="text-align: center; font-family: monospace">[mp4]video_url[/mp4]</p>
         </div>
         <div class="section">
-          <p style="text-align: left;">Here is how to insert a YouTube video:</p>
-          <p style="text-align: center; font-family: monospace;">[YouTube]youtube_url[/YouTube]</p>
+          <p style="text-align: left">Here is how to insert a YouTube video:</p>
+          <p style="text-align: center; font-family: monospace">[YouTube]youtube_url[/YouTube]</p>
         </div>
         <div class="section">
-          <p style="text-align: left;">Here is a link to other markdown syntax:</p>
-          <p style="text-align: center;"><a href="https://www.markdownguide.org/cheat-sheet/">www.markdownguide.org/cheat-sheet</a></p>
+          <p style="text-align: left">Here is a link to other markdown syntax:</p>
+          <p style="text-align: center"><a href="https://www.markdownguide.org/cheat-sheet/">www.markdownguide.org/cheat-sheet</a></p>
         </div>
       </div>
       <div class="modal-buttons">
@@ -114,8 +114,8 @@ const handleCancel = () => {
   font-size: 14px;
   line-height: 1;
   border-radius: 500px;
-  transition-property: background-color,border-color,color,box-shadow,filter;
-  transition-duration: .3s;
+  transition-property: background-color, border-color, color, box-shadow, filter;
+  transition-duration: 0.3s;
   border: 1px solid transparent;
   letter-spacing: 2px;
   min-width: 115px;
@@ -127,7 +127,7 @@ const handleCancel = () => {
   background-color: transparent;
   height: 40px;
 }
-.cancel:hover{
+.cancel:hover {
   transform: scale(1.04);
 }
 </style>
