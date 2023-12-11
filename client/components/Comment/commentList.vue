@@ -96,6 +96,11 @@ onBeforeMount(async () => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap");
+.viewRepliesContainer {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+} 
 .viewReplies {
   background-color: transparent;
   border: none;
@@ -157,7 +162,8 @@ onBeforeMount(async () => {
   box-sizing: border-box;
 }
 .container {
-  border: solid rgb(255, 0, 0) 1px;
+  border: solid rgb(0, 115, 255) 1px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
