@@ -103,6 +103,7 @@ onBeforeMount(async () => {
       <div v-if="isInstructor || props.comment.author == currentUsername" class="author">{{ props.comment.author }}</div>
       <div v-else class="author">Anonymous</div>
       <em v-if="isPinned">(pinned)</em>
+      <em v-if="props.comment.instructorEdited">(instructor edited)</em>
     </div>
 
     <button v-if="!viewOptions && (isInstructor || props.comment.author == currentUsername)" class="options-button pure-button btn-small" @click="toggleOptions">Options</button>
@@ -130,8 +131,7 @@ onBeforeMount(async () => {
   <div class="base">
     <commentList :parentId="props.comment._id" :isReplies="true" />
     <article class="timestamp">
-      <p v-if="props.comment.dateCreated !== props.comment.dateUpdated && !props.comment.instructorEdited">Edited on: {{ formatDate(props.comment.dateUpdated) }}</p>
-      <p v-else-if="props.comment.dateCreated !== props.comment.dateUpdated && props.comment.instructorEdited">Edited by Instructor on: {{ formatDate(props.comment.dateUpdated) }}</p>
+      <p v-if="props.comment.dateCreated !== props.comment.dateUpdated">Edited on: {{ formatDate(props.comment.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.comment.dateCreated) }}</p>
     </article>
   </div>
@@ -140,6 +140,10 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
+.instructorEdited {
+  color: gray;
+}
+
 p {
   margin: 0em;
 }
