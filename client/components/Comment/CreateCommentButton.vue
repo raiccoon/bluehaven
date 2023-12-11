@@ -83,7 +83,7 @@ const handleCancel = () => {
 <template>
   <main>
     <button v-if="!props.isReply" class="button" @click="clickCreateComment">Create A Comment</button>
-    <button v-else class="button reply" @click="clickCreateComment">Create A Reply</button>
+    <button v-else class="reply" @click="clickCreateComment">Create A Reply</button>
     <div class="modal-background" v-if="isCreateCommentClicked">
       <div class="modal-content">
         <form @submit.prevent="handleCreateComment(props.parent, content, '', '')">
@@ -136,8 +136,14 @@ const handleCancel = () => {
 }
 
 .reply {
-  font-size: 12px;
-  height: 42px;
+  background-color: transparent;
+  border: none;
+  color: rgb(81, 174, 245);
+  padding: 0px;
+}
+
+.reply:hover {
+  text-decoration: underline;
 }
 .button:hover {
   color: #fff;

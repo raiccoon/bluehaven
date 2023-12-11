@@ -76,8 +76,10 @@ onBeforeMount(async () => {
       </div>
     </div>
     <div class="bigboycontainer" v-else>
-      <button v-if="isReplies" @click="toggleComments">Reply Section</button>
-      <div class="bigboy" v-else @click="toggleComments">
+      <div class="viewRepliesContainer">
+        <button v-if="isReplies" class="viewReplies" @click="toggleComments">View Replies</button>
+      </div>
+      <div class="bigboy" v-if="!isReplies" @click="toggleComments">
         <p class="commentSectionText">
           <span class="comment">View</span><br />
           <span class="comment">Comment</span><br />
@@ -86,10 +88,6 @@ onBeforeMount(async () => {
         </p>
       </div>
     </div>
-    <section class="hideButtons" v-if="viewComments">
-      <button v-if="isReplies" @click="toggleComments">Collapse Replies</button>
-      <!-- <button v-else @click="toggleComments">Collapse Comments</button> -->
-    </section>
   </div>
   <div v-else>
     <p>Loading...</p>
@@ -98,6 +96,16 @@ onBeforeMount(async () => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap");
+.viewReplies {
+  background-color: transparent;
+  border: none;
+  color: rgb(81, 174, 245);
+  padding: 0px;
+}
+
+.viewReplies:hover {
+  text-decoration: underline;
+}
 .hideButton {
   width: 100%;
   display: flex;
@@ -145,6 +153,7 @@ onBeforeMount(async () => {
   flex-direction: column;
   align-items: center;
   height: 100%;
+  width: 100%;
   box-sizing: border-box;
 }
 .container {
@@ -153,6 +162,7 @@ onBeforeMount(async () => {
   flex-direction: column;
   align-items: center;
   height: 100%;
+  width: 100%;
   box-sizing: border-box;
 }
 

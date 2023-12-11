@@ -3,7 +3,7 @@ import EditCommentButton from "@/components/Comment/EditCommentButton.vue";
 import { ref } from "vue";
 
 const props = defineProps(["comment", "viewOptions", "isInstructor", "isAuthor", "isPinned"]);
-const emit = defineEmits(["toggleOptions", "deleteComment", "editComment", "toggleLabelModal", "togglePin", "refreshComments"]);
+const emit = defineEmits(["toggleOptions", "deleteComment", "editComment", "openLabelModal", "togglePin", "refreshComments"]);
 
 const isMenuOpen = ref(false);
 const clickModule = () => {

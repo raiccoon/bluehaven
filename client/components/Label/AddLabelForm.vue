@@ -6,7 +6,7 @@ import { onBeforeMount, ref } from "vue";
 
 const loaded = ref(false);
 const props = defineProps(["comment", "labels"]);
-const emit = defineEmits(["updatedLabels", "refreshComments"]);
+const emit = defineEmits(["updatedLabels", "refreshComments", "closeLabelModal"]);
 
 let labelsInClass = ref(); //all labels in class*
 let selectedLabels = ref<Array<Record<string, string>>>([]); //labels selected by user in form*
@@ -37,28 +37,49 @@ onBeforeMount(async () => {
 
 <template>
   <form v-if="loaded && classHasLabels" @submit.prevent="updateLabels">
-    <section v-for="label in labelsInClass" :key="label._id">
+    <section v-for="label in labelsInClass" :key="label._id" class="scrollable">
       <input class="checkbox" type="checkbox" :id="label._id" :value="label" v-model="selectedLabels" />
-      {{ label.name }}
+      <div class="labelName">{{ label.name }}</div>
       <br />
     </section>
-    <input class="submit" type="submit" value="Submit" />
+    <div class="buttonSection">
+      <input class="submit" type="submit" value="Submit" />
+      <button @click="emit('closeLabelModal')" class="cancel" type="button">Cancel</button>
+    </div>
   </form>
   <div v-if="loaded && !classHasLabels"><em>No labels associated with this class!</em></div>
 </template>
 
 <style scoped>
+.scrollable {
+  width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+.close {
+  font-size: 18px;
+}
+.labelName {
+  display: inline-block;
+  margin-left: 10px;
+}
 form {
-  margin: 1em;
+  margin: 0px;
   background-color: white;
-  border-radius: 1em;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
-  padding: 1em;
+  padding: 15px;
   box-shadow: inset 0 0 0 2px #d6eaf9ff;
+  width: calc(100%-30px);
 }
-
+.buttonSection {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 .submit {
   display: inline-block;
   outline: none;
@@ -69,15 +90,41 @@ form {
   transition-property: background-color, border-color, color, box-shadow, filter;
   transition-duration: 0.3s;
   border: 1px solid transparent;
-  letter-spacing: 2px;
-  min-width: 70px;
+  letter-spacing: 1.5px;
+  width: fit-content;
+  height: fit-content;
   white-space: normal;
   text-align: center;
-  padding: 5px 5px 5px;
+  padding: 5px 10px 5px;
   color: #5190bbff;
   box-shadow: inset 0 0 0 2px #d6eaf9ff;
   background-color: white;
-  height: 40px;
+}
+.submit:hover {
+  transform: scale(1.04);
+}
+.cancel {
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 500px;
+  transition-property: background-color, border-color, color, box-shadow, filter;
+  transition-duration: 0.3s;
+  border: 1px solid transparent;
+  letter-spacing: 1.5px;
+  width: fit-content;
+  height: fit-content;
+  white-space: normal;
+  text-align: center;
+  padding: 5px 10px 5px;
+  color: #888888;
+  box-shadow: inset 0 0 0 2px #bbbbbb;
+  background-color: transparent;
+}
+.cancel:hover {
+  transform: scale(1.04);
 }
 
 textarea {
