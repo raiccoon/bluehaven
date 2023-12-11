@@ -61,11 +61,11 @@ onBeforeMount(async () => {
 }
 
 .labels {
-  max-height: 200px;
+  max-height: 50px;
   overflow-x: hidden;
 }
 
-::-webkit-scrollbar {
+.scrollable::-webkit-scrollbar {
   display: none;
 }
 .close {
