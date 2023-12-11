@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import LeaveClassButton from "@/components/Class/LeaveClassButton.vue";
-import ArchiveClassButton from "@/components/Class/ArchiveClassButton.vue";
-import ViewLabelsButton from "@/components/Class/ViewLabelsButton.vue";
-import ViewBookmarksButton from "@/components/Class/ViewBookmarksButton.vue";
 import AddInstructor from "@/components/Class/AddInstructorButton.vue";
+import ArchiveClassButton from "@/components/Class/ArchiveClassButton.vue";
+import LeaveClassButton from "@/components/Class/LeaveClassButton.vue";
+import ViewBookmarksButton from "@/components/Class/ViewBookmarksButton.vue";
+import ViewLabelsButton from "@/components/Class/ViewLabelsButton.vue";
+import { ref } from "vue";
 import router from "../../router";
+import UnarchiveClassButton from "./UnarchiveClassButton.vue";
 
-const props = defineProps(["classId", "isAdmin"]);
+const props = defineProps(["classId", "isAdmin", "isArchived"]);
 const isModuleClicked = ref(false);
 const clickModule = () => {
   isModuleClicked.value = !isModuleClicked.value;
@@ -24,14 +25,17 @@ const viewBookmarks = async () => {
     <LeaveClassButton :classId="props.classId" />
   </button>
   <div class="menu" v-if="isModuleClicked">
-    <button v-if="isAdmin" class="button">
+    <button v-if="isAdmin && !isArchived" class="button">
       <AddInstructor :classId="props.classId" />
     </button>
     <button v-if="isAdmin" class="button">
       <ViewLabelsButton :classId="props.classId" />
     </button>
-    <button v-if="isAdmin" class="button">
+    <button v-if="isAdmin && !isArchived" class="button">
       <ArchiveClassButton :classId="props.classId" />
+    </button>
+    <button v-if="isAdmin && isArchived" class="button">
+      <UnarchiveClassButton :classId="props.classId" />
     </button>
   </div>
   <button v-if="isAdmin" @click="clickModule" class="buttonClick">

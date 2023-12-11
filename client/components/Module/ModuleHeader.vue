@@ -1,12 +1,12 @@
 <script setup lang="ts">
 // import PublishModuleButton from "@/components/Module/PublishModuleButton.vue";
-import AddPostButton from "@/components/Post/AddPostButton.vue";
 import DeleteModuleButton from "@/components/Module/DeleteModuleButton.vue";
 import ModuleVisibility from "@/components/Module/ModuleVisibility.vue";
+import AddPostButton from "@/components/Post/AddPostButton.vue";
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
 
-const props = defineProps(["module", "isAdmin"]);
+const props = defineProps(["module", "isAdmin", "isArchived"]);
 const emits = defineEmits(["toggleClick", "expandMe", "refreshPosts", "deleteModule"]);
 const _module = ref({ _id: "", name: "", description: "", hidden: true });
 
@@ -42,10 +42,10 @@ onBeforeMount(() => {
   <main>
     <div class="header">
       <div class="expand">
-        <button v-if="isAdmin" class="button">
+        <button v-if="isAdmin && !isArchived" class="button">
           <DeleteModuleButton :module="_module" @deleteModule="deleteModule" />
         </button>
-        <button v-if="isAdmin" class="button">
+        <button v-if="isAdmin && !isArchived" class="button">
           <AddPostButton :module="_module" @expandMe="emits('expandMe')" @refreshPosts="refreshPosts" />
         </button>
         <button @click="clickModule" class="button">
@@ -58,7 +58,7 @@ onBeforeMount(() => {
         </button>
       </div>
       <div class="headerText">
-        <div v-if="isAdmin">
+        <div v-if="isAdmin && !isArchived">
           <ModuleVisibility :module="_module" @toggleVisibility="refreshModule" />
         </div>
         <h3 v-else class="name">

@@ -415,10 +415,10 @@ class Routes {
   }
 
   @Router.patch("/classes/id/:classId/archived")
-  async archiveClass(session: WebSessionDoc, classId: ObjectId) {
+  async updateIsClassArchived(session: WebSessionDoc, classId: ObjectId, archived: boolean) {
     const user = WebSession.getUser(session);
     await Class.assertIsInstructor(new ObjectId(classId), user);
-    return await Class.archiveClass(new ObjectId(classId));
+    return await Class.updateIsClassArchived(new ObjectId(classId), archived);
   }
 
   // MODULE

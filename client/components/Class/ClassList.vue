@@ -9,13 +9,11 @@ const loaded = ref(false);
 const props = defineProps({
   role: String,
 });
-// const classIDs = ref<string[]>([]);
 const classes = ref<Array<Record<string, string>>>([]);
 
 const getClasses = async () => {
   try {
     const response = await fetchy(`/api/classes/${props.role}`, "GET");
-    // classIDs.value = response.classes.map((classItem: { _id: String }) => classItem._id);
     classes.value = response.classes;
   } catch (error) {
     console.error("Error fetching classes:", error);
@@ -36,9 +34,12 @@ onBeforeMount(async () => {
       <h2 class="enrolled">Enrolled: Instructor</h2>
       <AddClassButton @classCreated="handleRefresh" />
     </div>
-    <div class="header" v-else>
+    <div class="header" v-else-if="role === 'enroll'">
       <h2 class="enrolled">Enrolled: Student</h2>
       <JoinClassButton @classJoined="handleRefresh" />
+    </div>
+    <div class="header" v-else-if="role === 'archive'">
+      <h2 class="enrolled">Archived Classes</h2>
     </div>
     <div v-if="loaded" class="tile-container">
       <div v-if="classes.length === 0" class="placeholder">No classes to show.</div>

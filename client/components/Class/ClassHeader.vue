@@ -1,30 +1,9 @@
 <script setup lang="ts">
-import { fetchy } from "@/utils/fetchy";
-import { ref, defineProps, onBeforeMount } from "vue";
 import BackButton from "@/components/BackButton.vue";
 import ClassMenu from "@/components/Class/ClassMenu.vue";
+import { defineProps } from "vue";
 
-const props = defineProps(["classId", "isAdmin"]);
-
-const className = ref("");
-const joinCode = ref("");
-
-const getClass = async () => {
-  let response;
-  try {
-    response = await fetchy(`/api/classes/id/${props.classId}`, "GET", {
-      query: { _id: props.classId },
-    });
-  } catch (_) {
-    return;
-  }
-  className.value = response.className;
-  joinCode.value = response.joinCode;
-};
-
-onBeforeMount(async () => {
-  await getClass();
-});
+const props = defineProps(["isAdmin", "classObj", "isArchived"]);
 </script>
 
 <template>
@@ -32,26 +11,11 @@ onBeforeMount(async () => {
     <div class="options">
       <BackButton :routeName="'Classes'" />
       <div class="right">
-        <ClassMenu :isAdmin="isAdmin" :classId="props.classId" />
-        <!-- <button v-if="isAdmin" class="button">
-          <AddInstructor :classId="props.classId" />
-        </button>
-        <button v-if="isAdmin" class="button">
-          <ViewLabelsButton :classId="props.classId" />
-        </button>
-        <button class="button" @click="viewBookmarks">
-          <ViewBookmarksButton />
-        </button>
-        <button v-if="isAdmin" class="button">
-          <ArchiveClassButton :classId="props.classId" />
-        </button>
-        <button v-else class="button">
-          <LeaveClassButton :classId="props.classId" />
-        </button> -->
+        <ClassMenu :isAdmin="isAdmin" :classId="props.classObj._id" :isArchived="isArchived" />
       </div>
     </div>
-    <h1>{{ className }}</h1>
-    <p v-if="isAdmin">Join code: {{ joinCode }}</p>
+    <h1>{{ props.classObj.className }}</h1>
+    <p v-if="isAdmin">Join code: {{ props.classObj.joinCode }}</p>
   </main>
 </template>
 
