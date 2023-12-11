@@ -45,44 +45,43 @@ onBeforeMount(async () => {
     <div class="container" v-if="viewComments">
       <div @click="toggleComments" class="hideButton">Hide</div>
       <CreateCommentButton :parent="props.parentId" :isReply="props.isReplies" @refreshComments="getComments($props.parentId)" />
-      <div class="filterPlusComments" v-if="comments.length || pinnedComments.length">
-        <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
-        <div class="comment-section" v-if="viewComments">
-          <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
-            <commentComponent
-              v-if="editing !== pinnedComment._id"
-              :comment="pinnedComment"
-              :isPinned="true"
-              :isReply="false"
-              @refreshComments="getComments($props.parentId)"
-              @editComment="updateEditing"
-            />
-            <EditCommentButton v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
-          </article>
-          <article v-for="comment in comments" :key="comment._id">
-            <commentComponent
-              v-if="editing !== comment._id"
-              :comment="comment"
-              :isPinned="false"
-              :isReply="props.isReplies"
-              @refreshComments="getComments($props.parentId)"
-              @editComment="updateEditing"
-            />
-            <EditCommentButton v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
-          </article>
-        </div>
+      <SelectLabelForm v-if="!isReplies" :postId="props.parentId" @filterByLabel="getComments" />
+      <div class="comment-section" v-if="(comments.length || pinnedComments.length) && viewComments">
+        <article v-for="pinnedComment in pinnedComments" :key="pinnedComment._id">
+          <commentComponent
+            v-if="editing !== pinnedComment._id"
+            :comment="pinnedComment"
+            :isPinned="true"
+            :isReply="false"
+            @refreshComments="getComments($props.parentId)"
+            @editComment="updateEditing"
+          />
+          <EditCommentButton v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
+        </article>
+        <article v-for="comment in comments" :key="comment._id">
+          <commentComponent
+            v-if="editing !== comment._id"
+            :comment="comment"
+            :isPinned="false"
+            :isReply="props.isReplies"
+            @refreshComments="getComments($props.parentId)"
+            @editComment="updateEditing"
+          />
+          <!-- <EditCommentButton v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" /> -->
+        </article>
       </div>
-      <div class="noCommentsMessage" v-else>
-        <p>No comments found</p>
+      <div class="noCommentsMessage" v-if="!(comments.length || pinnedComments.length)">
+        <p v-if="isReplies">No replies found</p>
+        <p v-else>No comments found</p>
       </div>
     </div>
     <div class="bigboycontainer" v-else>
       <button v-if="isReplies" @click="toggleComments">Reply Section</button>
       <div class="bigboy" v-else @click="toggleComments">
         <p class="commentSectionText">
-          <span class="comment">View</span><br>
-          <span class="comment">Comment</span><br>
-          <span class="section">Section</span><br>
+          <span class="comment">View</span><br />
+          <span class="comment">Comment</span><br />
+          <span class="section">Section</span><br />
           <i class="material-symbols-outlined eye">double_arrow</i>
         </p>
       </div>
@@ -104,7 +103,7 @@ onBeforeMount(async () => {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-right: 7px;
+  margin-right: 30px;
   margin-top: 5px;
 }
 .hideButton:hover {
@@ -156,32 +155,29 @@ onBeforeMount(async () => {
   height: 100%;
   box-sizing: border-box;
 }
-.filterPlusComments {
-  border: solid rgb(0, 185, 34) 1px;
-  height: calc(100% - 63px);
-}
 
 .comment-section {
-  border: solid rgb(0, 249, 249) 1px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: calc(100% - 54px);
+  max-height: calc(100% - 140px);
   overflow-y: scroll;
+  width: 300px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 article {
   background-color: white;
-  border-radius: 1em;
-  border-width: 2px;
-  border-style: solid;
-  border-color: #d6eaf9ff;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
+  border: solid 2px #d6eaf9ff;
+  border-radius: 8px;
   padding: 1em;
-  width: 85%;
+  width: 88%;
   max-width: 550px;
+  margin-bottom: 5px;
 }
 </style>
