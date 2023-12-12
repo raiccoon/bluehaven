@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import commentList from "@/components/Comment/commentList.vue";
-import CommentMenu from "@/components/Comment/CommentMenu.vue";
 import CommentFooter from "@/components/Comment/CommentFooter.vue";
+import CommentMenu from "@/components/Comment/CommentMenu.vue";
+import commentList from "@/components/Comment/commentList.vue";
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
+import * as marked from "marked";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
@@ -18,10 +19,43 @@ const hasVideo = ref(false);
 const viewOptions = ref(false);
 const viewReplies = ref(false);
 let isInstructor = ref(false);
+const renderText = ref("");
 
 const labels = ref<Array<Record<string, string>>>([]);
 
 const isAddLabelModelOpen = ref(false);
+
+async function renderMarkdown(text: string) {
+  return await marked.parse(text);
+}
+
+async function render(text: string) {
+  renderText.value = await renderMarkdown(renderYouTube(renderMP4(renderImages(text))));
+}
+
+function renderImages(text: string): string {
+  const imageRegex = /\[image\](.*?)\[\/image\]/g; // [image]...[/image]
+
+  return text.replace(imageRegex, (_, imageUrl) => {
+    return `<img src="${imageUrl}" width="100%">`;
+  });
+}
+
+function renderMP4(text: string): string {
+  const videoRegex = /\[mp4\](.*?)\[\/mp4\]/g; // [mp4]...[/mp4]
+
+  return text.replace(videoRegex, (_, videoUrl) => {
+    return `<video width="100%" controls><source src="${videoUrl}" type="video/mp4" /></video>`;
+  });
+}
+
+function renderYouTube(text: string): string {
+  const youtubeRegex = /\[YouTube\](.*?)\[\/YouTube\]/g; // [YouTube]...[/YouTube]
+
+  return text.replace(youtubeRegex, (_, youtubeUrl) => {
+    return `<iframe class="youtube-video" src="${youtubeUrl}"></iframe>`;
+  });
+}
 
 const deleteComment = async () => {
   try {
@@ -95,6 +129,8 @@ onBeforeMount(async () => {
         query: { username: currentUsername.value },
       });
     }
+
+    await render(props.comment.content);
   } catch (_) {
     return;
   }
@@ -126,7 +162,8 @@ onBeforeMount(async () => {
       />
     </div>
     <!-- truncate text, can view full text by expanding -->
-    <p class="text content">{{ props.comment.content }}</p>
+    <!-- <p class="text content">{{ props.comment.content }}</p> -->
+    <p class="text content" v-html="renderText"></p>
     <CommentFooter
       :authorName="props.comment.author"
       :isEdited="props.comment.dateCreated !== props.comment.dateUpdated"
