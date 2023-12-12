@@ -59,14 +59,7 @@ onBeforeMount(async () => {
           <EditCommentButton v-else :comment="pinnedComment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" />
         </article>
         <article v-for="comment in comments" :key="comment._id">
-          <commentComponent
-            v-if="editing !== comment._id"
-            :comment="comment"
-            :isPinned="false"
-            :isReply="props.isReplies"
-            @refreshComments="getComments($props.parentId)"
-            @editComment="updateEditing"
-          />
+          <commentComponent v-if="editing !== comment._id" :comment="comment" :isPinned="false" :isReply="props.isReplies" @editComment="updateEditing" />
           <!-- <EditCommentButton v-else :comment="comment" @refreshComments="getComments($props.parentId)" @editComment="updateEditing" /> -->
         </article>
       </div>
@@ -100,7 +93,7 @@ onBeforeMount(async () => {
   width: 100%;
   display: flex;
   justify-content: flex-end;
-} 
+}
 .viewReplies {
   background-color: transparent;
   border: none;
