@@ -10,7 +10,8 @@ const props = defineProps(["authorName", "isEdited", "isInstructorEdited", "date
     </div>
     <div class="edited" v-if="isEdited">
       <p>
-        <i>{{ isInstructorEdited ? "instructor " : "" }}{{ isEdited ? "edited on " + dateUpdated : "" }}</i>
+        <!-- <i>{{ isInstructorEdited ? "instructor " : "" }}{{ isEdited ? "edited on " + dateUpdated : "" }}</i> -->
+        <i>{{ isInstructorEdited ? "instructor edited " : "" }}{{}}</i>
       </p>
     </div>
   </div>
